@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\SortieRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=SortieRepository::class)
@@ -19,31 +20,52 @@ class Sortie
 
     /**
      * @ORM\Column(type="string", length=100)
+     *
+     * @Assert\NotBlank(message="Le nom de la sortie est obligatoire")
+     * @Assert\Length(
+     *     min=3
+     *     minMessage="Veuillez renseigner 3 caractères minimum"
+     *     max=100
+     *     maxMessage="Le nom de la sortie ne peut dépasser 100 caractères"
+     * )
      */
     private $nom;
 
     /**
      * @ORM\Column(type="datetime")
+     *
+     * @Assert\NotBlank(message="La date et l'heure sont obligatoires")
+     * @Assert\GreaterThan("today", message="La sortie doit au minimum avoir lieu demain ")
      */
     private $dateDebut;
 
     /**
      * @ORM\Column(type="integer")
+     *
+     * @Assert\NotBlank(message="La durée ne peut être vide")
+     * @Assert\GreaterThanOrEqual(15, message="La durée mimimale d'une sortie est de 15 minutes")
      */
     private $duree;
 
     /**
      * @ORM\Column(type="datetime")
+     *
+     * @Assert\NotBlank(message="La date limite d'inscription est obligatoire")
+     * @Assert\LessThanOrEqual(propertyPath="dateDebut", message="La date limite d'inscription doit être inférieure ou égale à la date de sortie")
      */
     private $dateLimiteInscription;
 
     /**
      * @ORM\Column(type="integer")
+     *
+     * @Assert\NotBlank(message="Veuillez indiquez un nombre maximum de participants")
+     * @Assert\LessThanOrEqual(500, message="Le nombre maximum de participants ne peut exéder 500 personnes")
      */
     private $nbInscritptionMax;
 
     /**
      * @ORM\Column(type="text")
+     *
      */
     private $description;
 

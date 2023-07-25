@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\LieuRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=LieuRepository::class)
@@ -19,6 +20,9 @@ class Lieu
 
     /**
      * @ORM\Column(type="string", length=100)
+     *
+     * @Assert\NotBlank(message="Veuillez indiquez un nom pour le lieu")
+     *
      */
     private $nom;
 

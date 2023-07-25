@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\VilleRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=VilleRepository::class)
@@ -19,11 +20,16 @@ class Ville
 
     /**
      * @ORM\Column(type="string", length=100)
+     *
+     * @Assert\NotBlank(message="Veuillez indiquez un nom de ville")
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=5)
+     *
+     * @Assert\NotBlank(message="Veuillez indiquez un code postal")
+     * @Assert\EqualTo(5, message="Un code postal contient 5 chiffres")
      */
     private $codePostal;
 
