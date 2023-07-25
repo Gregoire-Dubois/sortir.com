@@ -9,11 +9,20 @@ use Symfony\Component\Routing\Annotation\Route;
 class testController extends AbstractController
 {
     /**
-     * @Route("/",name="main_testHome")
+     * @Route("/user",name="utilisateur_main_testHome")
      */
     public function testHome(){
 
-        echo "hello";
+        echo "hello tout le monde";
+        die();
+    }
+
+    /**
+     * @Route("/admin",name="admin_main_testHome")
+     */
+    public function testHomeAdmin(){
+
+        echo "hello admin";
         die();
     }
 
