@@ -23,9 +23,9 @@ class Sortie
      *
      * @Assert\NotBlank(message="Le nom de la sortie est obligatoire")
      * @Assert\Length(
-     *     min=3
-     *     minMessage="Veuillez renseigner 3 caractères minimum"
-     *     max=100
+     *     min=3,
+     *     minMessage="Veuillez renseigner 3 caractères minimum",
+     *     max=100,
      *     maxMessage="Le nom de la sortie ne peut dépasser 100 caractères"
      * )
      */
