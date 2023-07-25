@@ -43,7 +43,7 @@ class ParticipantController extends AbstractController
      */
     public function bannirUtilisateur(int $id): Response
     {
-
+        return $this->render( []);
     }
 
     /**
@@ -51,6 +51,6 @@ class ParticipantController extends AbstractController
      */
     public function supprimerUtilisateur(int $id): Response
     {
-
+        return $this->render( []);
     }
 }
