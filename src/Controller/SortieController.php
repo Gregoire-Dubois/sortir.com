@@ -43,7 +43,7 @@ class SortieController extends AbstractController
      */
     public function publierSortie(int $id): Response
     {
-        return $this->render( []);
+        return $this->redirectToRoute('sortie_listeSortie');
     }
 
     /**
