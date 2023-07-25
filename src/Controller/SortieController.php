@@ -51,8 +51,6 @@ class SortieController extends AbstractController
      */
     public function annulerSortie(int $id): Response
     {
-        return $this->render('sortie/annulation.html.twig', [
-
-        ]);
+        return $this->redirectToRoute('sortie_listeSortie');
     }
 }

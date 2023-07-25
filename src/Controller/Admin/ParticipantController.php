@@ -23,7 +23,7 @@ class ParticipantController extends AbstractController
      */
     public function chargerFichierCsv(): Response
     {
-        return $this->render('admin/utilisateur/charger_fichier_csv.html.twig', [
+        return $this->render('admin/participant/charger_fichier_csv.html.twig', [
 
         ]);
     }
@@ -33,7 +33,7 @@ class ParticipantController extends AbstractController
      */
     public function listeUtilisateur(): Response
     {
-        return $this->render('admin/utilisateur/liste.html.twig', [
+        return $this->render('admin/participant/liste.html.twig', [
 
         ]);
     }
@@ -43,7 +43,7 @@ class ParticipantController extends AbstractController
      */
     public function bannirUtilisateur(int $id): Response
     {
-        return $this->render( []);
+        return $this->redirectToRoute('admin_listeUtilisateur');
     }
 
     /**
@@ -51,6 +51,6 @@ class ParticipantController extends AbstractController
      */
     public function supprimerUtilisateur(int $id): Response
     {
-        return $this->render( []);
+        return $this->redirectToRoute('admin_listeUtilisateur');
     }
 }
