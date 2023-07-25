@@ -17,4 +17,42 @@ class SortieController extends AbstractController
 
         ]);
     }
+
+    /**
+     * @Route("/sorties/detail/{id}", name="sortie_detailSortie")
+     */
+    public function detailSortie(int $id): Response
+    {
+        return $this->render('sortie/detail.html.twig', [
+
+        ]);
+    }
+
+    /**
+     * @Route("/creation", name="sortie_creerSortie")
+     */
+    public function creerSortie(): Response
+    {
+        return $this->render('sortie/creation.html.twig', [
+
+        ]);
+    }
+
+    /**
+     * @Route("/sorties/publier/{id}", name="sortie_publierSortie")
+     */
+    public function publierSortie(int $id): Response
+    {
+
+    }
+
+    /**
+     * @Route("/sorties/annuler/{id}", name="sortie_annulerSortie")
+     */
+    public function annulerSortie(int $id): Response
+    {
+        return $this->render('sortie/annulation.html.twig', [
+
+        ]);
+    }
 }
