@@ -1,0 +1,14 @@
+footer {
+  display: flex;
+  align-items: center;
+  height: 5vh;
+}
+
+.footer_container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  color: white;
+}
