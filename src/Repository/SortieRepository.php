@@ -58,5 +58,27 @@ class SortieRepository extends ServiceEntityRepository
 
     }
 
+    public function selectAllSorties()
+    {
+
+        $queryBuilder = $this->createQueryBuilder('s');
+        $queryBuilder->innerJoin('s.etat', 'e'); // Utilisez l'alias 's' pour la jointure avec 'etat'
+        $queryBuilder->innerJoin('s.organisateur', 'p'); // Utilisez l'alias 's' pour la jointure avec 'organisateur'
+        $queryBuilder->where('s.dateLimiteInscription > :currentDate'); // Utilisez 's' pour faire référence à la colonne "dateLimiteInscription"
+        $queryBuilder->setParameter('currentDate', new \DateTime(), \Doctrine\DBAL\Types\Types::DATETIME_MUTABLE);        $query = $queryBuilder->getQuery();
+        $query->setMaxResults(10);
+        $results = $query->getResult();
+        return $results;
+
+    }
+
 
 }
+
+
+/*
+ *    $dql = 'SELECT s.nom, s.dateDebut, s.dateLimiteInscription, p.nom AS participantNom, e.libelle AS etatLibelle
+                FROM App\Entity\Sortie s
+                INNER JOIN s.etat e
+                INNER JOIN s.organisateur p';
+ */

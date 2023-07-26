@@ -2,7 +2,24 @@
 
 {% block body %}
 
+    <h1>liste des sorties</h1>
+
+        <ul>
+            {% for sortie in sorties %}
+                <li>
+                    <strong>Nom :</strong> {{ sortie.nom }}<br>
+                    <strong>Date de début :</strong> {{ sortie.dateDebut|date('Y-m-d H:i:s') }}<br>
+                    <strong>Date limite d'inscription :</strong> {{ sortie.dateLimiteInscription|date('Y-m-d H:i:s') }}<br>
+                    <strong>Nom du participant :</strong> {{ sortie.organisateur }}<br>
+                    <strong>État :</strong> {{ sortie.etat.libelle }}<br>
+                </li>
+            {% endfor %}
+
+        </ul>
+
+
 {% endblock %}
+
 
 {% block title %}
 

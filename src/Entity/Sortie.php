@@ -322,4 +322,11 @@ class Sortie
 
         return $this;
     }
+
+    public function __toString()
+    {
+        return $this->organisateur . $this->etat . $this->nom . $this->participants ;
+    }
+
+
 }

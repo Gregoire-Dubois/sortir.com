@@ -13,11 +13,15 @@ use Symfony\Component\Routing\Annotation\Route;
 class SortieController extends AbstractController
 {
     /**
-     * @Route("/sorties", name="sortie_listeSortie")
+     * @Route("/", name="sortie_listeSortie")
      */
-    public function listeSortie(): Response
+    //sorties
+    public function listeSortie(SortieRepository $sortieRepository): Response
     {
+        $sorties = $sortieRepository-> selectAllSorties();
+
         return $this->render('sortie/liste.html.twig', [
+            'sorties' => $sorties
 
         ]);
     }
