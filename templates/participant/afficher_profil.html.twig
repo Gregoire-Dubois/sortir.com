@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Mon profil</h1>
+
+    {{ form_start(participantForm) }}
+    {{ form_widget(participantForm) }}
+
+    <button type="submit" class="btn">Modifier</button>
+
+    {{ form_end(participantForm) }}
+    <div>
+        <a href="{{ path("sortie_listeSortie") }}" title="accueil"><button type="button">Annuler</button></a>
+    </div>
+{% endblock %}
+
+{% block title %}Profil | {{ parent() }}{% endblock %}
+

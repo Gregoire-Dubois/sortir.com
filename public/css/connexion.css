@@ -1,0 +1,86 @@
+:root {
+  --primary-color: #144A7F;
+  --font-family: 'Open Sans', sans-serif;
+}
+
+main{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Container */
+.default_container {
+  margin: auto;
+  width: 300px;
+  font-size: 2.5vh;
+}
+
+/* Titre du container */
+.title__connexion_container{
+  display: flex;
+  width: 100%;
+  height: 7vh;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--primary-color);
+  overflow: hidden;
+}
+
+#logo_ENI_connexion {
+  height: 7.5vh;
+  width: auto;
+}
+
+#app_title {
+  padding-left: 1vh;
+  font-size: 4.3vh;
+  color: white;
+}
+
+/* Formulaire de connexion */
+.login_form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  padding: 1.5vh 1vw 2vh 1vw;
+}
+
+.login_label {
+  display: flex;
+  align-items: center;
+  height: 4vh;
+}
+
+.login_input {
+  display: flex;
+  align-items: center;
+  height: 4vh;
+  margin-bottom: 2vh;
+  padding-left: 0.5vw;
+  background-color: var(--tertiary-color);
+  border-radius: 5px;
+  color: var(--primary-color);
+}
+
+#remember_me{
+  display: flex;
+  align-items: center;
+  margin-bottom: 2vh;
+}
+
+#remember_me input {
+  margin-right: 1vh;
+  border: 1px solid var(--primary-color);
+}
+
+.default_principal_button {
+  height: 4vh;
+  margin-bottom: 2vh;
+}
+
+.default_secondary_button {
+  width: 100%;
+  height: 4vh;
+}

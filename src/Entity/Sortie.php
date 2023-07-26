@@ -3,7 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\SortieRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=SortieRepository::class)
@@ -19,31 +22,52 @@ class Sortie
 
     /**
      * @ORM\Column(type="string", length=100)
+     *
+     * @Assert\NotBlank(message="Le nom de la sortie est obligatoire")
+     * @Assert\Length(
+     *     min=3,
+     *     minMessage="Veuillez renseigner 3 caractères minimum",
+     *     max=100,
+     *     maxMessage="Le nom de la sortie ne peut dépasser 100 caractères"
+     * )
      */
     private $nom;
 
     /**
      * @ORM\Column(type="datetime")
+     *
+     * @Assert\NotBlank(message="La date et l'heure sont obligatoires")
+     * @Assert\GreaterThan("today", message="La sortie doit au minimum avoir lieu demain ")
      */
     private $dateDebut;
 
     /**
      * @ORM\Column(type="integer")
+     *
+     * @Assert\NotBlank(message="La durée ne peut être vide")
+     * @Assert\GreaterThanOrEqual(15, message="La durée mimimale d'une sortie est de 15 minutes")
      */
     private $duree;
 
     /**
      * @ORM\Column(type="datetime")
+     *
+     * @Assert\NotBlank(message="La date limite d'inscription est obligatoire")
+     * @Assert\LessThanOrEqual(propertyPath="dateDebut", message="La date limite d'inscription doit être inférieure ou égale à la date de sortie")
      */
     private $dateLimiteInscription;
 
     /**
      * @ORM\Column(type="integer")
+     *
+     * @Assert\NotBlank(message="Veuillez indiquez un nombre maximum de participants")
+     * @Assert\LessThanOrEqual(500, message="Le nombre maximum de participants ne peut exéder 500 personnes")
      */
     private $nbInscritptionMax;
 
     /**
      * @ORM\Column(type="text")
+     *
      */
     private $description;
 
@@ -66,6 +90,40 @@ class Sortie
      * @ORM\Column(type="string", length=100, nullable=true)
      */
     private $modifiePar;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="sorties")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $campus;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Etat::class, inversedBy="sorties")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $etat;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Lieu::class, inversedBy="sorties")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $lieu;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Participant::class, inversedBy="sortiesOrganisateur")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $organisateur;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Participant::class, inversedBy="sortiesParticipant")
+     */
+    private $participants;
+
+    public function __construct()
+    {
+        $this->participants = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -188,6 +246,78 @@ class Sortie
     public function setModifiePar(?string $modifiePar): self
     {
         $this->modifiePar = $modifiePar;
+
+        return $this;
+    }
+
+    public function getCampus(): ?Campus
+    {
+        return $this->campus;
+    }
+
+    public function setCampus(?Campus $campus): self
+    {
+        $this->campus = $campus;
+
+        return $this;
+    }
+
+    public function getEtat(): ?Etat
+    {
+        return $this->etat;
+    }
+
+    public function setEtat(?Etat $etat): self
+    {
+        $this->etat = $etat;
+
+        return $this;
+    }
+
+    public function getLieu(): ?Lieu
+    {
+        return $this->lieu;
+    }
+
+    public function setLieu(?Lieu $lieu): self
+    {
+        $this->lieu = $lieu;
+
+        return $this;
+    }
+
+    public function getOrganisateur(): ?Participant
+    {
+        return $this->organisateur;
+    }
+
+    public function setOrganisateur(?Participant $organisateur): self
+    {
+        $this->organisateur = $organisateur;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Participant>
+     */
+    public function getParticipants(): Collection
+    {
+        return $this->participants;
+    }
+
+    public function addParticipant(Participant $participant): self
+    {
+        if (!$this->participants->contains($participant)) {
+            $this->participants[] = $participant;
+        }
+
+        return $this;
+    }
+
+    public function removeParticipant(Participant $participant): self
+    {
+        $this->participants->removeElement($participant);
 
         return $this;
     }
