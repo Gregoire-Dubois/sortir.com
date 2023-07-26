@@ -1,0 +1,205 @@
+.default_container{
+  width: 640px;
+  margin:calc((92vh - 58vh) / 2) auto;
+}
+.my_profil_form {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr 1.1fr 2.5fr;
+  grid-template-rows: repeat(8,4vh);
+  row-gap: 2vh;
+  column-gap: 1.5vw;
+  align-items: center;
+  width: 100%;
+  padding: 2.25vh 1vw 2.25vh 1vw;
+}
+
+.photo_profil_border{
+  grid-column: 1/3;
+  grid-row: 1/6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  border-radius: 5px;
+  background-color: white;
+}
+
+.photo_profil_border img {
+  height: 100%;
+  width: auto;
+}
+
+.default_principal_button {
+  grid-column: 1/3;
+  grid-row: 7;
+}
+
+.default_secondary_button {
+  grid-column: 1/3;
+  grid-row: 8;
+}
+
+/* Paramétrage des lignes et colonnes du formulaire */
+.column1 {
+  grid-column: 1/2;
+  display: flex;
+  align-items: center;
+}
+
+.column2 {
+  grid-column: 2/3;
+}
+
+.column3 {
+  grid-column: 3/4;
+  display: flex;
+  align-items: center;
+}
+
+.column4 {
+  grid-column: 4/5;
+}
+
+.row1 {
+  grid-row: 1;
+}
+
+.row2 {
+  grid-row: 2;
+}
+
+.row3 {
+  grid-row: 3;
+}
+
+.row4 {
+  grid-row: 4;
+}
+
+.row5 {
+  grid-row: 5;
+}
+
+.row6 {
+  grid-row: 6;
+}
+
+.row7 {
+  grid-row: 7;
+}
+
+.row8 {
+  grid-row: 8;
+}
+
+@media screen and (max-width: 768px) {
+
+  .header_menu_nav {
+    height: 20vh;
+  }
+
+  .user_menu_nav {
+    top: 0;
+  }
+
+}
+
+@media (max-width: 426px) {
+
+  .default_container {
+    width: 100vw;
+    margin: 4vh auto auto auto;
+  }
+
+  .profil_info {
+    grid-template-columns: 1.1fr 2.5fr;
+    grid-template-rows: repeat(16,4vh);
+  }
+
+  .photo_profil_border{
+    grid-column: 1/3;
+    grid-row: 1/6;
+    width: 94.5vw;
+    margin-left: 1.75vw;
+  }
+
+  .default_principal_button {
+    grid-row: 15;
+    width: 96vw;
+    height: 4vh;
+    margin-left: 0.75vw;
+  }
+
+  .default_secondary_button {
+    grid-row: 16;
+    width: 96vw;
+    height: 4vh;
+    margin-left: 0.75vw;
+  }
+
+  /* Paramétrage des lignes et colonnes du formulaire */
+  .column1.row6 {
+    grid-row: 6;
+    padding-left: 2vw;
+  }
+
+  .column2.row6 {
+    grid-row: 6;
+    padding-top: 0.5vh;
+    color: var(--defaut-backgroung);
+  }
+
+  .column3 {
+    grid-column: 1/2;
+    height: 100%;
+    padding-left: 2vw;
+  }
+
+  .column4 {
+    grid-column: 2/3;
+    height: 100%;
+    width: 55vw;
+    padding-left: 1.25vw;
+  }
+
+  .row1 {
+    grid-row: 7;
+    height: 4vh;
+  }
+
+  .row2 {
+    grid-row: 8;
+    height: 4vh;
+  }
+
+  .row3 {
+    grid-row: 9;
+    height: 4vh;
+  }
+
+  .row4 {
+    grid-row: 10;
+    height: 4vh;
+  }
+
+  .row5 {
+    grid-row: 11;
+    height: 4vh;
+  }
+
+  .row6 {
+    grid-row: 12;
+    height: 4vh;
+  }
+
+  .row7 {
+    grid-row: 13;
+    height: 4vh;
+  }
+
+  .row8 {
+    grid-row: 14;
+    height: 4vh;
+  }
+
+}

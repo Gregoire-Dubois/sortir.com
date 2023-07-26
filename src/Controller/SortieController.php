@@ -2,6 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Sortie;
+use App\Form\SortieType;
+use App\Repository\SortieRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,21 +24,32 @@ class SortieController extends AbstractController
 
     /**
      * @Route("/sorties/detail/{id}", name="sortie_detailSortie")
+     * @throws NonUniqueResultException
      */
-    public function detailSortie(int $id): Response
+    public function detailSortie(int $id, SortieRepository $sortieRepository): Response
     {
-        return $this->render('sortie/detail.html.twig', [
 
+        $sortie = $sortieRepository->findSortieByIdWithDetails($id);
+
+        if (!$sortie) {
+            throw $this->createNotFoundException('Sortie non trouvée.');
+        }
+
+        return $this->render('sortie/detail.html.twig', [
+            'sortie' => $sortie,
         ]);
+
     }
 
     /**
-     * @Route("/creation", name="sortie_creerSortie")
+     * @Route("/sorties/creation", name="sortie_creerSortie")
      */
     public function creerSortie(): Response
     {
-        return $this->render('sortie/creation.html.twig', [
-
+        $sortie = New Sortie();
+        $sortieType = $this->createForm(SortieType::class, $sortie);
+        return $this->render('sortie/test/creation.html.twig', [
+            'SortieType' => $sortieType->createView()
         ]);
     }
 
