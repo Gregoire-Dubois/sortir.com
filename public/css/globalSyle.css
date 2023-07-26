@@ -47,3 +47,263 @@ body {
 main{
   height: 88vh;
 }
+
+/* Container par défaut */
+.default_container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 1.5vh 0.25vw;
+  background-color: var(--defaut-backgroung);
+  border: 1px solid var(--tertiary-color);
+  border-radius: 10px;
+  box-shadow: var(--default-shadow);
+  color: white;
+  font-size: 2vh;
+}
+
+/* Titre des containers par défaut */
+h2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 5.5vh;
+  width: 100%;
+  background-color: var(--primary-color);
+  font-size: 3vh;
+  font-weight: bold;
+  text-shadow: 3px 3px rgba(1,31,57,0.99);
+}
+
+/* Tableau par défaut */
+.default_table_wrapper {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  background-color: var(--defaut-backgroung)
+}
+
+.default_table {
+  width: 100%;
+  table-layout: auto;
+  border-collapse: collapse;
+}
+
+.default_table th {
+  position: sticky;
+  top: 0;
+  height: 4vh;
+  padding: 0 1vh;
+  background-color: var(--secondary-color);
+  border-top: 1px solid var(--tertiary-color);
+  border-right: 1px solid var(--tertiary-color);
+}
+
+.default_table th:last-child {
+  border-right: none;
+}
+
+.default_table td {
+  white-space: nowrap;
+  padding: 0 1vh;
+  border-right: 1px solid var(--tertiary-color);
+}
+
+.default_table td:last-child {
+  border-right: none;
+}
+
+.default_table tr {
+  height: 4vh;
+  border-top: 1px solid var(--tertiary-color);
+  text-align: center;
+}
+
+.default_table tr:nth-child(even) {
+  background-color: var(--primary-color);
+}
+
+.default_table tr:nth-child(odd) {
+  background-color: var(--defaut-backgroung);
+}
+
+.default_table tr:last-child {
+  border-bottom: 1px solid var(--tertiary-color);
+}
+
+/* Popup par défaut */
+.default_popup_container {
+  display: none;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 320px;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  background-color: var(--defaut-backgroung);
+  border: 1px solid var(--tertiary-color);
+  border-radius: 10px;
+  box-shadow: var(--default-shadow);
+  color: white;
+  font-size: 2vh;
+}
+
+.default_popup_overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.75);
+  z-index: 9998;
+}
+
+/* Label par défaut */
+.default_label {
+  width: 100%;
+  height: 100%;
+  font-size: 2vh;
+  color: white;
+}
+
+/* Input par défaut */
+.default_input {
+  width: 100%;
+  height: 100%;
+  padding-left: 0.5vw;
+  font-size: 2vh;
+  color: var(--primary-color);
+  background-color: var(--tertiary-color);
+  border-radius: 5px;
+}
+
+.default_input::placeholder {
+  color: lightslategrey;
+  font-style: italic;
+}
+
+.default_input:focus {
+  border: 3px solid var(--secondary-color);
+}
+
+/* Select par défaut */
+.default_select {
+  width: 100%;
+  height: 100%;
+  padding-left: 0.3vw;
+  font-size: 2vh;
+  color: var(--primary-color);
+  background-color: var(--tertiary-color);
+  border-radius: 5px;
+}
+
+.default_select:focus {
+  border: 3px solid var(--secondary-color);
+}
+
+/* Span par défaut */
+.default_span {
+  width: 100%;
+  height: 100%;
+  padding-left: 0.5vw;
+  font-size: 2vh;
+  color: white;
+  background-color: var(--primary-color);
+  border-radius: 5px;
+}
+
+/* Input par défaut */
+.default_textarea {
+  width: 100%;
+  padding: 1vh 0.5vw;
+  font-size: 2vh;
+  color: var(--primary-color);
+  background-color: var(--tertiary-color);
+  border-radius: 5px;
+  resize: none;
+}
+
+.default_textarea:focus {
+  border: 3px solid var(--secondary-color);
+}
+
+/* Bouton par défaut */
+.default_principal_button {
+  height: 100%;
+  padding: 0 1vw;
+  background-color: var(--primary-color);
+  /*border: 1px solid var(--tertiary-color);*/
+  border-radius: 5px;
+  box-shadow: var(--default-button-shadow);
+  color: white;
+  font-size: 2.3vh;
+  transition: transform 0.3s;
+}
+
+.default_principal_button:active {
+  border-style: outset;
+  transform: scale(0.97);
+  box-shadow: var(--default-button-active-shadow);
+}
+
+.default_secondary_button {
+  height: 100%;
+  padding: 0 1vw;
+  background-color: var(--tertiary-color);
+  border-radius: 5px;
+  box-shadow: var(--default-button-shadow);
+  color: var(--primary-color);
+  font-size: 2.3vh;
+  font-style: italic;
+  transition: transform 0.3s;
+}
+
+.default_secondary_button:active {
+  border-style: outset;
+  transform: scale(0.97);
+  box-shadow: var(--default-button-active-shadow);
+}
+
+.default_tertiary_button {
+  height: 100%;
+  padding: 0 1vw;
+  background-color: var(--secondary-color);
+  border-radius: 5px;
+  box-shadow: var(--default-button-shadow);
+  color: white;
+  font-size: 2.3vh;
+  transition: transform 0.3s;
+}
+
+.default_tertiary_button:active {
+  border-style: outset;
+  transform: scale(0.97);
+  box-shadow: var(--default-button-active-shadow);
+}
+
+/* ScrollBar par défaut */
+::-webkit-scrollbar {
+  width: 0.75vw;
+}
+
+::-webkit-scrollbar-track {
+  background-color: var(--defaut-backgroung);
+  border: 1px solid var(--tertiary-color);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--primary-color);
+  border: 1px solid var(--tertiary-color);
+  border-radius: 5px;
+}
+
+@media screen and (max-width: 768px) {
+
+  ::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+
+}

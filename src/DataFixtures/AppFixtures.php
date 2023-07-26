@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Campus;
 use App\Entity\Participant;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -20,6 +21,17 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
+        $nomsCampus = ['SAINT HERBLAIN', 'CHARTRES DE BRETAGNE', 'LA ROCHE SUR YON'];
+
+        $campusArray = [];
+
+        foreach ($nomsCampus as $nomCampus){
+            $campus = new Campus();
+            $campus->setNom($nomCampus);
+            $manager->persist($campus);
+            $campusArray[] = $campus;
+        }
+
         $participant = new Participant();
         $participant->setNom('NomTest');
         $participant->setPrenom('prenomTest');
@@ -30,7 +42,7 @@ class AppFixtures extends Fixture
         $participant->setDateCreation(new \DateTimeImmutable());
         $participant->setPseudo('PseudoTest');
         $participant->setTelephone('0600010203');
-
+        $participant->setCampus($campusArray[0]);
         $manager->persist($participant);
 
         $faker = Faker\Factory::create('fr_FR');
@@ -48,7 +60,7 @@ class AppFixtures extends Fixture
             $participant->setDateCreation(new \DateTimeImmutable());
             $participant->setPseudo($participant->getPrenom().'_'.$participant->getNom());
             $participant->setTelephone($faker->phoneNumber());
-
+            $participant->setCampus($campusArray[array_rand($campusArray)]); //pour choisir aleatoirement dans campusArray
             $manager->persist($participant);
         }
 
