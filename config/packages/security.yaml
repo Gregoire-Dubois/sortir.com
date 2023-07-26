@@ -45,10 +45,13 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        - { path: ^/admin, roles: ROLE_ADMIN }
-        - { path: ^/utilisateur, roles: ROLE_USER }
-        - { path: ^/sortie, roles: ROLE_USER }
-        - { path: ^/lieu, roles: ROLE_USER }
+        - { path: ^/(?!login), roles: ROLE_USER }
+        - { path: ^/login$, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        #Priscillia: J'étais déconnectée automatiquement quand je cliquais sur Mon Profil, je n'ai pas trouvé pourquoi.
+        #- { path: ^/admin, roles: ROLE_ADMIN }
+        #- { path: ^/utilisateur, roles: ROLE_USER }
+        #- { path: ^/sortie, roles: ROLE_USER }
+        #- { path: ^/lieu, roles: ROLE_USER }
 
 
 

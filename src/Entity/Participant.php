@@ -75,7 +75,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     private $dateCreation;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="eleves")
+     * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="eleves", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $campus;
