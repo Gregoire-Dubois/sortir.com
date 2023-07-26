@@ -9,10 +9,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ParticipantRepository::class)
- * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
+ * @UniqueEntity(fields={"email"}, message="Il y a déjà un compte avec cet email !")
+ * @UniqueEntity(fields={"pseudo"}, message="Ce pseudo est déjà pris !")
  */
 class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -25,6 +27,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Assert\NotBlank(message="Vous devez renseigner votre email !")
      */
     private $email;
 
@@ -36,26 +39,31 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
+     * @Assert\NotBlank(message="Vous devez renseigner votre mot de passe !")
      */
     private $password;
 
     /**
      * @ORM\Column(type="string", length=100, unique=true)
+     * @Assert\NotBlank(message="Vous devez renseigner votre pseudo !")
      */
     private $pseudo;
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Assert\NotBlank(message="Vous devez renseigner votre nom !")
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Assert\NotBlank(message="Vous devez renseigner votre prénom !")
      */
     private $prenom;
 
     /**
      * @ORM\Column(type="string", length=20)
+     * @Assert\NotBlank(message="Vous devez renseigner votre téléphone !")
      */
     private $telephone;
 
