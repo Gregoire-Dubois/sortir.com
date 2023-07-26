@@ -66,8 +66,9 @@ class SortieType extends AbstractType
             ])*/
             ->add('ville', EntityType::class, [
                 'label' => 'Ville :',
-                'choice_label' => function ($VilleEtCp) {
-                return $VilleEtCp->getNomEtCp();
+                'class' => Ville::class,
+                'choice_label' => function ($VilleCP) {
+                return $VilleCP->getNom();
     },
                 'mapped' => false,
             ])
@@ -79,6 +80,7 @@ class SortieType extends AbstractType
         ;
     }
 
+    /*Bout de code qui ne sert pas car ne fonctionne pas
     private function getVillesChoices(): array
     {
         $villes = $this->entityManager->getRepository('App\Entity\Ville')->findAll();
@@ -89,6 +91,7 @@ class SortieType extends AbstractType
         }
         return $choices;
     }
+    */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
