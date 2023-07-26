@@ -14,6 +14,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\String\Slugger\SluggerInterface;
+
 class ParticipantController extends AbstractController
 {
     private $passwordHasher;
@@ -26,7 +28,12 @@ class ParticipantController extends AbstractController
      * @Route("/profil/{id}", name="utilisateur_afficherProfil")
      * @Method("GET")
      */
-    public function afficherProfil(int $id, ParticipantRepository $participantRepository, Request $request, EntityManagerInterface $entityManager): Response
+    public function afficherProfil(
+        int $id,
+        ParticipantRepository $participantRepository,
+        Request $request,
+        EntityManagerInterface $entityManager,
+        SluggerInterface $slugger): Response
     {
         $participant=$participantRepository->find($id);
 
@@ -42,6 +49,17 @@ class ParticipantController extends AbstractController
                 $participant->setPassword($this->passwordHasher->hashPassword($participant, $plainPassword));
             }
 
+            $file = $participantForm->get('photo')->getData();
+
+            if($file){
+                $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$file->guessExtension();
+
+                $file->move($this->getParameter('upload_photo'), $newFilename);
+            }
+            $participant->setPhoto($newFilename);
+
             $entityManager->persist($participant);
             $entityManager->flush();
 
@@ -55,7 +73,8 @@ class ParticipantController extends AbstractController
         }
 
         return $this->render('participant/afficher_profil.html.twig', [
-            'participantForm' => $participantForm->createView()
+            'participantForm' => $participantForm->createView(),
+            'participant'=>$participant,
         ]);
     }
 

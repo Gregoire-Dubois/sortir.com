@@ -48,6 +48,7 @@ class AppFixtures extends Fixture
         $participant->setPseudo('PseudoTest');
         $participant->setTelephone('0600010203');
         $participant->setCampus($campusArray[0]);
+        $participant->setPhoto('testupload-64c152eec147d.jpg');
         $manager->persist($participant);
 
         $faker = Faker\Factory::create('fr_FR');
@@ -65,6 +66,7 @@ class AppFixtures extends Fixture
             $participant->setPseudo($participant->getPrenom().'_'.$participant->getNom());
             $participant->setTelephone($faker->phoneNumber());
             $participant->setCampus($campusArray[array_rand($campusArray)]);
+            $participant->setPhoto('Photo_Profil_Defaut_Test.png');
             $manager->persist($participant);
         }
 
