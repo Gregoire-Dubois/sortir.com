@@ -58,10 +58,18 @@ class SortieType extends AbstractType
                 'class' => Campus::class,
                 'choice_label' => 'nom'
             ])
+            /*
             ->add('ville', ChoiceType::class, [
                 'label' => 'Ville :',
                 'choices' => $this->getVillesChoices(),
                 //'choice_label' => 'nom'
+            ])*/
+            ->add('ville', EntityType::class, [
+                'label' => 'Ville :',
+                'choice_label' => function ($VilleEtCp) {
+                return $VilleEtCp->getNomEtCp();
+    },
+                'mapped' => false,
             ])
             ->add('lieu', EntityType::class, [
                 'label' => 'Lieu :',
