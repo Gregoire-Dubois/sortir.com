@@ -325,7 +325,7 @@ class Sortie
 
     public function __toString()
     {
-        return $this->organisateur . $this->etat . $this->nom . $this->participants ;
+        return $this->organisateur . $this->etat . $this->nom . $this->participants . $this->nbInscritptionMax;
     }
 
 

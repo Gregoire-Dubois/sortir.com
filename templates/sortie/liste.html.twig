@@ -3,19 +3,46 @@
 {% block body %}
 
     <h1>liste des sorties</h1>
+<!--
 
-        <ul>
-            {% for sortie in sorties %}
-                <li>
-                    <strong>Nom :</strong> {{ sortie.nom }}<br>
-                    <strong>Date de début :</strong> {{ sortie.dateDebut|date('Y-m-d H:i:s') }}<br>
-                    <strong>Date limite d'inscription :</strong> {{ sortie.dateLimiteInscription|date('Y-m-d H:i:s') }}<br>
-                    <strong>Nom du participant :</strong> {{ sortie.organisateur }}<br>
-                    <strong>État :</strong> {{ sortie.etat.libelle }}<br>
-                </li>
-            {% endfor %}
+    <ul>
+           {% for sortie in sorties %}
+            <li>
+                <strong>Nom :</strong> {{ sortie.nom }}<br>
+                <strong>Date de début :</strong> {{ sortie.dateDebut|date('Y-m-d H:i:s') }}<br>
+                <strong>Date limite d'inscription :</strong> {{ sortie.dateLimiteInscription|date('Y-m-d H:i:s') }}<br>
+                <strong>Nom du participant :</strong> {{ sortie.organisateur }}<br>
+                <strong>État :</strong> {{ sortie.etat.libelle }}<br>
+            </li>
+       // {% endfor %}
 
-        </ul>
+    </ul>
+-->
+
+
+    <table>
+        {% for sortie in sorties %}
+
+        <tr>
+            <td>Nom de la sortie</td>
+            <td>Date de la sortie</td>
+            <td>Clôture</td>
+            <td>Inscrits / places</td>
+            <td>Organisateur</td>
+            <td>Etat</td>
+        </tr>
+
+        <tr>
+            <td>{{ sortie.nom }}</td>
+            <td>{{ sortie.dateDebut|date('d-m-Y') }}</td>
+            <td>{{ sortie.dateLimiteInscription|date('d-m-Y') }}</td>
+            <td>{{ sortie.nbInscritptionMax }}</td>
+            <td>{{ sortie.organisateur }}</td>
+            <td>{{ sortie.etat.libelle }}</td>
+        </tr>
+        {% endfor %}
+
+    </table>
 
 
 {% endblock %}

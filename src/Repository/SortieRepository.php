@@ -64,7 +64,7 @@ class SortieRepository extends ServiceEntityRepository
         $queryBuilder = $this->createQueryBuilder('s');
         $queryBuilder->innerJoin('s.etat', 'e'); // Utilisez l'alias 's' pour la jointure avec 'etat'
         $queryBuilder->innerJoin('s.organisateur', 'p'); // Utilisez l'alias 's' pour la jointure avec 'organisateur'
-        $queryBuilder->where('s.dateLimiteInscription > :currentDate'); // Utilisez 's' pour faire référence à la colonne "dateLimiteInscription"
+        $queryBuilder->where('s.dateLimiteInscription < :currentDate'); // Utilisez 's' pour faire référence à la colonne "dateLimiteInscription"
         $queryBuilder->setParameter('currentDate', new \DateTime(), \Doctrine\DBAL\Types\Types::DATETIME_MUTABLE);        $query = $queryBuilder->getQuery();
         $query->setMaxResults(10);
         $results = $query->getResult();
