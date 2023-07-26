@@ -18,8 +18,8 @@
     <!-- Menu accessible aux connectés -->
     <ul class="user_menu_nav">
         <li><a href="#">Accueil</a></li>
-        <li><a href="#">Mon profil</a></li>
-        <li><a href="#">Se déconnecter</a></li>
+        <li><a href="{{ path('utilisateur_afficherProfil', {'id': 12}) }}">Mon profil</a></li>
+        <li><a href="{{ path('app_logout') }}">Se déconnecter</a></li>
     </ul>
 </nav>
 <!-- Menu hamburger pour les tablettes et smartphones -->
