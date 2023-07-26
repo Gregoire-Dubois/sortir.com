@@ -7,11 +7,13 @@ use App\Entity\Participant;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -56,8 +58,11 @@ class ParticipantType extends AbstractType
                 'label'=>'Campus',
 
             ])
-            ->add('photo',null,[
-                'label'=>'Photo'
+            ->add('photo',FileType::class,[
+                'label'=>'Photo',
+                'mapped' => false,
+                'constraints' => [ new Image( ["mimeTypesMessage" => "Le format de fichier n'est pas autorisé."])
+    ]
             ])
         ;
     }
