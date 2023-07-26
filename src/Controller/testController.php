@@ -14,7 +14,11 @@ class testController extends AbstractController
     public function testHome(){
 
         echo "hello tout le monde";
-        die();
+/*
+        return $this->render('participant/afficher_profil.html.twig', [
+
+        ]);
+*/
     }
 
     /**
