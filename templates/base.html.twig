@@ -15,16 +15,20 @@
         {% endblock %}
     </head>
     <body>
+
+    {% block header %}
 	<header>
-		{% include('inc/nav.html.twig') %}
+        {% include('inc/nav.html.twig') %}
     </header>
+    {% endblock %}
+
     <main>
 		{% block body %}{% endblock %}
     </main>
+
     <footer>
 		{% include('inc/footer.html.twig') %}
     </footer>
-
 
     </body>
 </html>
