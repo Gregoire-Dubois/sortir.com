@@ -39,7 +39,6 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
-     * @Assert\NotBlank(message="Vous devez renseigner votre mot de passe !")
      */
     private $password;
 
