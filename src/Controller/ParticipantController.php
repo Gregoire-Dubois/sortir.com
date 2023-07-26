@@ -9,6 +9,7 @@ use App\Form\ParticipantType;
 use App\Repository\ParticipantRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -56,7 +57,14 @@ class ParticipantController extends AbstractController
                 $safeFilename = $slugger->slug($originalFilename);
                 $newFilename = $safeFilename.'-'.uniqid().'.'.$file->guessExtension();
 
-                $file->move($this->getParameter('upload_photo'), $newFilename);
+                try
+                {
+                    $file->move($this->getParameter('upload_photo'), $newFilename);
+                }
+                catch (FileException $e)
+                {
+                    //TODO: Message d'erreur?
+                }
             }
             $participant->setPhoto($newFilename);
 

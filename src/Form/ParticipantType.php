@@ -61,7 +61,18 @@ class ParticipantType extends AbstractType
             ->add('photo',FileType::class,[
                 'label'=>'Photo',
                 'mapped' => false,
-                'constraints' => [ new Image( ["mimeTypesMessage" => "Le format de fichier n'est pas autorisé."])
+                'constraints' => [ new Image( [
+                    'mimeTypes' => [
+                        'image/jpeg',
+                        'image/jpg',
+                        'image/gif',
+                        'image/png',
+                    ],
+                    'mimeTypesMessage' => 'Veuillez télécharger une image au format JPG, PNG ou GIF.',
+                    'maxSize' => '8M',
+                    'maxSizeMessage' => 'La taille de la photo ne doit pas dépasser 8 Mo',
+
+        ])
     ]
             ])
         ;
