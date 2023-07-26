@@ -68,6 +68,7 @@ class Sortie
     /**
      * @ORM\Column(type="text")
      *
+     * Assert\GreaterThanOrEqual(1, message="La sortie doit avoir un participant minimum")
      */
     private $description;
 
