@@ -43,11 +43,12 @@ class ParticipantType extends AbstractType
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'Les champs du mot de passe doivent correspondre.',
+                'options' => ['attr' => ['class' => 'password-field']],
                 'required' => true,
                 'first_options'  => ['label' => 'Mot de passe'],
                 'second_options' => ['label' => 'Confirmer le mot de passe'],
                 'attr' => ['autocomplete' => 'new-password'],
-                'mapped' => false,
+                'mapped' => true,
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Mot de passe obligatoire',
