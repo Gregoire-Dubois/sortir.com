@@ -21,7 +21,7 @@
             <span class="column2-4 row2 default_span" id="event_date_begin">{{ sortie.dateDebut|date('Y-m-d H:i') }}</span>
 
             <label class="column1 row3 default_label">Date limite d'inscription :</label>
-            <span class="column2-4 row3 default_span" id="event_deadline_registration">{{ sortie.dateLimiteInscription|date('Y-m-d H:i') }}</span>
+            <span class="column2-4 row3 default_span" id="event_deadline_registration">{{ sortie.dateLimiteInscription|date('Y-m-d') }}</span>
 
             <label class="column1 row4 default_label">Nombre de places :</label>
             <span class="column2 row4 default_span" id="event_number_places">{{ sortie.nbInscritptionMax }}</span>
