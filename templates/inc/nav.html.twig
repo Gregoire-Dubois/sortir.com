@@ -10,15 +10,16 @@
 <!-- Menu global -->
 <nav class="header_menu_nav">
     <!-- Menu réservé aux administrateurs -->
+    {% if is_granted("ROLE_ADMIN")  %}
     <ul class="admin_menu_nav">
         <li><p class="administrator_li">Administrateur</p></li>
         <li><a href="#" id="administrator_cities_campus">Villes & Campus</a></li>
-        <li><a href="#" id="administrator_users">Utilisateurs</a></li>
+        <li><a href="{{ path('app_register') }}" id="administrator_users">Utilisateurs</a></li>
     </ul>
-
+    {% endif %}
     <!-- Menu accessible aux connectés -->
     <ul class="user_menu_nav">
-        <li><a href="#">Accueil</a></li>
+        <li><a href="{{ path('sortie_listeSortie')}}">Accueil</a></li>
         <li><a href="{{ path('participant_afficherSonProfil')}}">Mon profil</a></li>
         <li><a href="{{ path('app_logout') }}">Se déconnecter</a></li>
     </ul>

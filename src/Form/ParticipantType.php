@@ -50,6 +50,14 @@ class ParticipantType extends AbstractType
                 'second_options' => ['label' => 'Confirmer le mot de passe'],
                 'mapped' => false,
                 'required' => false,
+                'constraints' => [
+                    new Length([
+                        'min' => 6,
+                        'minMessage' => 'Le mot de passe doit contenir au minimum {{ limit }} caractères.',
+                        // max length allowed by Symfony for security reasons
+                        'max' => 4096,
+                    ]),
+                ],
             ])
 
             ->add('campus', EntityType::class, [
