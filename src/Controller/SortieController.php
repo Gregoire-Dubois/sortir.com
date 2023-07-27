@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Sortie;
 use App\Form\SortieType;
+use App\Repository\EtatRepository;
 use App\Repository\VilleRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -37,7 +38,7 @@ class SortieController extends AbstractController
     /**
      * @Route("/sorties/creation", name="sortie_creerSortie")
      */
-    public function creerSortie(Request $request, EntityManagerInterface $em): Response
+    public function creerSortie(Request $request, EtatRepository $etatRepository, EntityManagerInterface $em): Response
     {
         $sortie = New Sortie();
         //On fixe une date de création
@@ -54,7 +55,7 @@ class SortieController extends AbstractController
 
         if ($sortieType-> isSubmitted() && $sortieType->isValid()){
             //On passe la sortie à l'état Créée
-            $sortie->setEtat(1);
+            $sortie->setEtat($etatRepository->findOneBy(['libelle' => 'Créée']));
 
             //On enregistre le créateur (utilisateur connecté)
             $sortie->setOrganisateur($this->getUser());

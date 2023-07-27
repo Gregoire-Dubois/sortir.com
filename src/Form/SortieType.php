@@ -8,6 +8,7 @@ use App\Entity\Sortie;
 use App\Entity\Ville;
 use App\Repository\LieuRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Form\AbstractType;
@@ -23,11 +24,6 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class SortieType extends AbstractType
 {
-    private LieuRepository $lieuRepository;
-
-    public function __construct(LieuRepository $lieuRepository){
-        $this->lieuRepository = $lieuRepository;
-    }
 
     public function buildForm(FormBuilderInterface $builder, array $options) : void
     {
@@ -72,14 +68,25 @@ class SortieType extends AbstractType
                 'placeholder' => 'Sélectionner une ville',
                 'class' => Ville::class,
                 'choice_label' => 'nom',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('v')
+                        ->orderBy('v.nom', 'ASC');
+                },
                 'mapped' => false,
                 'required' => false
             ])
+
             ->add('lieu', EntityType::class, [
                 'label' => 'Lieu :',
                 'placeholder' => 'Sélectionner un lieu',
                 'class' => Lieu::class,
-                'choice_label' => 'nom',
+                'choice_label' => function($lieu) {
+                return $lieu->getNom() . " (" . $lieu->getVille() . ")";
+                },
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('l')
+                        ->orderBy('l.nom', 'ASC');
+                },
             ]);
     }
 
