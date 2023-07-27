@@ -37,7 +37,6 @@ class SortiesFilterType extends AbstractType
                 'class' => Campus::class,
                 'choice_label' => 'nom',
                 'required' => false,
-
             ])
 
             ->add('organized', CheckboxType::class, [
@@ -53,7 +52,7 @@ class SortiesFilterType extends AbstractType
                 'required' => false
             ])
             ->add('over', CheckboxType::class, [
-                'label' => "Sorties passée",
+                'label' => "Sorties passées",
                 'required' => false
             ])
             ->add('open', CheckboxType::class, [
