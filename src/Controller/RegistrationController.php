@@ -21,7 +21,7 @@ class RegistrationController extends AbstractController
      * @Route("/admin/inscription", name="app_register")
      * @IsGranted("ROLE_ADMIN", message="Vous n'avez pas les droits d'accès !")
      */
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, AppAuthentifcatorAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
+    public function creerParticipant(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, AppAuthentifcatorAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
     {
         $user = new Participant();
 

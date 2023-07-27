@@ -7,9 +7,7 @@ use App\Form\SortiesFilterType;
 use App\Form\SortieType;
 use App\Repository\SortieRepository;
 use Doctrine\ORM\NonUniqueResultException;
-use phpDocumentor\Reflection\Types\This;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -18,17 +16,12 @@ class SortieController extends AbstractController
     /**
      * @Route("/", name="sortie_listeSortie")
      */
-    public function listeSortie(Request $request, SortieRepository $sortieRepository): Response
+    public function listeSortie(SortieRepository $sortieRepository): Response
     {
-        $sortie = new Sortie();
 
         $sortieForm = $this->createForm(SortiesFilterType::class);
 
-
-
         $sortiesAll = $sortieRepository-> selectAllSorties();
-
-
 
         return $this->render('sortie/liste.html.twig', [
             'sorties' => $sortiesAll,
