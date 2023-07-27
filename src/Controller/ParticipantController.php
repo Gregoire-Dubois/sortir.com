@@ -6,15 +6,14 @@ namespace App\Controller;
 use App\Entity\Participant;
 use App\Form\ParticipantType;
 
-use App\Repository\ParticipantRepository;
+
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
-
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 class ParticipantController extends AbstractController
@@ -26,17 +25,14 @@ class ParticipantController extends AbstractController
         $this->passwordHasher=$passwordHasher;
     }
     /**
-     * @Route("/profil/{id}", name="utilisateur_afficherProfil")
-     * @Method("GET")
+     * @Route("/profil", name="participant_afficherSonProfil")
      */
-    public function afficherProfil(
-        int $id,
-        ParticipantRepository $participantRepository,
+    public function afficherSonProfil(
         Request $request,
         EntityManagerInterface $entityManager,
         SluggerInterface $slugger): Response
     {
-        $participant=$participantRepository->find($id);
+        $participant=$this->getUser();
 
         $participantForm = $this->createForm(ParticipantType::class, $participant);
         $participantForm->handleRequest($request);
@@ -57,7 +53,14 @@ class ParticipantController extends AbstractController
                 $safeFilename = $slugger->slug($originalFilename);
                 $newFilename = $safeFilename.'-'.uniqid().'.'.$file->guessExtension();
 
-                $file->move($this->getParameter('upload_photo'), $newFilename);
+                try
+                {
+                    $file->move($this->getParameter('upload_photo'), $newFilename);
+                }
+                catch (FileException $e)
+                {
+                    //TODO: Message d'erreur?
+                }
             }
             $participant->setPhoto($newFilename);
 
@@ -65,7 +68,7 @@ class ParticipantController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash('success', 'Votre profil a bien été modifié!');
-            return $this->redirectToRoute("utilisateur_afficherProfil", [
+            return $this->redirectToRoute("participant_afficherSonProfil", [
                 'id'=>$participant->getId()
             ]);
         }else
@@ -80,12 +83,18 @@ class ParticipantController extends AbstractController
     }
 
     /**
-     * @Route("/profil/modification", name="utilisateur_modifierProfil")
+     * @Route("/profil/{id}", name="participant_afficherProfil", requirements={"id"="\d+"})
      */
-    public function modifierProfil(int $id): Response
+    public function afficherProfil(Participant $participant): Response
     {
-        return $this->render('participant/modifier_profil.html.twig', [
+        if($participant === $this->getUser()){
+            return $this->redirectToRoute('participant_profil');
+        }else{
+            return $this->render('participant/afficher_profil.html.twig', [
+                'participant'=>$participant,
+            ]);
 
-        ]);
+        }
+
     }
 }
