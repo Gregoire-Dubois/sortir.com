@@ -19,7 +19,7 @@ class SortieController extends AbstractController
      */
     public function listeSortie(Request $request, SortieRepository $sortieRepository): Response
     {
-        $sortie = new Sortie();
+        //$sortie = new Sortie();
 
         $sortieForm = $this->createForm(SortiesFilterType::class);
 
@@ -28,6 +28,8 @@ class SortieController extends AbstractController
         if ($sortieForm->isSubmitted())
         {
             dump($sortieForm);
+            #TODO filtrer les choix de l'utilisateur afin de lui retourner les requetes correspondantes
+
         }
 
         $sortiesAll = $sortieRepository-> selectAllSorties();
