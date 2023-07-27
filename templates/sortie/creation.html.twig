@@ -1,10 +1,36 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
+    {{ parent() }} | Créer une sortie
+{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/creerUneSortie.css') }}">
 {% endblock %}
 
 {% block body %}
+<section class="default_container">
+    <h2>Créer une sortie</h2>
+    <!-- Formulaire de création d'une sortie-->
 
+    {{ form_start(SortieType) }}
+    {{ form_row(SortieType.nom) }}
+    {{ form_row(SortieType.dateDebut) }}
+    {{ form_row(SortieType.dateLimiteInscription) }}
+    {{ form_row(SortieType.nbInscritptionMax) }}
+    {{ form_row(SortieType.duree) }}
+    {{ form_row(SortieType.description) }}
+    {{ form_row(SortieType.campus) }}
+    {{ form_row(SortieType.ville) }}
+    {{ form_row(SortieType.lieu) }}
+    <button type="submit">Envoyer</button>
+    {{ form_end(SortieType, {'render_rest': false}) }}
+<!--
+</section>
+
+    <script
+        src="{{  asset('js/formSortieLieuParVille.js') }}">
+        </script>
+-->
 {% endblock %}
-
