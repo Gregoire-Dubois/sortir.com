@@ -4,6 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Sortie;
 use App\Form\SortieType;
+use App\Repository\VilleRepository;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
+use \Symfony\Component\HttpFoundation\Request as Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -33,11 +37,34 @@ class SortieController extends AbstractController
     /**
      * @Route("/sorties/creation", name="sortie_creerSortie")
      */
-    public function creerSortie(): Response
+    public function creerSortie(Request $request, EntityManagerInterface $em): Response
     {
         $sortie = New Sortie();
+        //On fixe une date de création
+        $sortie->setDateCreation(new \DateTime());
+        $sortie->setDateModification(new \DateTime());
+
+        //On paramètre des propositions de date cohérentes dans le formulaire
+        $sortie->setDateDebut((new \DateTimeImmutable())->setTime(21,0));
+        $sortie->setDateLimiteInscription($sortie->getDateDebut()->sub(new \DateInterval("PT8H")));
+
         $sortieType = $this->createForm(SortieType::class, $sortie);
-        return $this->render('sortie/test/creation.html.twig', [
+
+        $sortieType->handleRequest($request);
+
+        if ($sortieType-> isSubmitted() && $sortieType->isValid()){
+            //On passe la sortie à l'état Créée
+            $sortie->setEtat(1);
+
+            //On enregistre le créateur (utilisateur connecté)
+            $sortie->setOrganisateur($this->getUser());
+            $sortie->setModifiePar($this->getUser());
+            $em->persist($sortie);
+            $em->flush();
+            $this->addFlash('success', 'La sortie a bien été enregistrée');
+            //return $this->redirectToRoute('sortie_listeSortie');
+        }
+        return $this->render('sortie/creation.html.twig', [
             'SortieType' => $sortieType->createView()
         ]);
     }
