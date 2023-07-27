@@ -95,6 +95,7 @@ class ParticipantController extends AbstractController
             return $this->render('participant/afficher_profil.html.twig', [
                 'participant'=>$participant,
             ]);
+
         }
 
     }
