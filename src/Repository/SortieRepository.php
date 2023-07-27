@@ -77,8 +77,28 @@ class SortieRepository extends ServiceEntityRepository
 
 
 /*
- *    $dql = 'SELECT s.nom, s.dateDebut, s.dateLimiteInscription, p.nom AS participantNom, e.libelle AS etatLibelle
-                FROM App\Entity\Sortie s
-                INNER JOIN s.etat e
-                INNER JOIN s.organisateur p';
+ requete pour sorties passées
+
+SELECT sortie.nom, sortie.date_debut, sortie.date_limite_inscription,sortie.date_debut ,participant.nom, etat.libelle
+FROM sortie
+INNER JOIN etat ON sortie.etat_id = etat.id
+INNER JOIN participant ON sortie.organisateur_id = participant.id
+WHERE sortie.date_debut < CURDATE();
+
+requete selon le campus
+
+SELECT sortie.nom, sortie.date_debut, sortie.date_limite_inscription,sortie.date_debut ,participant.nom, etat.libelle, campus.nom
+FROM sortie
+INNER JOIN etat ON sortie.etat_id = etat.id
+INNER JOIN participant ON sortie.organisateur_id = participant.id
+INNER JOIN campus ON sortie.campus_id = campus.id
+WHERE campus.nom ='SAINT HERBLAIN';
+
+requete entre 2 dates
+
+SELECT sortie.nom, sortie.date_debut, sortie.date_limite_inscription,sortie.date_debut ,participant.nom, etat.libelle
+FROM sortie
+INNER JOIN etat ON sortie.etat_id = etat.id
+INNER JOIN participant ON sortie.organisateur_id = participant.id
+WHERE sortie.date_debut >= '2023-06-01' AND sortie.date_debut <= '2023-06-28';
  */
