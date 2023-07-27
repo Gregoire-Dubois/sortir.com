@@ -27,7 +27,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
-     * @Assert\NotBlank(message="Vous devez renseigner votre email !")
+     * @Assert\NotBlank(message="Veuillez renseigner l'email.")
      */
     private $email;
 
@@ -39,31 +39,30 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
-     * @Assert\NotBlank(message="Vous devez renseigner votre mot de passe !")
      */
     private $password;
 
     /**
      * @ORM\Column(type="string", length=100, unique=true)
-     * @Assert\NotBlank(message="Vous devez renseigner votre pseudo !")
+     * @Assert\NotBlank(message="Veuillez renseigner le pseudo.")
      */
     private $pseudo;
 
     /**
      * @ORM\Column(type="string", length=100)
-     * @Assert\NotBlank(message="Vous devez renseigner votre nom !")
+     * @Assert\NotBlank(message="Veuillez renseigner le nom.")
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=100)
-     * @Assert\NotBlank(message="Vous devez renseigner votre prénom !")
+     * @Assert\NotBlank(message="Veuillez renseigner le prénom.")
      */
     private $prenom;
 
     /**
      * @ORM\Column(type="string", length=20)
-     * @Assert\NotBlank(message="Vous devez renseigner votre téléphone !")
+     * @Assert\NotBlank(message="Veuillez renseigner le numéro de téléphone.")
      */
     private $telephone;
 
@@ -83,7 +82,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     private $dateCreation;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="eleves", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="etudiants", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $campus;
