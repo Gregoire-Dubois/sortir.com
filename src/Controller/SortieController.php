@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Sortie;
+use App\Form\SortiesFilterType;
 use App\Form\SortieType;
 use App\Repository\SortieRepository;
 use Doctrine\ORM\NonUniqueResultException;
@@ -17,12 +18,17 @@ class SortieController extends AbstractController
      */
     public function listeSortie(SortieRepository $sortieRepository): Response
     {
-        $sorties = $sortieRepository-> selectAllSorties();
+
+        $sortieForm = $this->createForm(SortiesFilterType::class);
+
+        $sortiesAll = $sortieRepository-> selectAllSorties();
 
         return $this->render('sortie/liste.html.twig', [
-            'sorties' => $sorties
+            'sorties' => $sortiesAll,
+            'sortieForm' => $sortieForm->createView(),
 
         ]);
+
     }
 
     /**
