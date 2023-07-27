@@ -47,7 +47,13 @@ Inscriptiion fichier CSV | {{ parent() }}
             </tbody>
         </table>
     {% else %}
-        <div class='alert alert-danger'>Aucun participant importé.</div>
+        {{ form_start(form, {'attr':{'novalidate':'novalidate'}}) }}
+
+        {{ form_widget(form) }}
+
+        <button type="submit" class="btn">Importer</button>
+
+        {{ form_end(form) }}
     {% endif %}
 
     <a href="{{ path('sortie_listeSortie') }}"><button>Retour à la page d'accueil</button></a>
