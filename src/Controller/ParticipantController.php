@@ -174,8 +174,10 @@ class ParticipantController extends AbstractController
                     $participant->setPhoto($aLine[9]);
                     $campus = $campusRepository->find($aLine[11]);
                     $participant->setCampus($campus);
-                    dump($aLine[10]);
-                    $participant->setDateCreation(new \DateTime($aLine[10]));
+                    $dateFormat = 'd/m/Y H:i';
+                    $date = \DateTime::createFromFormat($dateFormat,$aLine[10] );
+                    dump($date);
+                    $participant->setDateCreation($date);
                     // On persiste l'objet courant
                     $entityManager->persist($participant);
 
