@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Sortie;
-use App\Form\SearchSortie;
 use App\Form\SortiesFilterType;
 use App\Form\SortieType;
 use App\Repository\SortieRepository;
@@ -20,17 +19,20 @@ class SortieController extends AbstractController
      */
     public function listeSortie(Request $request, SortieRepository $sortieRepository): Response
     {
-        $sortie = new SearchSortie();
-        $sortieForm = $this->createForm(SortiesFilterType::class, $sortie);
+        $sortie = new Sortie();
+
+        $sortieForm = $this->createForm(SortiesFilterType::class);
 
         $sortieForm -> handleRequest($request);
 
-        if ($sortieForm -> isSubmitted()){
-            dump($sortie);
+        if ($sortieForm->isSubmitted())
+        {
+            dump($sortieForm);
         }
 
-
         $sortiesAll = $sortieRepository-> selectAllSorties();
+
+
 
         return $this->render('sortie/liste.html.twig', [
             'sorties' => $sortiesAll,

@@ -11,7 +11,6 @@ use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-
 class SortiesFilterType extends AbstractType
 {
 
@@ -67,13 +66,8 @@ class SortiesFilterType extends AbstractType
         $resolver->setDefaults([
             'data_class' => SearchSortie::class,
             'method' => 'GET',
-            'csrf_protection' => false,
+            'csrf_protection' => true,
         ]);
     }
-
-
-
-
-
 
 }
