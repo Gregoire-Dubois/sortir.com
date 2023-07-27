@@ -6,11 +6,14 @@ use App\Entity\Campus;
 use App\Entity\Participant;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -24,41 +27,29 @@ class ParticipantType extends AbstractType
                 'empty_data' => '',
 
             ])
-            ->add('prenom',null,[
+            ->add('prenom',TextType::class,[
                 'label'=>'Prénom',
                 'empty_data' => '',
             ])
-            ->add('nom',null,[
+            ->add('nom',TextType::class,[
                 'label'=>'Nom',
                 'empty_data' => '',
             ])
-            ->add('telephone',null,[
+            ->add('telephone',TextType::class,[
                 'label'=>'Téléphone',
                 'empty_data' => '',
             ])
-            ->add('email',null,[
+            ->add('email',EmailType::class,[
                 'label'=>'Email',
                 'empty_data' => '',
             ])
-            ->add('password', RepeatedType::class, [
+            ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'Les champs du mot de passe doivent correspondre.',
-                'required' => true,
                 'first_options'  => ['label' => 'Mot de passe'],
                 'second_options' => ['label' => 'Confirmer le mot de passe'],
-                'attr' => ['autocomplete' => 'new-password'],
                 'mapped' => false,
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Mot de passe obligatoire',
-                    ]),
-                    new Length([
-                        'min' => 6,
-                        'minMessage' => 'Le mot de passe doit avoir une longueur minimum de 6 caractères.',
-                        // max length allowed by Symfony for security reasons
-                        'max' => 4096,
-                    ]),
-                ],
+                'required' => false,
             ])
 
             ->add('campus', EntityType::class, [
@@ -67,8 +58,11 @@ class ParticipantType extends AbstractType
                 'label'=>'Campus',
 
             ])
-            ->add('photo',null,[
-                'label'=>'Photo'
+            ->add('photo',FileType::class,[
+                'label'=>'Photo',
+                'mapped' => false,
+                'constraints' => [ new Image( ["mimeTypesMessage" => "Le format de fichier n'est pas autorisé."])
+    ]
             ])
         ;
     }
