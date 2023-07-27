@@ -59,7 +59,7 @@ class Etat
         return $this->sorties;
     }
 
-    public function addSorty(Sortie $sortie): self
+    public function addSortie(Sortie $sortie): self
     {
         if (!$this->sorties->contains($sortie)) {
             $this->sorties[] = $sortie;
@@ -69,7 +69,7 @@ class Etat
         return $this;
     }
 
-    public function removeSorty(Sortie $sortie): self
+    public function removeSortie(Sortie $sortie): self
     {
         if ($this->sorties->removeElement($sortie)) {
             // set the owning side to null (unless already changed)

@@ -323,10 +323,13 @@ class Sortie
         return $this;
     }
 
-    public function __toString()
+    /**
+     * Calcule et retourne la date de fin en ajoutant la durée à la date de début.
+     */
+    public function getDateFin(): \DateTime
     {
-        return $this->organisateur . $this->etat . $this->nom . $this->participants . $this->nbInscritptionMax;
+        $dateFin = clone $this->dateDebut;
+        $dateFin->modify('+' . $this->duree . ' minutes');
+        return $dateFin;
     }
-
-
 }
