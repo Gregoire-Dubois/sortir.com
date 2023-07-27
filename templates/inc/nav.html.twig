@@ -15,10 +15,11 @@
         <li><a href="#" id="administrator_cities_campus">Villes & Campus</a></li>
         <li><a href="#" id="administrator_users">Utilisateurs</a></li>
     </ul>
+
     <!-- Menu accessible aux connectés -->
     <ul class="user_menu_nav">
         <li><a href="#">Accueil</a></li>
-        <li><a href="{{ path('utilisateur_afficherProfil', {'id': app.user.id}) }}">Mon profil</a></li>
+        <li><a href="{{ path('participant_afficherSonProfil')}}">Mon profil</a></li>
         <li><a href="{{ path('app_logout') }}">Se déconnecter</a></li>
     </ul>
 </nav>
