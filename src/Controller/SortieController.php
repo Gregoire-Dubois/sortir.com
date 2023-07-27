@@ -14,8 +14,7 @@ class SortieController extends AbstractController
 {
     /**
      * @Route("/sorties", name="sortie_listeSortie")
-     *
-    //
+     */
     public function listeSortie(SortieRepository $sortieRepository): Response
     {
         $sorties = $sortieRepository-> selectAllSorties();
