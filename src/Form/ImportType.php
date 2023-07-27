@@ -18,16 +18,18 @@ class ImportType extends AbstractType
             ->add('file', FileType::class, [
                 'label' => 'Fichier CSV',
                 'mapped' => false,
-              /*  'constraints' => [
+                'constraints' => [
                     new File([
                         'mimeTypes' => [
                             'text/csv',
+                            'application/vnd.ms-excel',
+                            'text/plain',
                         ],
                         'mimeTypesMessage' => 'Veuillez télécharger un fichier au format CSV.',
                         'maxSize' => '1M',
-                        'maxSizeMessage' => 'La taille de la photo ne doit pas dépasser 1 Mo',
+                        'maxSizeMessage' => 'La taille du fichier ne doit pas dépasser 1 Mo.',
                     ]),
-                ],*/
+                ],
             ]);
     }
 
