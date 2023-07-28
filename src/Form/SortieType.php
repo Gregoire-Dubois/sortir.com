@@ -75,7 +75,7 @@ class SortieType extends AbstractType
                 'mapped' => false,
                 'required' => false
             ])
-
+/*
             ->add('lieu', EntityType::class, [
                 'label' => 'Lieu :',
                 'placeholder' => 'Sélectionner un lieu',
@@ -87,7 +87,38 @@ class SortieType extends AbstractType
                     return $er->createQueryBuilder('l')
                         ->orderBy('l.nom', 'ASC');
                 },
-            ]);
+            ])
+*/
+                ->add('lieu', EntityType::class, [
+                    'label' => 'Lieu :',
+                    'placeholder' => 'Sélectionner un lieu',
+                    'class' => Lieu::class,
+                    'choice_label' => 'nom',
+])
+
+                ->add('Valider', SubmitType::class);
+
+        $formModifier = function (FormInterface $form, Ville $ville = null) {
+            $lieux = $ville === null ? [] : $ville->getLieux();
+
+            $form->add('lieu', EntityType::class, [
+                    'class' => Lieu::class,
+                    'choice_label' => 'nom',
+                    'disabled' => $ville === null,
+                    'placeholder' => 'Sélectionnez un lieu',
+                    'choices' => $lieux
+                ]
+            );
+        };
+
+        $builder->get('ville')->addEventListener(
+            FormEvents::POST_SUBMIT,
+            function (FormEvent $event) use ($formModifier) {
+                $ville = $event->getForm()->getData();
+                $parent = $event->getForm()->getParent();
+                $formModifier($parent, $ville);
+            }
+        );
     }
 
 
