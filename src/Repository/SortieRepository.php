@@ -190,6 +190,9 @@ INNER JOIN participant ON sortie.organisateur_id = participant.id
 INNER JOIN campus ON sortie.campus_id = campus.id
 WHERE campus.nom ='SAINT HERBLAIN';
 
+
+
+
 requete entre 2 dates
 
 SELECT sortie.nom, sortie.date_debut, sortie.date_limite_inscription,sortie.date_debut ,participant.nom, etat.libelle
