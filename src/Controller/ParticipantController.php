@@ -78,7 +78,7 @@ class ParticipantController extends AbstractController
             $entityManager->refresh($participant);
         }
 
-        return $this->render('participant/afficher_profil.html.twig', [
+        return $this->render('participant/modifier_profil.html.twig', [
             'participantForm' => $participantForm->createView(),
             'participant'=>$participant,
         ]);
