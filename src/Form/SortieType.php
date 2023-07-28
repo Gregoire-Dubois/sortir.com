@@ -75,28 +75,28 @@ class SortieType extends AbstractType
                 'mapped' => false,
                 'required' => false
             ])
-/*
+            /*
+                        ->add('lieu', EntityType::class, [
+                            'label' => 'Lieu :',
+                            'placeholder' => 'Sélectionner un lieu',
+                            'class' => Lieu::class,
+                            'choice_label' => function($lieu) {
+                            return $lieu->getNom() . " (" . $lieu->getVille() . ")";
+                            },
+                            'query_builder' => function (EntityRepository $er) {
+                                return $er->createQueryBuilder('l')
+                                    ->orderBy('l.nom', 'ASC');
+                            },
+                        ])
+            */
             ->add('lieu', EntityType::class, [
                 'label' => 'Lieu :',
                 'placeholder' => 'Sélectionner un lieu',
                 'class' => Lieu::class,
-                'choice_label' => function($lieu) {
-                return $lieu->getNom() . " (" . $lieu->getVille() . ")";
-                },
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('l')
-                        ->orderBy('l.nom', 'ASC');
-                },
+                'choice_label' => 'nom',
             ])
-*/
-                ->add('lieu', EntityType::class, [
-                    'label' => 'Lieu :',
-                    'placeholder' => 'Sélectionner un lieu',
-                    'class' => Lieu::class,
-                    'choice_label' => 'nom',
-])
 
-                ->add('Valider', SubmitType::class);
+            ->add('Valider', SubmitType::class);
 
         $formModifier = function (FormInterface $form, Ville $ville = null) {
             $lieux = $ville === null ? [] : $ville->getLieux();
@@ -122,83 +122,83 @@ class SortieType extends AbstractType
     }
 
 
-        //DEBUT DU MERDIER DEV SUR LA DEPENDANCE DE FORMULAIRES
-/*
-            ->addEventListener(
-                FormEvents::PRE_SET_DATA,
-                function (FormEvent $event) {
-                    $form = $event->getForm();
-                    //$data = $event->getData();
-                    $ville = $event->getData()['ville'] ?? null;
-                    $lieux = null === $ville ? [] : $ville->getLieux();
-                    $form->add('lieu', EntityType::class, [
-                        'class' => Lieu::class,
-                        'placeholder' => 'Sélectionner une ville',
-                        'choices' => $lieux,
-                        'choice_label' => 'nom'
-                    ]);
-                }
-            )
+    //DEBUT DU MERDIER DEV SUR LA DEPENDANCE DE FORMULAIRES
+    /*
+                ->addEventListener(
+                    FormEvents::PRE_SET_DATA,
+                    function (FormEvent $event) {
+                        $form = $event->getForm();
+                        //$data = $event->getData();
+                        $ville = $event->getData()['ville'] ?? null;
+                        $lieux = null === $ville ? [] : $ville->getLieux();
+                        $form->add('lieu', EntityType::class, [
+                            'class' => Lieu::class,
+                            'placeholder' => 'Sélectionner une ville',
+                            'choices' => $lieux,
+                            'choice_label' => 'nom'
+                        ]);
+                    }
+                )
 
-//            ->add('Valider', SubmitType::class);
+    //            ->add('Valider', SubmitType::class);
 
-        $formModifier = function (FormInterface $form, Ville $ville = null) {
-            $lieux = $ville === null ? [] : $this->lieuRepository->findLieuxParVille($ville);
+            $formModifier = function (FormInterface $form, Ville $ville = null) {
+                $lieux = $ville === null ? [] : $this->lieuRepository->findLieuxParVille($ville);
 
-            $form->add('lieu', EntityType::class, [
-                'class' => Lieu::class,
-                    'choice_label' => 'nom',
-                    'disabled' => $ville === null,
-                    'placeholder' => 'Sélectionnez un lieu',
-                    'choices' => $lieux
-                ]
-            );
-        };
-/*
-        $builder->addEventListener(
-            FormEvents::PRE_SET_DATA,
-            function (FormEvent $event) use ($formModifier) {
-                $data = $event->getData();
-                //$ville= $event->getForm()->getData();
-                $formModifier($event->getForm()->getParent(),  );
-            }
-        );
-
-        $builder->get('ville')->addEventListener(
-            FormEvents::POST_SUBMIT,
-            function (FormEvent $event) use ($formModifier) {
-                $ville = $event->getForm()->getData();
-                $formModifier($event-getForm()->getParent(), $ville);
-            }
-        );
-
-
-    }
-
-/*
-
-            $formModifier = function(FormInterface $form, Ville $ville = null){
-              $lieu = null === $ville ? [] : $ville->getLieux();
-
-              $form->add('lieu', EntityType::class, [
-                  'class' => Lieu::class,
-                  'choices' => $lieu,
-                  'choice_label' => 'nom',
-                  'placeholder' => 'Sélectionner un lieu',
-                  'label' => 'Lieu :'
-              ]);
+                $form->add('lieu', EntityType::class, [
+                    'class' => Lieu::class,
+                        'choice_label' => 'nom',
+                        'disabled' => $ville === null,
+                        'placeholder' => 'Sélectionnez un lieu',
+                        'choices' => $lieux
+                    ]
+                );
             };
+    /*
+            $builder->addEventListener(
+                FormEvents::PRE_SET_DATA,
+                function (FormEvent $event) use ($formModifier) {
+                    $data = $event->getData();
+                    //$ville= $event->getForm()->getData();
+                    $formModifier($event->getForm()->getParent(),  );
+                }
+            );
 
             $builder->get('ville')->addEventListener(
-        FormEvents::PRE_SET_DATA,
-            function (FormEvent $event) use ($formModifier){
-                //$data = $event->getData();
-                $ville= $event->getData()['ville'] ?? null;
-                dump("La VILLE choisie est " . $ville);
-                //$formModifier($event->getForm()->getParent(), $ville);
-            }
-        );
-    }
+                FormEvents::POST_SUBMIT,
+                function (FormEvent $event) use ($formModifier) {
+                    $ville = $event->getForm()->getData();
+                    $formModifier($event-getForm()->getParent(), $ville);
+                }
+            );
+
+
+        }
+
+    /*
+
+                $formModifier = function(FormInterface $form, Ville $ville = null){
+                  $lieu = null === $ville ? [] : $ville->getLieux();
+
+                  $form->add('lieu', EntityType::class, [
+                      'class' => Lieu::class,
+                      'choices' => $lieu,
+                      'choice_label' => 'nom',
+                      'placeholder' => 'Sélectionner un lieu',
+                      'label' => 'Lieu :'
+                  ]);
+                };
+
+                $builder->get('ville')->addEventListener(
+            FormEvents::PRE_SET_DATA,
+                function (FormEvent $event) use ($formModifier){
+                    //$data = $event->getData();
+                    $ville= $event->getData()['ville'] ?? null;
+                    dump("La VILLE choisie est " . $ville);
+                    //$formModifier($event->getForm()->getParent(), $ville);
+                }
+            );
+        }
 
 
 
@@ -206,21 +206,21 @@ class SortieType extends AbstractType
 
 
 
-/*
-    private function ajoutListeLieu(FormInterface $form, ?Ville $ville)
-    {
-        $builder = $form->getConfig()->getFormFactory()->createNamedBuilder()(
-            'lieu',
-            EntityType::class,
-            null,
-            [
-                'class' => Lieu::class,
-                'placeholder' => $ville ? 'Sélection un lieu' : "Sélection d'abord une ville",
-                'choices' => $ville ? $ville->getLieux() : []
-            ]
-        );
-    }
-*/
+    /*
+        private function ajoutListeLieu(FormInterface $form, ?Ville $ville)
+        {
+            $builder = $form->getConfig()->getFormFactory()->createNamedBuilder()(
+                'lieu',
+                EntityType::class,
+                null,
+                [
+                    'class' => Lieu::class,
+                    'placeholder' => $ville ? 'Sélection un lieu' : "Sélection d'abord une ville",
+                    'choices' => $ville ? $ville->getLieux() : []
+                ]
+            );
+        }
+    */
 
     // FIN DU DEV SUR LA DEPENDANCE DE FORMULAIRE
 
