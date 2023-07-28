@@ -21,14 +21,14 @@ class SortieController extends AbstractController
     {
 
         $sortieForm = $this->createForm(SortiesFilterType::class);
-
         $sortieForm->handleRequest($request);
-        if ($sortieForm->isSubmitted())
-        {
-            dump($sortieForm);
-        }
+        $sortiesAll= "";
 
-        $sortiesAll = $sortieRepository-> selectAllSorties();
+        if ($sortieForm->isSubmitted() && $sortieForm->isValid())
+        {
+            $sortiesAll = $sortieRepository-> selectAllSorties($request);
+            dump($sortiesAll);
+        }
 
         return $this->render('sortie/liste.html.twig', [
             'sorties' => $sortiesAll,

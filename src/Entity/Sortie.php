@@ -148,7 +148,7 @@ class Sortie
         return $this->dateDebut;
     }
 
-    public function setDateDebut(\DateTimeInterface $dateDebut): self
+    public function setDateDebut(\DateTimeInterface $dateDebut = null): self
     {
         $this->dateDebut = $dateDebut;
 
@@ -172,7 +172,7 @@ class Sortie
         return $this->dateLimiteInscription;
     }
 
-    public function setDateLimiteInscription(\DateTimeInterface $dateLimiteInscription): self
+    public function setDateLimiteInscription(\DateTimeInterface $dateLimiteInscription = null): self
     {
         $this->dateLimiteInscription = $dateLimiteInscription;
 
