@@ -136,10 +136,12 @@ class SortieController extends AbstractController
             $entityManager->flush();
             //dump($sortie);
             $this->addFlash('success', 'Vous êtes bien inscrit/e pour la sortie '.$sortie->getNom().' !');
+        }else{
+            $this->addFlash('error', 'Vous ne pouvez pas vous inscrire pour la sortie '.$sortie->getNom().' !');
         }
 
 
-        $this->addFlash('error', 'Vous ne pouvez pas vous inscrire pour la sortie '.$sortie->getNom().' !');
+
         //On renvoit vers l'URL qui a émis la requête
         if($url){
             return $this->redirect($url);
