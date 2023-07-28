@@ -2,6 +2,8 @@
 
 namespace App\Repository;
 use App\Entity\Sortie;
+use App\Form\SearchSortie;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NonUniqueResultException;
@@ -59,18 +61,18 @@ class SortieRepository extends ServiceEntityRepository
 
     }
 
-    public function selectAllSorties(Request $request)
+    public function selectAllSorties(SearchSortie $data)
     {
 
         // Récupérer les valeurs des filtres depuis le formulaire
-        $campus = $request->query->get('campus');
-        $nomSortie = $request->query->get('nom_sortie');
-        $dateDebut = $request->query->get('date_debut');
-        $dateFin = $request->query->get('date_fin');
-        $organisateur = $request->query->get('organisateur');
-        $nonOrganisateur = $request->query->get('non_organisateur');
-        $nonInscrit = $request->query->get('non_inscrit');
-        $sortiesPassees = $request->query->get('sorties_passees');
+        $campus = $data->getCampus();
+        $nomSortie = $data->getName();
+        $dateDebut = $data->getFrom();
+        $dateFin = $data->getTo();
+        $organisateur = $data->isOrganized();
+        //$nonOrganisateur = $data->is['non_organisateur'];
+        $nonInscrit = $data->isSubscribed();
+        $sortiesPassees = $data->isOver();
 
         $queryBuilder = $this->createQueryBuilder('s');
 
@@ -82,7 +84,9 @@ class SortieRepository extends ServiceEntityRepository
             ->leftJoin('s.lieu', 'l')
             ->leftJoin('l.ville', 'v')
             ->where('s.dateLimiteInscription < :currentDate')
+            ->addOrderBy('s.dateDebut', 'DESC')
             ->setParameter('currentDate', new \DateTime(), \Doctrine\DBAL\Types\Types::DATETIME_MUTABLE);
+
 
         if ($campus) {
             $queryBuilder->andWhere('s.campus = :campus')
@@ -95,24 +99,25 @@ class SortieRepository extends ServiceEntityRepository
         }
 
         if ($dateDebut) {
-            $queryBuilder->andWhere('s.dateHeureDebut >= :dateDebut')
-                ->setParameter('dateDebut', new \DateTime($dateDebut));
+            $queryBuilder->andWhere('s.dateDebut >= :date_debut')
+                ->setParameter('date_debut', $dateDebut);
         }
 
         if ($dateFin) {
-            $queryBuilder->andWhere('s.dateHeureDebut <= :dateFin')
-                ->setParameter('dateFin', new \DateTime($dateFin));
+            $queryBuilder->andWhere('s.dateLimiteInscription <= :date_fin')
+                ->setParameter('date_fin', $dateFin);
         }
 
         if ($organisateur) {
             $queryBuilder->andWhere('s.organisateur = :organisateur')
                 ->setParameter('organisateur', $this->getUser());
         }
-
+/*
         if ($nonOrganisateur) {
             $queryBuilder->andWhere('s.organisateur != :nonOrganisateur')
                 ->setParameter('nonOrganisateur', $this->getUser());
         }
+*/
 
         if ($nonInscrit) {
             $queryBuilder->andWhere(':user NOT MEMBER OF s.participants')
@@ -121,7 +126,7 @@ class SortieRepository extends ServiceEntityRepository
 
         if ($sortiesPassees) {
             $queryBuilder->andWhere('s.dateHeureDebut < :now')
-                ->setParameter('now', new \DateTime());
+                ->setParameter('now', new DateTime());
         }
 
         $query = $queryBuilder->getQuery();
