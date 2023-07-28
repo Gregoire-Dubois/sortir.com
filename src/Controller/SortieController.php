@@ -13,6 +13,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Csrf\CsrfToken;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 class SortieController extends AbstractController
 {
@@ -117,17 +119,28 @@ class SortieController extends AbstractController
     }
 
     /**
-     * @Route("/sorties/inscription/{id}", name="sortie_inscription", requirements={"id"="\d+"})
+     * @Route("/sorties/inscription/{id}", name="sortie_inscription", requirements={"id"="\d+"}, methods={"POST"})
      */
-    public function inscriptionSortie(Request $request, Sortie $sortie, EntityManagerInterface $entityManager) : Response
+    public function inscriptionSortie(
+        Request $request,
+        Sortie $sortie,
+        EntityManagerInterface $entityManager,
+        CsrfTokenManagerInterface $csrfTokenManager
+    ) : Response
     {
+        $token = new CsrfToken('inscription_sortie', $request->request->get('_csrf_token'));
+        if (!$csrfTokenManager->isTokenValid($token)) {
+            throw $this->createAccessDeniedException('Jeton CSRF invalide.');
+        }
         //On récupère l'URL qui a émis la requête
         $url = $request->headers->get('referer');
         $participantConnecte = $this->getUser();
+
         if($sortie->getEtat()->getLibelle() == 'Ouverte'
             && $sortie->getDateLimiteInscription()>=new \DateTime('now')
             && !$sortie->getParticipants()->contains($participantConnecte))
         {
+
             //dump($sortie->getEtat()->getLibelle());
             //dump($sortie->getDateLimiteInscription());
             //dump(new \DateTime('now'));
@@ -158,10 +171,19 @@ class SortieController extends AbstractController
 
     }
     /**
-     * @Route("/sorties/desistement/{id}", name="sortie_desistement", requirements={"id"="\d+"})
+     * @Route("/sorties/desistement/{id}", name="sortie_desistement", requirements={"id"="\d+"}, methods={"POST"})
      */
-    public function desistementSortie(Request $request, Sortie $sortie, EntityManagerInterface $entityManager) : Response
+    public function desistementSortie(
+        Request $request,
+        Sortie $sortie,
+        EntityManagerInterface $entityManager,
+        CsrfTokenManagerInterface $csrfTokenManager
+    ) : Response
     {
+        $token = new CsrfToken('desistement_sortie', $request->request->get('_csrf_token'));
+        if (!$csrfTokenManager->isTokenValid($token)) {
+            throw $this->createAccessDeniedException('Jeton CSRF invalide.');
+        }
         //On récupère l'URL qui a émis la requête
         $url = $request->headers->get('referer');
         $participantConnecte = $this->getUser();
