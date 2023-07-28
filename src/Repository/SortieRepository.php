@@ -73,6 +73,7 @@ class SortieRepository extends ServiceEntityRepository
         //$nonOrganisateur = $data->is['non_organisateur'];
         $nonInscrit = $data->isSubscribed();
         $sortiesPassees = $data->isOver();
+        $sortiesOpen = $data->isOpen();
 
         $queryBuilder = $this->createQueryBuilder('s');
 
@@ -97,6 +98,7 @@ class SortieRepository extends ServiceEntityRepository
             $queryBuilder->andWhere('s.nom LIKE :nomSortie')
                 ->setParameter('nomSortie', '%' . $nomSortie . '%');
         }
+
 
         if ($nomSortie) {
             $queryBuilder->andWhere('s.nom LIKE :nomSortie')
@@ -146,7 +148,12 @@ class SortieRepository extends ServiceEntityRepository
         }
 
         if ($sortiesPassees) {
-            $queryBuilder->andWhere('s.dateHeureDebut < :now')
+            $queryBuilder->andWhere('s.dateDebut < :now')
+                ->setParameter('now', new DateTime());
+        }
+
+        if($sortiesOpen){
+            $queryBuilder->andWhere('s.dateDebut >= :now')
                 ->setParameter('now', new DateTime());
         }
 
