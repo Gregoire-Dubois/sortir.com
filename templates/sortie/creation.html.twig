@@ -26,9 +26,36 @@
     {{ form_row(SortieType.lieu) }}
     <button type="submit">Envoyer</button>
     {{ form_end(SortieType) }}
-<!--
-</section>
 
+</section>
+    <script>
+        window.onload = () => {
+            let sortie_ville = document.querySelector("#sortie_ville");
+            sortie_ville.addEventListener("change", function(){
+                let form = this.closest("form");
+                let data = this.name + "=" + this.value;
+
+                fetch(form.action, {
+                    method: form.getAttribute("method"),
+                    body: data,
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded; charset:UTF-8"
+                    }
+                })
+                    .then(response => response.text())
+                    .then(html => {
+                        let content = document.createElement("html");
+                        content.innerHTML = html;
+                        let nouveauSelect = content.querySelector("#sortie_lieu");
+                        document.querySelector("#sortie_lieu").replaceWith(nouveauSelect);
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    })
+            });
+        }
+    </script>
+<!--
     <script
         src="{{  asset('js/formSortieLieuParVille.js') }}">
         </script>
