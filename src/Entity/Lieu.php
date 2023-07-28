@@ -59,6 +59,11 @@ class Lieu
         $this->sorties = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        return $this->nom;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -130,7 +135,7 @@ class Lieu
         return $this;
     }
 
-    public function removeSorty(Sortie $sortie): self
+    public function removeSortie(Sortie $sortie): self
     {
         if ($this->sorties->removeElement($sortie)) {
             // set the owning side to null (unless already changed)

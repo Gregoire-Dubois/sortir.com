@@ -9,10 +9,12 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=ParticipantRepository::class)
- * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
+ * @UniqueEntity(fields={"email"}, message="Il y a déjà un compte avec cet email !")
+ * @UniqueEntity(fields={"pseudo"}, message="Ce pseudo est déjà pris !")
  */
 class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -25,6 +27,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     * @Assert\NotBlank(message="Veuillez renseigner l'email.")
      */
     private $email;
 
@@ -41,21 +44,25 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=100, unique=true)
+     * @Assert\NotBlank(message="Veuillez renseigner le pseudo.")
      */
     private $pseudo;
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Assert\NotBlank(message="Veuillez renseigner le nom.")
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Assert\NotBlank(message="Veuillez renseigner le prénom.")
      */
     private $prenom;
 
     /**
      * @ORM\Column(type="string", length=20)
+     * @Assert\NotBlank(message="Veuillez renseigner le numéro de téléphone.")
      */
     private $telephone;
 
@@ -75,7 +82,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     private $dateCreation;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="eleves", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="etudiants", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $campus;
@@ -138,7 +145,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
+        $roles[] = 'ROLE_PARTICIPANT';
 
         return array_unique($roles);
     }
@@ -336,5 +343,10 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->nom . $this->prenom;
     }
 }

@@ -6,6 +6,7 @@ use App\Entity\Participant;
 use App\Form\RegistrationFormType;
 use App\Security\AppAuthentifcatorAuthenticator;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,13 +18,14 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class RegistrationController extends AbstractController
 {
     /**
-     * @Route("/register", name="app_register")
+     * @Route("/admin/inscription", name="app_register")
+     * @IsGranted("ROLE_ADMIN", message="Vous n'avez pas les droits d'accès !")
      */
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, AppAuthentifcatorAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
+    public function creerParticipant(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, AppAuthentifcatorAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
     {
         $user = new Participant();
 
-        $user->setRoles(["ROLE_USER"]);
+        $user->setRoles(["ROLE_PARTICIPANT"]);
 
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);

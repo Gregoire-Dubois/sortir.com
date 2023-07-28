@@ -8,6 +8,7 @@ use App\Entity\Lieu;
 use App\Entity\Participant;
 use App\Entity\Sortie;
 use App\Entity\Ville;
+use App\Event\SortieEvent;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -16,10 +17,12 @@ use Faker;
 class AppFixtures extends Fixture
 {
     private $passwordHasher;
+    private $sortieEtats;
 
-    public function __construct(UserPasswordHasherInterface $passwordHasher)
+    public function __construct(UserPasswordHasherInterface $passwordHasher, SortieEvent $sortieEtats)
     {
         $this->passwordHasher=$passwordHasher;
+        $this->sortieEtats = $sortieEtats;
     }
 
     public function load(ObjectManager $manager): void
@@ -48,6 +51,7 @@ class AppFixtures extends Fixture
         $participant->setPseudo('PseudoTest');
         $participant->setTelephone('0600010203');
         $participant->setCampus($campusArray[0]);
+        $participant->setPhoto('testupload-64c152eec147d.jpg');
         $manager->persist($participant);
 
         $faker = Faker\Factory::create('fr_FR');
@@ -65,6 +69,7 @@ class AppFixtures extends Fixture
             $participant->setPseudo($participant->getPrenom().'_'.$participant->getNom());
             $participant->setTelephone($faker->phoneNumber());
             $participant->setCampus($campusArray[array_rand($campusArray)]);
+            $participant->setPhoto('Photo_Profil_Defaut_Test.png');
             $manager->persist($participant);
         }
 
@@ -144,18 +149,44 @@ class AppFixtures extends Fixture
 
         // Création de 20 sorties aléatoires
         for ($i = 0; $i < 20; $i++) {
+            // Générer une date aléatoire entre -1 mois et +2 mois
+            $now = new \DateTime();
+            $startDate = (clone $now)->modify('-2 month');
+            $endDate = (clone $now)->modify('+2 months');
+            $randomDate = $faker->dateTimeBetween($startDate, $endDate);
+
             $sortie = new Sortie();
             $sortie->setNom($faker->randomElement($nomsSorties));
             $sortie->setDescription($faker->paragraph(1));
-            $sortie->setDateDebut($faker->dateTimeThisMonth());
+            $sortie->setDateDebut($randomDate);
             $sortie->setDuree($faker->numberBetween(60, 240));
-            $sortie->setDateLimiteInscription($faker->dateTimeThisMonth());
+            $dateLimiteInscription = (clone $randomDate)->modify('-1 day');
+            $sortie->setDateLimiteInscription($dateLimiteInscription);
             $sortie->setNbInscritptionMax($faker->numberBetween(2, 20));
             $sortie->setCampus($faker->randomElement($campusArray));
-            $sortie->setEtat($faker->randomElement($etats));
+            //$sortie->setEtat($faker->randomElement($etats));
             $sortie->setLieu($faker->randomElement($lieux));
             $sortie->setOrganisateur($faker->randomElement($organisateur));
             $sortie->setDateCreation(new \DateTimeImmutable());
+
+            // 90% de chance que l'état soit "Ouverte"
+            /*if ($faker->numberBetween(1, 100) <= 90) {
+                $sortie->setEtat($this->sortieEtats->getEtatByLibelle('Ouverte'));
+            } else {
+                // 10% de chance que l'état soit "Annulée"
+                $sortie->setEtat($this->sortieEtats->getEtatByLibelle('Annulée'));
+            }*/
+
+            $nouvelEtatLibelle = $this->sortieEtats->getEtatSortie($sortie);
+            $nouvelEtat = $this->sortieEtats->getEtatByLibelle($nouvelEtatLibelle);
+            $sortie->setEtat($nouvelEtat);
+
+            //on annule certaines sorties (20% des ouvertes ou fermées)
+            /*if ($sortie->getEtat()->getLibelle() === "Ouverte" || $sortie->getEtat()->getLibelle() === "Clôturée") {
+                if ($faker->numberBetween(0, 100) > 80) {
+                    $this->sortieEtats->changeEtatSortie($sortie, "Annulée");
+                }
+            }*/
 
             $manager->persist($sortie);
         }

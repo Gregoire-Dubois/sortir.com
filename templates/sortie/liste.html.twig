@@ -2,7 +2,42 @@
 
 {% block body %}
 
+
+    {{ form_start(sortieForm) }}
+    {{ form_widget(sortieForm) }}
+    <button>Rechercher</button>
+    {{ form_end(sortieForm) }}
+
+    <table>
+        <thead>
+            <tr>
+                <th>Nom de la sortie</th>
+                <th>Date de la sortie</th>
+                <th>Clôture</th>
+                <th>Inscrits / places</th>
+                <th>Organisateur</th>
+                <th>Etat</th>
+            </tr>
+        </thead>
+            <tbody>
+            {% for sortie in sorties %}
+            <tr>
+                <td>{{ sortie.nom }}</td>
+                <td>{{ sortie.dateDebut|date('d-m-Y') }}</td>
+                <td>{{ sortie.dateLimiteInscription|date('d-m-Y') }}</td>
+                <td>{{ sortie.nbInscritptionMax }}</td>
+                <td>{{ sortie.organisateur }}</td>
+                <td>{{ sortie.etat.libelle }}</td>
+            </tr>
+            </tbody>
+        {% endfor %}
+
+    </table>
+
+
+
 {% endblock %}
+
 
 {% block title %}
 

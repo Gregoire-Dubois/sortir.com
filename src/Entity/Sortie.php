@@ -68,6 +68,7 @@ class Sortie
     /**
      * @ORM\Column(type="text")
      *
+     * Assert\GreaterThanOrEqual(1, message="La sortie doit avoir un participant minimum")
      */
     private $description;
 
@@ -105,7 +106,7 @@ class Sortie
 
     /**
      * @ORM\ManyToOne(targetEntity=Lieu::class, inversedBy="sorties")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $lieu;
 
@@ -147,7 +148,7 @@ class Sortie
         return $this->dateDebut;
     }
 
-    public function setDateDebut(\DateTimeInterface $dateDebut): self
+    public function setDateDebut(\DateTimeInterface $dateDebut = null): self
     {
         $this->dateDebut = $dateDebut;
 
@@ -171,7 +172,7 @@ class Sortie
         return $this->dateLimiteInscription;
     }
 
-    public function setDateLimiteInscription(\DateTimeInterface $dateLimiteInscription): self
+    public function setDateLimiteInscription(\DateTimeInterface $dateLimiteInscription = null): self
     {
         $this->dateLimiteInscription = $dateLimiteInscription;
 
@@ -320,5 +321,15 @@ class Sortie
         $this->participants->removeElement($participant);
 
         return $this;
+    }
+
+    /**
+     * Calcule et retourne la date de fin en ajoutant la durée à la date de début.
+     */
+    public function getDateFin(): \DateTime
+    {
+        $dateFin = clone $this->dateDebut;
+        $dateFin->modify('+' . $this->duree . ' minutes');
+        return $dateFin;
     }
 }
