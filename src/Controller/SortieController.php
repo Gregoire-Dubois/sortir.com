@@ -13,6 +13,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Csrf\CsrfToken;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 
 class SortieController extends AbstractController
 {
@@ -114,5 +116,106 @@ class SortieController extends AbstractController
     public function annulerSortie(int $id): Response
     {
         return $this->redirectToRoute('sortie_listeSortie');
+    }
+
+    /**
+     * @Route("/sorties/inscription/{id}", name="sortie_inscription", requirements={"id"="\d+"}, methods={"POST"})
+     */
+    public function inscriptionSortie(
+        Request $request,
+        Sortie $sortie,
+        EntityManagerInterface $entityManager,
+        CsrfTokenManagerInterface $csrfTokenManager
+    ) : Response
+    {
+        $token = new CsrfToken('inscription_sortie', $request->request->get('_csrf_token'));
+        if (!$csrfTokenManager->isTokenValid($token)) {
+            throw $this->createAccessDeniedException('Jeton CSRF invalide.');
+        }
+        //On récupère l'URL qui a émis la requête
+        $url = $request->headers->get('referer');
+        $participantConnecte = $this->getUser();
+
+        if($sortie->getEtat()->getLibelle() == 'Ouverte'
+            && $sortie->getDateLimiteInscription()>=new \DateTime('now')
+            && !$sortie->getParticipants()->contains($participantConnecte))
+        {
+
+            //dump($sortie->getEtat()->getLibelle());
+            //dump($sortie->getDateLimiteInscription());
+            //dump(new \DateTime('now'));
+
+            //dump($sortie);
+            //dump($participantConnecte);
+            $sortie->addParticipant($participantConnecte);
+
+
+            $entityManager->persist($sortie);
+            //dump($participantConnecte);
+            $entityManager->flush();
+            //dump($sortie);
+            $this->addFlash('success', 'Vous êtes bien inscrit/e pour la sortie '.$sortie->getNom().' !');
+        }else{
+            $this->addFlash('error', 'Vous ne pouvez pas vous inscrire pour la sortie '.$sortie->getNom().' !');
+        }
+
+
+
+        //On renvoit vers l'URL qui a émis la requête
+        if($url){
+            return $this->redirect($url);
+        }else{
+            return $this->redirectToRoute('sortie_listeSortie');
+        }
+
+
+    }
+    /**
+     * @Route("/sorties/desistement/{id}", name="sortie_desistement", requirements={"id"="\d+"}, methods={"POST"})
+     */
+    public function desistementSortie(
+        Request $request,
+        Sortie $sortie,
+        EntityManagerInterface $entityManager,
+        CsrfTokenManagerInterface $csrfTokenManager
+    ) : Response
+    {
+        $token = new CsrfToken('desistement_sortie', $request->request->get('_csrf_token'));
+        if (!$csrfTokenManager->isTokenValid($token)) {
+            throw $this->createAccessDeniedException('Jeton CSRF invalide.');
+        }
+        //On récupère l'URL qui a émis la requête
+        $url = $request->headers->get('referer');
+        $participantConnecte = $this->getUser();
+
+        if($sortie->getDateDebut()>=new \DateTime('now')
+            && $sortie->getParticipants()->contains($participantConnecte)){
+            dump($sortie->getEtat()->getLibelle());
+            dump($sortie->getDateLimiteInscription());
+            dump(new \DateTime('now'));
+
+            dump($sortie);
+            dump($participantConnecte);
+            $sortie->removeParticipant($participantConnecte);
+
+
+            $entityManager->persist($sortie);
+            dump($participantConnecte);
+            $entityManager->flush();
+            dump($sortie);
+            $this->addFlash('success', 'Vous êtes bien désinscrit/e pour la sortie '.$sortie->getNom().' !');
+        }else{
+            $this->addFlash('error', 'Vous ne pouvez pas vous désinscrire pour la sortie '.$sortie->getNom().' !');
+        }
+
+
+
+        //On renvoit vers l'URL qui a émis la requête ou main_accueil
+        if($url){
+            return $this->redirect($url );
+        }else{
+            return $this->redirectToRoute('sortie_listeSortie');
+        }
+
     }
 }
