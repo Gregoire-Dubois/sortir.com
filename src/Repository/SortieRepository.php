@@ -98,15 +98,36 @@ class SortieRepository extends ServiceEntityRepository
                 ->setParameter('nomSortie', '%' . $nomSortie . '%');
         }
 
+        if ($nomSortie) {
+            $queryBuilder->andWhere('s.nom LIKE :nomSortie')
+                ->setParameter('nomSortie', '%' . $nomSortie . '%');
+        }
+
         if ($dateDebut) {
             $queryBuilder->andWhere('s.dateDebut >= :date_debut')
                 ->setParameter('date_debut', $dateDebut);
         }
 
         if ($dateFin) {
+            $queryBuilder->andWhere('s.dateDebut <= :date_fin')
+                ->setParameter('date_fin', $dateFin);
+        }
+
+
+/*
+        if ($dateDebut) {
+            $queryBuilder->andWhere('s.dateDebut >= :date_debut')
+                ->setParameter('date_debut', $dateDebut);
+        }
+
+
+
+        if ($dateFin) {
             $queryBuilder->andWhere('s.dateLimiteInscription <= :date_fin')
                 ->setParameter('date_fin', $dateFin);
         }
+
+*/
 
         if ($organisateur) {
             $queryBuilder->andWhere('s.organisateur = :organisateur')
