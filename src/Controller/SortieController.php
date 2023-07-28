@@ -28,9 +28,15 @@ class SortieController extends AbstractController
 
         if ($sortieForm->isSubmitted() && $sortieForm->isValid())
         {
-            $sortiesAll = $sortieRepository-> selectAllSorties($request);
-            dump($sortiesAll);
+
+            $data = $sortieForm->getData();
+            dump($data);
+            $sortiesAll = $sortieRepository-> selectAllSorties($data);
+            dump($sortieForm->getData());
+
         }
+
+        //$sortiesAll = $sortieRepository-> selectAllSorties($request);
 
         return $this->render('sortie/liste.html.twig', [
             'sorties' => $sortiesAll,
