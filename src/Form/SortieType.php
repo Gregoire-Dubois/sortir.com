@@ -20,7 +20,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class SortieType extends AbstractType
 {
 
-    public function buildForm(FormBuilderInterface $builder, array $options) : void
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('nom', null, [
@@ -65,36 +65,31 @@ class SortieType extends AbstractType
                 'required' => false
             ])
 
+            //Affichage par défaut du formulaire de Lieu, avant toute action sur le formulaire Ville
+            //Désactivé par défaut
             ->add('lieu', EntityType::class, [
-                'label' => 'Lieu :',
+                //'label' => 'Lieu :',
                 'placeholder' => 'Sélectionner un lieu',
                 'class' => Lieu::class,
-                'choice_label' => 'nom',
+                'disabled' => true,
             ]);
 
-            //->add('Valider', SubmitType::class);
+        //->add('Valider', SubmitType::class);
 
         $formModifier = function (FormInterface $form, Ville $ville = null) {
             $lieux = $ville === null ? [] : $ville->getLieux();
 
             $form->add('lieu', EntityType::class, [
-                    'class' => Lieu::class,
-                    'choice_label' => 'nom',
-                    'disabled' => $ville === null,
-                    'placeholder' => 'Sélectionnez un lieu',
-                    'choices' => $lieux
-                ]);
-/*
-            $form->add('codePostal', EntityType::class, [
-                    'class' => Ville::class,
-                    'choice_label' => 'codePostal',
-                    'disabled' => $ville === null,
-                    'read_only' => true
+                'class' => Lieu::class,
+                'choice_label' => 'nom',
+                //'disabled' => !isset($ville),
+                'placeholder' => 'Sélectionnez un lieu',
+                'choices' => $lieux
             ]);
-*/
         };
 
-        //Ecoute de l'événement de choix d'une ville dans la liste déroulante
+        //Ecoute de la soumission sur le formulaire Ville.
+        //On passe le résultat à $formModifier
         $builder->get('ville')->addEventListener(
             FormEvents::POST_SUBMIT,
             function (FormEvent $event) use ($formModifier) {
@@ -103,7 +98,20 @@ class SortieType extends AbstractType
                 $formModifier($parent, $ville);
             }
         );
+
+        $builder->get('lieu')->addEventListener(
+            FormEvents::POST_SUBMIT,
+            function (FormEvent $event) {
+                $event->getForm()->getData();
+                $event->getForm()->getParent();
+
+            }
+        );
+
+        //Ajout d'action pour Javascript mais peut-être présent par défaut ?
+        $builder->setAction($options['action']);
     }
+
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([

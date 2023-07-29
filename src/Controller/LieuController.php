@@ -44,4 +44,15 @@ class LieuController extends AbstractController
 
         return new JsonResponse($codePostal);
     }
+
+    /**
+     * Méthode appelée en AJAX pour retourner la rue d'un lieu donné.
+     * @Route("/get-rue/{id}", name="get_rue_lieu", methods={"GET"})
+     */
+    public function findStreetByLocation(Lieu $lieu) : JsonResponse
+    {
+        $rue = $lieu->getRue();
+
+        return new JsonResponse($rue);
+    }
 }

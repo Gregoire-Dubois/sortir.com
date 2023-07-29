@@ -6,12 +6,13 @@ use App\Repository\LieuRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=LieuRepository::class)
  */
-class Lieu
+class Lieu implements \JsonSerializable
 {
     /**
      * @ORM\Id
@@ -157,5 +158,17 @@ class Lieu
         $this->ville = $ville;
 
         return $this;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            "id" => $this->getId(),
+            "name" => $this->getNom(),
+            "street" => $this->getRue(),
+            "lat" => $this->getLatitude(),
+            "lng" => $this->getLongitude(),
+            "ville" => $this->getVille(),
+        ];
     }
 }
