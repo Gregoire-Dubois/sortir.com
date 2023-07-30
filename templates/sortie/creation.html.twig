@@ -7,6 +7,7 @@
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('css/creerUneSortie.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/popupAjouterUnLieu.css') }}">
 {% endblock %}
 
 {% block body %}
@@ -63,10 +64,10 @@
         <span class="column7 row5 default_span" id="event_postal_code"></span>
 
         <label class="column6 row6 default_label">Latitude</label>
-        <span class="column7 row6 default_span" id="event_latitude"></span>
+        <span class="column7-8 row6 default_span" id="event_latitude"></span>
 
         <label class="column6 row7 default_label">Longitude</label>
-        <span class="column7 row7 default_span" id="event_longitude"></span>
+        <span class="column7-8 row7 default_span" id="event_longitude"></span>
 
         <div class="row8 creation_event_button">
             <button type="submit" class="default_tertiary_button" id="creation_event_save">Enregistrer</button>
@@ -77,10 +78,66 @@
         </div>
         {{ form_end(SortieType) }}
     </section>
+
+    <!-- Popup "Ajouter un lieu" -->
+    <div class="default_popup_container" id="popup_add_place">
+        <!-- Overlay pour donner un arrière-plan assombri -->
+        <div class="default_popup_overlay" id="popup_overlay"></div>
+    </div>
+
     {% block javascripts %}
 
-        <script src="{{ asset('/js/formAdresseParLieu.js')  }}" defer></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <!--Script qui affiche dynamiquement les infos des villes et des lieux-->
         <script src="{{ asset('/js/formSortieLieuParVille.js') }}" defer></script>
+
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                // Affichage du formulaire dans la modale
+                document.getElementById("add_place_button").addEventListener("click", function(e) {
+                    e.preventDefault();
+
+                    // Effectuez une requête AJAX pour récupérer le contenu du formulaire
+                    let xhr = new XMLHttpRequest();
+
+                    xhr.open("GET", "/sorties/lieu/afficher"); // L'URL associée à votre action du contrôleur
+
+                    xhr.onload = function() {
+                        if (xhr.status === 200) {
+                            // Ajoutez le contenu de la modale dans le DOM
+                            console.log(xhr.responseText)
+                            console.log(xhr.status)
+                            document.getElementById("popup_add_place").innerHTML = xhr.responseText;
+                            console.log(document.getElementById("popup_add_place").innerHTML)
+                            // Affichez la modale
+                            document.getElementById("popup_add_place").style.display = "block";
+                        } else {
+                            console.error("Erreur lors de la requête AJAX");
+                        }
+                    };
+                    xhr.send();
+                });
+
+                // Enregistrement des données
+                document.addEventListener("click", function(e) {
+                    if (e.target.id === "confirm_add_place_button") {
+                        e.preventDefault();
+                        let formData = new FormData(document.getElementById("form_lieu"));
+
+                        let xhr = new XMLHttpRequest();
+                        xhr.open("POST", "/sorties/lieu/creation"); // L'URL associée à votre action du contrôleur
+                        xhr.send(formData);
+                    }
+                });
+
+                // Cacher la modale lorsque l'utilisateur clique sur le bouton "Fermer" ou en dehors de la modale
+                document.addEventListener("click", function(e) {
+                    if (e.target.classList.contains("modal")) {
+                        document.querySelector(".modal").style.display = "none";
+                    }
+                });
+            });
+        </script>
 
     {% endblock %}
 

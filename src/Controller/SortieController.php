@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Sortie;
+use App\Form\LieuType;
 use App\Form\SortiesFilterType;
 use App\Form\SortieType;
 use App\Repository\EtatRepository;
@@ -89,8 +90,10 @@ class SortieController extends AbstractController
             $this->addFlash('success', 'La sortie a bien été enregistrée');
             //return $this->redirectToRoute('sortie_listeSortie');
         }
+        $lieuType = $this->createForm(LieuType::class);
         return $this->render('sortie/creation.html.twig', [
-            'SortieType' => $sortieType->createView()
+            'SortieType' => $sortieType->createView(),
+            'LieuType' => $lieuType->createView()
         ]);
     }
 

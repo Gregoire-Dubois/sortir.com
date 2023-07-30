@@ -1,3 +1,11 @@
-{{ form_start(LieuType) }}
+<!-- Titre du popup "Ajouter une ville" -->
+
+<!-- Formulaire "Ajouter une ville" -->
+{{ form_start(LieuType, {'attr': {'id': 'form_lieu'}}) }}
+
 {{ form_widget(LieuType) }}
+<div class="row8 creation_event_button">
+    <button type="submit" class="default_principal_button" id="confirm_add_place_button">Ajouter</button>
+    <button class="default_secondary_button" id="cancel_add_place_button" formnovalidate>Annuler</button>
+</div>
 {{ form_end(LieuType) }}

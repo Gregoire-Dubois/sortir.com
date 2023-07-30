@@ -82,7 +82,6 @@ class SortieType extends AbstractType
             $form->add('lieu', EntityType::class, [
                 'class' => Lieu::class,
                 'choice_label' => 'nom',
-                //'disabled' => !isset($ville),
                 'placeholder' => 'Sélectionnez un lieu',
                 'choices' => $lieux
             ]);
