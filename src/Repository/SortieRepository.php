@@ -83,7 +83,7 @@ class SortieRepository extends ServiceEntityRepository
             ->leftJoin('s.campus', 'c')
             ->leftJoin('s.lieu', 'l')
             ->leftJoin('l.ville', 'v')
-            ->where('s.dateLimiteInscription < :currentDate')
+            ->where('s.dateLimiteInscription < :currentDate or s.dateLimiteInscription > :currentDate')
             ->addOrderBy('s.dateDebut', 'DESC')
             ->setParameter('currentDate', new \DateTime(), \Doctrine\DBAL\Types\Types::DATETIME_MUTABLE);
 
