@@ -30,15 +30,33 @@
                 <td>{{ sortie.nbInscritptionMax }}</td>
                 <td>{{ sortie.organisateur }}</td>
                 <td>{{ sortie.etat.libelle }}</td>
-                <td><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}">Afficher</a></td>
+                <td>
+
+                {% if is_granted('ROLE_ADMIN') %}
+                    <td><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}">Afficher</a></td>
+                    <td><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}">- Modifier</a></td>
+                {% elseif is_granted('ROLE_PARTICIPANT') and app.USER and sortie.organisateur.id == app.user.id %}
+                    <td><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}">Afficher</a></td>
+                    <td><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}">- Modifier</a></td>
+
+                {% elseif is_granted('ROLE_PARTICIPANT') %}
+                    {% if app.user in sortie.participants %}
+                        <td><a href="#">Se désinscrire</a></td>
+                    {% else %}
+                        <td><a href="#">- Modifier</a>S'inscrire</td>
+                    {% endif %}
+
+
+                {% elseif is_granted('ROLE_PARTICIPANT') %}
+                    <td><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}">Afficher</a></td>
+
+                {% endif %}
 
             </tr>
             </tbody>
         {% endfor %}
 
     </table>
-
-
 
 {% endblock %}
 
