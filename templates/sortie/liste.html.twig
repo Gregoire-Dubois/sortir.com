@@ -42,7 +42,6 @@
                     <td><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}">- Modifier</a></td>
 
 
-
                 {% elseif is_granted('ROLE_PARTICIPANT') %}
                     {% if app.user in sortie.participants %}
                         <td><a href="{{ path('sortie_desistement', { 'id': sortie.id }) }}"></a>{% include('inc/desister.html.twig') %}</td>
