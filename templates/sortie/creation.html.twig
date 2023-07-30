@@ -70,10 +70,9 @@
         <span class="column7-8 row7 default_span" id="event_longitude"></span>
 
         <div class="row8 creation_event_button">
-            <button type="submit" class="default_tertiary_button" id="creation_event_save">Enregistrer</button>
-            <button type="submit" class="default_principal_button" id="creation_event_publish">Publier la sortie
-            </button>
-            <button class="default_secondary_button" id="creation_event_cancel" formnovalidate>Annuler</button>
+            <div class="default_tertiary_button" id="creation_event_save">{{ form_row(SortieType.creer) }}</div>
+            <div class="default_tertiary_button" id="creation_event_save">{{ form_row(SortieType.publier) }}</div>
+            <div></div><button class="default_secondary_button" id="creation_event_cancel" formnovalidate>Annuler</button></div>
 
         </div>
         {{ form_end(SortieType) }}
@@ -126,6 +125,17 @@
 
                         let xhr = new XMLHttpRequest();
                         xhr.open("POST", "/sorties/lieu/creation"); // L'URL associée à votre action du contrôleur
+                        xhr.onload = function() {
+                            if (xhr.status === 200) {
+                                // Gérer la réponse du serveur en cas de succès (vous pouvez ajouter la logique souhaitée ici)
+                                console.log("Données enregistrées avec succès !");
+
+                                // Cacher la modale après l'enregistrement
+                                document.getElementById("popup_add_place").style.display = "none";
+                            } else {
+                                console.error("Erreur lors de la soumission du formulaire en AJAX");
+                            }
+                        };
                         xhr.send(formData);
                     }
                 });

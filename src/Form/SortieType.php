@@ -10,6 +10,7 @@ use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormEvent;
@@ -72,9 +73,14 @@ class SortieType extends AbstractType
                 'placeholder' => 'Sélectionner un lieu',
                 'class' => Lieu::class,
                 'disabled' => true,
-            ]);
+            ])
 
-        //->add('Valider', SubmitType::class);
+        ->add('creer', SubmitType::class, [
+            'label' => 'Créer'
+        ])
+        ->add('publier', SubmitType::class, [
+            'label' => 'Publier'
+        ]);
 
         $formModifier = function (FormInterface $form, Ville $ville = null) {
             $lieux = $ville === null ? [] : $ville->getLieux();
