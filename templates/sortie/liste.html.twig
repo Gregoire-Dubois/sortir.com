@@ -36,15 +36,18 @@
                 {% if is_granted('ROLE_ADMIN') %}
                     <td><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}">Afficher</a></td>
                     <td><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}">- Modifier</a></td>
+
                 {% elseif is_granted('ROLE_PARTICIPANT') and app.USER and sortie.organisateur.id == app.user.id %}
                     <td><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}">Afficher</a></td>
                     <td><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}">- Modifier</a></td>
 
+
+
                 {% elseif is_granted('ROLE_PARTICIPANT') %}
                     {% if app.user in sortie.participants %}
-                        <td><a href="#">Se désinscrire</a></td>
+                        <td><a href="{{ path('sortie_desistement', { 'id': sortie.id }) }}">Se désinscrire</a></td>
                     {% else %}
-                        <td><a href="#">- Modifier</a>S'inscrire</td>
+                        <td><a href="{{ path('sortie_inscription', { 'id': sortie.id }) }}">- S'inscrire</a></td>
                     {% endif %}
 
 
