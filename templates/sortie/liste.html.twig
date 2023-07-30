@@ -45,9 +45,10 @@
 
                 {% elseif is_granted('ROLE_PARTICIPANT') %}
                     {% if app.user in sortie.participants %}
-                        <td><a href="{{ path('sortie_desistement', { 'id': sortie.id }) }}">Se désinscrire</a></td>
+                        <td><a href="{{ path('sortie_desistement', { 'id': sortie.id }) }}"></a>{% include('inc/desister.html.twig') %}</td>
                     {% else %}
-                        <td><a href="{{ path('sortie_inscription', { 'id': sortie.id }) }}">- S'inscrire</a></td>
+                        <td><a href="{{ path('sortie_inscription', { 'id': sortie.id }) }}"></a>{% include('inc/inscrire.html.twig') %}</td>
+
                     {% endif %}
 
 
