@@ -157,6 +157,10 @@ class SortieRepository extends ServiceEntityRepository
 
     }
 
+    private function getUser()
+    {
+    }
+
 
 }
 
