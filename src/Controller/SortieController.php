@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Sortie;
+use App\Form\LieuType;
 use App\Form\SortiesFilterType;
 use App\Form\SortieType;
 use App\Repository\EtatRepository;
@@ -86,8 +87,12 @@ class SortieController extends AbstractController
         $sortieType->handleRequest($request);
 
         if ($sortieType-> isSubmitted() && $sortieType->isValid()){
-            //On passe la sortie à l'état Créée
-            $sortie->setEtat($etatRepository->findOneBy(['libelle' => 'Créée']));
+            //On passe la sortie à l'état Créée si on clique sur créer
+            if ($sortieType->getClickedButton() && 'publier' === $sortieType->getClickedButton()->getName()) {
+                        $sortie->setEtat($etatRepository->findOneBy(['libelle' => 'Ouverte']));}
+            else {
+                $sortie->setEtat($etatRepository->findOneBy(['libelle' => 'Créée']));
+            }
 
             //On enregistre le créateur (utilisateur connecté)
             $sortie->setOrganisateur($this->getUser());
@@ -95,10 +100,12 @@ class SortieController extends AbstractController
             $em->persist($sortie);
             $em->flush();
             $this->addFlash('success', 'La sortie a bien été enregistrée');
-            //return $this->redirectToRoute('sortie_listeSortie');
+            return $this->redirectToRoute('sortie_listeSortie');
         }
+        $lieuType = $this->createForm(LieuType::class);
         return $this->render('sortie/creation.html.twig', [
-            'SortieType' => $sortieType->createView()
+            'SortieType' => $sortieType->createView(),
+            'LieuType' => $lieuType->createView()
         ]);
     }
 
