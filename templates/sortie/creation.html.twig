@@ -13,51 +13,86 @@
 <section class="default_container">
     <h2>Créer une sortie</h2>
     <!-- Formulaire de création d'une sortie-->
+    {{ form_start(SortieType, {'attr': {'class': 'form_container'}}) }}
+    <!-- Bloc Formulaire -->
 
-    {{ form_start(SortieType) }}
-    {{ form_row(SortieType.nom) }}
-    {{ form_row(SortieType.dateDebut) }}
-    {{ form_row(SortieType.dateLimiteInscription) }}
-    {{ form_row(SortieType.nbInscritptionMax) }}
-    {{ form_row(SortieType.duree) }}
-    {{ form_row(SortieType.description) }}
-    {{ form_row(SortieType.campus) }}
-    {{ form_row(SortieType.ville) }}
-    {{ form_row(SortieType.lieu) }}
-    <button type="submit">Envoyer</button>
-    {{ form_end(SortieType) }}
+        <label for="event_name" class="column1 row1 default_label">Nom de la sortie :</label>
+    	<div class="column2-5 row1 default_input" id="event_name">{{ form_row(SortieType.nom, {'label': false, 'attr': {'required': 'required'}}) }}</div>
 
+        <label for="event_date_begin" class="column1 row2 default_label">Date et heure de la sortie :</label>
+    	<div class="column2-4 row2 default_input" id="event_date_begin">{{ form_row(SortieType.dateDebut, {'label': false,'attr': {'required': 'required'}}) }}</div>
+
+        <label for="event_deadline_registration" class="column1 row3 default_label">Date limite d'inscription :</label>
+        <div class="column2-4 row3 default_input" id="event_deadline_registration">{{ form_row(SortieType.dateLimiteInscription, {'label': false,'attr': {'required': 'required'}}) }}</div>
+
+        <label for="event_number_places" class="column1 row4 default_label">Nombre de places :</label>
+        <div class="column2 row4 default_input" id="event_number_places">{{ form_row(SortieType.nbInscritptionMax, {'label': false,'attr': {'required': 'required'}}) }}</div>
+        <span id="event_person_number">personnes</span>
+
+        <label for="event_duration" class="column1 row5 default_label">Durée :</label>
+        <div class="column2 row5 default_input" id="event_duration">{{ form_row(SortieType.duree, {'label': false,'attr': {'required': 'required'}}) }}</div>
+        <span id="event_duration_unit">minutes</span>
+
+        <label for="event_description" class="column1 row6 default_label">Description et infos :</label>
+        <div class="column2-5 row6 default_textarea" id="event_description">{{ form_row(SortieType.description, {'label': false,'attr': {'required': 'required'}}) }}</div>
+
+        <label class="column6 row1 default_label">Campus</label>
+        <div class="column7-9 row1 default_span" id="event_campus">{{ form_row(SortieType.campus, {'label': false}) }}</div>
+
+        <label for="event_city" class="column6 row2 default_label">Ville :</label>
+        <div class="column7-8 row2 default_select" id="event_city">{{ form_row(SortieType.ville, {'label': false}) }}</div>
+        <button id="add_city_button" formnovalidate>+</button>
+
+        <label for="event_place" class="column6 row3 default_label">Lieu :</label>
+        <div class="column7-8 row3 default_select" id="event_place">{{ form_row(SortieType.lieu, {'label': false,'attr': {'required': 'required'}}) }}</div>
+        <button id="add_place_button" formnovalidate>+</button>
+
+        <label class="column6 row4 default_label">Rue</label>
+        <span class="column7-9 row4 default_span" id="event_street"></span>
+
+        <label class="column6 row5 default_label">Code postal</label>
+        <span class="column7 row5 default_span" id="event_postal_code"></span>
+
+        <label class="column6 row6 default_label">Latitude</label>
+        <span class="column7 row6 default_span" id="event_latitude"></span>
+
+        <label class="column6 row7 default_label">Longitude</label>
+        <span class="column7 row7 default_span" id="event_longitude"></span>
+
+        <div class="row8 creation_event_button">
+            <button type="submit" class="default_tertiary_button" id="creation_event_save">Enregistrer</button>
+            <button type="submit" class="default_principal_button" id="creation_event_publish">Publier la sortie</button>
+            <button class="default_secondary_button" id="creation_event_cancel" formnovalidate>Annuler</button>
+
+        </div>
+        {{ form_end(SortieType) }}
 </section>
-    <script>
-        window.onload = () => {
-            let sortie_ville = document.querySelector("#sortie_ville");
-            sortie_ville.addEventListener("change", function(){
-                let form = this.closest("form");
-                let data = this.name + "=" + this.value;
 
-                fetch(form.action, {
-                    method: form.getAttribute("method"),
-                    body: data,
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded; charset:UTF-8"
-                    }
-                })
-                    .then(response => response.text())
-                    .then(html => {
-                        let content = document.createElement("html");
-                        content.innerHTML = html;
-                        let nouveauSelect = content.querySelector("#sortie_lieu");
-                        document.querySelector("#sortie_lieu").replaceWith(nouveauSelect);
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    })
-            });
-        }
+    <script>
+      window.onload = () => {
+        let sortie_ville = document.querySelector("#sortie_ville");
+        sortie_ville.addEventListener("change", function(){
+          let form = this.closest("form");
+          let data = this.name + "=" + this.value;
+
+          fetch(form.action, {
+            method: form.getAttribute("method"),
+            body: data,
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded; charset:UTF-8"
+            }
+          })
+            .then(response => response.text())
+            .then(html => {
+              let content = document.createElement("html");
+              content.innerHTML = html;
+              let nouveauSelect = content.querySelector("#sortie_lieu");
+              document.querySelector("#sortie_lieu").replaceWith(nouveauSelect);
+            })
+            .catch(error => {
+              console.log(error);
+            })
+        });
+      }
     </script>
-<!--
-    <script
-        src="{{  asset('js/formSortieLieuParVille.js') }}">
-        </script>
--->
 {% endblock %}

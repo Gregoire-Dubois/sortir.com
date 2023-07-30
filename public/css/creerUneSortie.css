@@ -15,6 +15,10 @@
   padding: 2.25vh 1vw 2.5vh 1vw;
 }
 
+div {
+  display: grid;
+}
+
 /* Formulaire - Spécifique */
 /* Nombre de place (personnes) */
 #event_person_number{
