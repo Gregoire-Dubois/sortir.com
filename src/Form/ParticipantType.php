@@ -69,6 +69,7 @@ class ParticipantType extends AbstractType
             ->add('photo',FileType::class,[
                 'label'=>'Photo',
                 'mapped' => false,
+                'required'=>false,
                 'constraints' => [ new Image( [
                     'mimeTypes' => [
                         'image/jpeg',

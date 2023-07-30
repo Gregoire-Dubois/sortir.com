@@ -58,13 +58,14 @@ class ParticipantController extends AbstractController
                 try
                 {
                     $file->move($this->getParameter('upload_photo'), $newFilename);
+                    $participant->setPhoto($newFilename);
                 }
                 catch (FileException $e)
                 {
                     //TODO: Message d'erreur?
                 }
             }
-            $participant->setPhoto($newFilename);
+
 
             $entityManager->persist($participant);
             $entityManager->flush();
