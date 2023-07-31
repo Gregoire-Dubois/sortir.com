@@ -14,7 +14,7 @@
     <section class="default_container">
         <h2>Créer une sortie</h2>
         <!-- Formulaire de création d'une sortie-->
-        {{ form_start(SortieType, {'attr': {'class': 'form_container'}}) }}
+        {{ form_start(SortieType, {'attr': {'class': 'form_container', 'id' : 'form_sortie'}}) }}
         <!-- Bloc Formulaire -->
 
         <label for="event_name" class="column1 row1 default_label">Nom de la sortie :</label>
@@ -92,6 +92,8 @@
 
         <script>
             document.addEventListener("DOMContentLoaded", function() {
+                let sortieFormData = new FormData();
+
                 // Affichage du formulaire dans la modale
                 document.getElementById("add_place_button").addEventListener("click", function(e) {
                     e.preventDefault();
@@ -104,12 +106,21 @@
                     xhr.onload = function() {
                         if (xhr.status === 200) {
                             // Ajoutez le contenu de la modale dans le DOM
-                            console.log(xhr.responseText)
-                            console.log(xhr.status)
+                            //console.log(xhr.responseText)
+                            //console.log(xhr.status)
                             document.getElementById("popup_add_place").innerHTML = xhr.responseText;
-                            console.log(document.getElementById("popup_add_place").innerHTML)
+                            //console.log(document.getElementById("popup_add_place").innerHTML)
                             // Affichez la modale
                             document.getElementById("popup_add_place").style.display = "block";
+
+                            // Avant d'enregistrer les données, vérifier si une ville a été sélectionnée dans le formulaire de sortie
+                            let sortieVilleSelect = document.getElementById("sortie_ville");
+                            console.log(sortieVilleSelect)
+                            //console.log(sortieLieuSelect)
+                            //if (sortieVilleSelect.selectedIndex !== -1) {
+                            //    selectedVilleId = sortieVilleSelect.value;
+                            //}
+
                         } else {
                             console.error("Erreur lors de la requête AJAX");
                         }
@@ -123,6 +134,13 @@
                         e.preventDefault();
                         let formData = new FormData(document.getElementById("form_lieu"));
 
+                        // Avant d'enregistrer les données, vérifier si une ville a été sélectionnée dans le formulaire de sortie
+                        let sortieLieuSelect = document.getElementById("sortie_ville");
+                        //console.log(sortieLieuSelect)
+                        if (sortieLieuSelect.selectedIndex !== -1) {
+                            selectedVilleId = sortieLieuSelect.value;
+                        }
+
                         let xhr = new XMLHttpRequest();
                         xhr.open("POST", "/sorties/lieu/creation"); // L'URL associée à votre action du contrôleur
                         xhr.onload = function() {
@@ -132,6 +150,33 @@
 
                                 // Cacher la modale après l'enregistrement
                                 document.getElementById("popup_add_place").style.display = "none";
+
+                                // Mise à jour du formulaire de sortie avec le nouveau lieu
+                                let response = JSON.parse(xhr.responseText);
+                                let lieuSelect = document.getElementById("sortie_lieu"); // ID du champ lieu dans le formulaire de sortie
+
+                                // Sélectionner le nouveau lieu dans le formulaire de sortie si une ville a été choisie
+                                if (selectedVilleId) {
+                                    lieuSelect.value = selectedVilleId;
+                                }
+
+                                // Créer une nouvelle option pour le nouveau lieu
+                                let newOption = document.createElement("option");
+                                newOption.value = response.id;
+                                newOption.text = response.nom;
+                                lieuSelect.appendChild(newOption);
+
+                                // Sélectionner le nouveau lieu dans le formulaire de sortie
+                                newOption.selected = true;
+
+                                // Réaffecter les données du formulaire de sortie
+                                for (let pair of sortieFormData.entries()) {
+                                    let key = pair[0];
+                                    let value = pair[1];
+                                    if (key !== "lieu") {
+                                        document.getElementById("form_sortie_" + key).value = value;
+                                    }
+                                }
                             } else {
                                 console.error("Erreur lors de la soumission du formulaire en AJAX");
                             }
