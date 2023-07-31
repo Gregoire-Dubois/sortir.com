@@ -56,6 +56,15 @@ main{
   height: 88vh;
 }
 
+.default_flash_container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  width: 100%;
+  font-size: 2.3vh;
+}
+
 /* Container par défaut */
 .default_container {
   display: flex;

@@ -31,7 +31,7 @@ class Ville
      * @ORM\Column(type="string", length=5)
      *
      * @Assert\NotBlank(message="Veuillez indiquez un code postal")
-     * @Assert\EqualTo(5, message="Un code postal contient 5 chiffres")
+     * @Assert\Length(min=5, max=5, exactMessage="Un code postal contient 5 chiffres")
      */
     private $codePostal;
 

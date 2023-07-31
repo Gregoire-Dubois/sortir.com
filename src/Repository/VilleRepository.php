@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Ville;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Exception;
 
 /**
  * @extends ServiceEntityRepository<Ville>
@@ -37,6 +38,26 @@ class VilleRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function modifierVille(int $id, string $nom, string $codePostal): Ville
+    {
+        $entityManager = $this->getEntityManager();
+        $ville = $this->find($id);
+
+        if (!$ville) {
+            throw new Exception('Ville non trouvée.');
+        }
+
+        $ville->setNom($nom);
+        $ville->setCodePostal($codePostal);
+
+        $entityManager->flush();
+
+        return $ville;
     }
 
     public function rechercheParNomVille($rechercheVille)
