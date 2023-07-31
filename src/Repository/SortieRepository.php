@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * @extends ServiceEntityRepository<Sortie>
@@ -20,8 +21,11 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class SortieRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private $security;
+
+    public function __construct(ManagerRegistry $registry, Security $security)
     {
+        $this->security = $security;
         parent::__construct($registry, Sortie::class);
     }
 
@@ -71,8 +75,10 @@ class SortieRepository extends ServiceEntityRepository
         $dateFin = $data->getTo();
         $organisateur = $data->isOrganized();
         //$nonOrganisateur = $data->is['non_organisateur'];
-        $nonInscrit = $data->isSubscribed();
+        $nonInscrit = $data->isNotSubscribed();
+        $inscrit = $data->isSubscribed();
         $sortiesPassees = $data->isOver();
+        $sortiesOuvertes = $data->isOpen();
 
         $queryBuilder = $this->createQueryBuilder('s');
 
@@ -114,31 +120,10 @@ class SortieRepository extends ServiceEntityRepository
         }
 
 
-/*
-        if ($dateDebut) {
-            $queryBuilder->andWhere('s.dateDebut >= :date_debut')
-                ->setParameter('date_debut', $dateDebut);
-        }
-
-
-
-        if ($dateFin) {
-            $queryBuilder->andWhere('s.dateLimiteInscription <= :date_fin')
-                ->setParameter('date_fin', $dateFin);
-        }
-
-*/
-
         if ($organisateur) {
             $queryBuilder->andWhere('s.organisateur = :organisateur')
                 ->setParameter('organisateur', $this->getUser());
         }
-/*
-        if ($nonOrganisateur) {
-            $queryBuilder->andWhere('s.organisateur != :nonOrganisateur')
-                ->setParameter('nonOrganisateur', $this->getUser());
-        }
-*/
 
         if ($nonInscrit) {
             $queryBuilder->andWhere(':user NOT MEMBER OF s.participants')
@@ -146,8 +131,23 @@ class SortieRepository extends ServiceEntityRepository
         }
 
         if ($sortiesPassees) {
-            $queryBuilder->andWhere('s.dateDebut < :now')
+            $oneMonthAgo = new \DateTime();
+            $oneMonthAgo->modify('-1 month');
+
+            $queryBuilder->andWhere('s.dateDebut >= :oneMonthAgo')
+                ->andWhere('s.dateDebut <= :now')
+                ->setParameter('oneMonthAgo', $oneMonthAgo)
                 ->setParameter('now', new \DateTime());
+        }
+
+        if($sortiesOuvertes){
+            $queryBuilder->andWhere('s.dateLimiteInscription >= :now')
+            ->setParameter('now', new  \DateTime());
+        }
+
+        if ($inscrit){
+            $queryBuilder->andWhere(':user MEMBER OF s.participants')
+                ->setParameter('user', $this->getUser());
         }
 
         $query = $queryBuilder->getQuery();
@@ -157,47 +157,10 @@ class SortieRepository extends ServiceEntityRepository
 
     }
 
+    private function getUser()
+    {
+        return $this->security->getUser();
+    }
 
 }
 
-
-/*
- * rqt initiale teste
- *    $queryBuilder = $this->createQueryBuilder('s');
-        $queryBuilder->innerJoin('s.etat', 'e'); // Utilisez l'alias 's' pour la jointure avec 'etat'
-        $queryBuilder->innerJoin('s.organisateur', 'p'); // Utilisez l'alias 's' pour la jointure avec 'organisateur'
-        $queryBuilder->where('s.dateLimiteInscription < :currentDate'); // Utilisez 's' pour faire référence à la colonne "dateLimiteInscription"
-        $queryBuilder->setParameter('currentDate', new \DateTime(), \Doctrine\DBAL\Types\Types::DATETIME_MUTABLE);        $query = $queryBuilder->getQuery();
-        $query->setMaxResults(10);
-        $results = $query->getResult();
-        return $results;
- *
- *
- requete pour sorties passées
-
-SELECT sortie.nom, sortie.date_debut, sortie.date_limite_inscription,sortie.date_debut ,participant.nom, etat.libelle
-FROM sortie
-INNER JOIN etat ON sortie.etat_id = etat.id
-INNER JOIN participant ON sortie.organisateur_id = participant.id
-WHERE sortie.date_debut < CURDATE();
-
-requete selon le campus
-
-SELECT sortie.nom, sortie.date_debut, sortie.date_limite_inscription,sortie.date_debut ,participant.nom, etat.libelle, campus.nom
-FROM sortie
-INNER JOIN etat ON sortie.etat_id = etat.id
-INNER JOIN participant ON sortie.organisateur_id = participant.id
-INNER JOIN campus ON sortie.campus_id = campus.id
-WHERE campus.nom ='SAINT HERBLAIN';
-
-
-
-
-requete entre 2 dates
-
-SELECT sortie.nom, sortie.date_debut, sortie.date_limite_inscription,sortie.date_debut ,participant.nom, etat.libelle
-FROM sortie
-INNER JOIN etat ON sortie.etat_id = etat.id
-INNER JOIN participant ON sortie.organisateur_id = participant.id
-WHERE sortie.date_debut >= '2023-06-01' AND sortie.date_debut <= '2023-06-28';
- */
