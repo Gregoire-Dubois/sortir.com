@@ -11,6 +11,7 @@ use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -121,9 +122,19 @@ class SortieController extends AbstractController
     /**
      * @Route("/sorties/annuler/{id}", name="sortie_annulerSortie")
      */
-    public function annulerSortie(int $id): Response
+    public function annulerSortie(int $id, Request $request, SortieRepository $sortieRepository): Response
     {
-        return $this->redirectToRoute('sortie_listeSortie');
+        $sortie = $sortieRepository->findSortieByIdWithDetails($id);
+
+        if (!$sortie) {
+            throw $this->createNotFoundException('Sortie non trouvée.');
+        }
+        $sortieType = $this->createForm(SortieType::class, $sortie);
+        //$sortieType->handleRequest($request);
+        return $this->render('sortie/annulation.html.twig', [
+            'SortieType' => $sortieType->createView(),
+            'sortie' => $sortie
+        ]);
     }
 
     /**
