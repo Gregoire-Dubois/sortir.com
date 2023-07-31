@@ -83,7 +83,7 @@ class SortieRepository extends ServiceEntityRepository
             ->leftJoin('s.campus', 'c')
             ->leftJoin('s.lieu', 'l')
             ->leftJoin('l.ville', 'v')
-            ->where('s.dateLimiteInscription < :currentDate')
+            ->where('s.dateLimiteInscription < :currentDate or s.dateLimiteInscription > :currentDate')
             ->addOrderBy('s.dateDebut', 'DESC')
             ->setParameter('currentDate', new \DateTime(), \Doctrine\DBAL\Types\Types::DATETIME_MUTABLE);
 
@@ -146,8 +146,8 @@ class SortieRepository extends ServiceEntityRepository
         }
 
         if ($sortiesPassees) {
-            $queryBuilder->andWhere('s.dateHeureDebut < :now')
-                ->setParameter('now', new DateTime());
+            $queryBuilder->andWhere('s.dateDebut < :now')
+                ->setParameter('now', new \DateTime());
         }
 
         $query = $queryBuilder->getQuery();
@@ -155,6 +155,10 @@ class SortieRepository extends ServiceEntityRepository
 
         return $results;
 
+    }
+
+    private function getUser()
+    {
     }
 
 

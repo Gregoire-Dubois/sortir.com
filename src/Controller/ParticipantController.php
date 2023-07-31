@@ -5,12 +5,9 @@ namespace App\Controller;
 use App\Entity\Participant;
 use App\Form\ImportType;
 use App\Form\ParticipantType;
-
-
 use App\Repository\CampusRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;

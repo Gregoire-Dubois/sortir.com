@@ -30,6 +30,11 @@
   font-weight: inherit;
 }
 
+/* Liens par défaut */
+a {
+  text-decoration: none;
+}
+
 /* Body par défaut */
 body {
   display: flex;
@@ -45,6 +50,9 @@ body {
 
 /* Main par défaut */
 main{
+  display: flex;
+  justify-content: center;
+  align-items: center;
   height: 88vh;
 }
 
