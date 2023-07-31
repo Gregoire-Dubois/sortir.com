@@ -82,15 +82,24 @@ class SortieRepository extends ServiceEntityRepository
 
         $queryBuilder = $this->createQueryBuilder('s');
 
+        $oneMonthAgo = new \DateTime();
+        $oneMonthAgo->modify('-1 month');
+
         $queryBuilder->select('s')
             ->innerJoin('s.etat', 'e')
             ->innerJoin('s.organisateur', 'p')
-            ->leftJoin('s.participants', 'part') // assignation d'un nouvel alias à participant pour le join
+            ->leftJoin('s.participants', 'part')
             ->leftJoin('s.campus', 'c')
             ->leftJoin('s.lieu', 'l')
             ->leftJoin('l.ville', 'v')
-            ->where('s.dateLimiteInscription < :currentDate or s.dateLimiteInscription > :currentDate')
+            ->where(
+                $queryBuilder->expr()->orX(
+                    's.dateDebut >= :oneMonthAgo',
+                    's.dateLimiteInscription > :currentDate'
+                )
+            )
             ->addOrderBy('s.dateDebut', 'DESC')
+            ->setParameter('oneMonthAgo', $oneMonthAgo, \Doctrine\DBAL\Types\Types::DATETIME_MUTABLE)
             ->setParameter('currentDate', new \DateTime(), \Doctrine\DBAL\Types\Types::DATETIME_MUTABLE);
 
 
@@ -118,7 +127,6 @@ class SortieRepository extends ServiceEntityRepository
             $queryBuilder->andWhere('s.dateDebut <= :date_fin')
                 ->setParameter('date_fin', $dateFin);
         }
-
 
         if ($organisateur) {
             $queryBuilder->andWhere('s.organisateur = :organisateur')
