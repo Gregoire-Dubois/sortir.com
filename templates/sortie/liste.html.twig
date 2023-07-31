@@ -65,7 +65,8 @@
             <button type="submit" class="default_principal_button" id="bouton-search_event">Rechercher</button>
         </div>
 
-        {{ form_end(sortieForm) }}
+        {{ form_row(sortieForm._token) }}
+        {{ form_end(sortieForm, {render_rest: false}) }}
 
         <!-- Bloc Tableau -->
         <div class="default_table_wrapper">
