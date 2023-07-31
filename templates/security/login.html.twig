@@ -43,7 +43,8 @@
                 <label for="remember_me_checkbox">Se souvenir de moi</label>
             </div>
             <button type="submit" class="default_principal_button" id="connexion">Connexion</button>
-            <button class="default_secondary_button" id="forgotten_password" formnovalidate>Mot de passe oublié</button>
+            <button class="default_secondary_button" id="forgotten_password" formnovalidate>
+                <a href="{{ path('app_forgot_password_request') }}">Mot de passe oublié</a></button>
         </form>
 
     </div>
