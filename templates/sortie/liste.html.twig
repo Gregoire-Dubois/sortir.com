@@ -15,10 +15,10 @@
                 <th>Date de la sortie</th>
                 <th>Clôture</th>
                 <th>Inscrits / places</th>
+                <th>Inscrit</th>
                 <th>Organisateur</th>
                 <th>Etat</th>
                 <th>Actions</th>
-
             </tr>
         </thead>
             <tbody>
@@ -27,11 +27,11 @@
                 <td>{{ sortie.nom }}</td>
                 <td>{{ sortie.dateDebut|date('d-m-Y') }}</td>
                 <td>{{ sortie.dateLimiteInscription|date('d-m-Y') }}</td>
-                <td>{{ sortie.nbInscritptionMax }}</td>
+                <td>{{ sortie.participants.count }} / {{ sortie.nbInscritptionMax }} </td>
+                <td>  {%if app.user in  sortie.participants %} X</td>
+                {% endif %}</td>
                 <td>{{ sortie.organisateur }}</td>
                 <td>{{ sortie.etat.libelle }}</td>
-                <td>
-
 
                 {% if is_granted('ROLE_ADMIN') %}
                     <td><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}">Afficher</a></td>
@@ -41,15 +41,16 @@
                     <td><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}">Afficher</a></td>
                     <td><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}">- Modifier</a></td>
 
-
                 {% elseif is_granted('ROLE_PARTICIPANT') %}
                     {% if app.user in sortie.participants %}
                         <td><a href="{{ path('sortie_desistement', { 'id': sortie.id }) }}"></a>{% include('inc/desister.html.twig') %}</td>
+                        <td><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}">Afficher</a></td>
+
                     {% else %}
                         <td><a href="{{ path('sortie_inscription', { 'id': sortie.id }) }}"></a>{% include('inc/inscrire.html.twig') %}</td>
+                        <td><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}">Afficher</a></td>
 
                     {% endif %}
-
 
                 {% elseif is_granted('ROLE_PARTICIPANT') %}
                     <td><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}">Afficher</a></td>
