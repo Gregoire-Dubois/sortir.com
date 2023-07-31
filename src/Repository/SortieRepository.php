@@ -21,8 +21,11 @@ use Symfony\Component\Security\Core\Security;
  */
 class SortieRepository extends ServiceEntityRepository
 {
+    private $security;
+
     public function __construct(ManagerRegistry $registry, Security $security)
     {
+        $this->security = $security;
         parent::__construct($registry, Sortie::class);
     }
 
@@ -156,6 +159,11 @@ class SortieRepository extends ServiceEntityRepository
 
         return $results;
 
+    }
+
+    private function getUser()
+    {
+        return $this->security->getUser();
     }
 
 
