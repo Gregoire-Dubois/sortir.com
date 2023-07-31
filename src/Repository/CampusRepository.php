@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Campus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Exception;
 
 /**
  * @extends ServiceEntityRepository<Campus>
@@ -37,6 +38,25 @@ class CampusRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function modifierCampus(int $id, string $nom): Campus
+    {
+        $entityManager = $this->getEntityManager();
+        $campus = $this->find($id);
+
+        if (!$campus) {
+            throw new Exception('Campus non trouvé.');
+        }
+
+        $campus->setNom($nom);
+
+        $entityManager->flush();
+
+        return $campus;
     }
 
     public function rechercheParNomCampus($rechercheCampus)
