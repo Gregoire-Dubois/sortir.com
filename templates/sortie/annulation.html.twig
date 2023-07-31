@@ -1,10 +1,52 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
+    {{ parent() }} | Annuler une sortie
+{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/annulerSortie.css') }}">>
 {% endblock %}
 
 {% block body %}
+
+    <section class="default_container">
+        <h2>Créer une sortie</h2>
+        <!-- Formulaire de création d'une sortie-->
+        {{ form_start(SortieType, {'attr': {'class': 'cancel_event_container', 'id' : 'form_cancel_event'}}) }}
+        <!-- Bloc Formulaire -->
+        <label for="event_name" class="column1 row1 default_label">Nom de la sortie :</label>
+        <span class="column2-3 row1 default_input"
+             id="event_name">{{ sortie.nom }}</span>
+
+        <label for="event_date_begin" class="column1 row2 default_label">Date et heure de la sortie :</label>
+        <span class="column2-4 row2 default_input"
+             id="event_date_begin">{{ sortie.dateDebut|date('d/m/Y') }}</span>
+
+        <label class="column1 row3 default_label">Campus</label>
+        <div class="column7-9 row1 default_span"
+             id="event_campus">{{ sortie.campus }}</div>
+
+        <label for="event_city" class="column1 row4 default_label">Ville :</label>
+        <div class="column7-8 row2 default_select"
+             id="event_city"> TO DO </div>
+
+        <label for="event_place" class="column1 row5 default_label">Lieu :</label>
+        <div class="column7-8 row3 default_select"
+             id="event_place">{{ sortie.lieu }}</div>
+
+        <label class="column1 row9 default_label">Motif :</label>
+        <div class="column7 row5 default_span" id="event_postal_code">{{ form_row(SortieType.motif, {'label': false,'attr': {'required': 'required'}}) }}</div>
+
+        <div class="column7-9 row1 creation_event_button">
+            <div class="default_tertiary_button" id="creation_event_save">{{ form_row(SortieType.creer) }}</div>
+            <div class="default_tertiary_button" id="creation_event_save">{{ form_row(SortieType.publier) }}</div>
+            <div></div><button class="default_secondary_button" id="creation_event_cancel" formnovalidate>Annuler</button></div>
+        {{ form_row(SortieType._token) }}
+        {{ form_end(SortieType, {render_rest: false}) }}
+        //AJOUTER LE CHAMP TOKEN !!
+    </section>
 
 {% endblock %}
 
