@@ -11,12 +11,12 @@
 {% endblock %}
 
 {% block body %}
+
     <section class="default_container">
         <h2>Créer une sortie</h2>
         <!-- Formulaire de création d'une sortie-->
-        {{ form_start(SortieType, {'attr': {'class': 'form_container'}}) }}
+        {{ form_start(SortieType, {'attr': {'class': 'form_container', 'id' : 'form_sortie'}}) }}
         <!-- Bloc Formulaire -->
-
         <label for="event_name" class="column1 row1 default_label">Nom de la sortie :</label>
         <div class="column2-5 row1 default_input"
              id="event_name">{{ form_row(SortieType.nom, {'label': false, 'attr': {'required': 'required'}}) }}</div>
@@ -74,8 +74,9 @@
             <div class="default_tertiary_button" id="creation_event_save">{{ form_row(SortieType.publier) }}</div>
             <div></div><button class="default_secondary_button" id="creation_event_cancel" formnovalidate>Annuler</button></div>
 
-        </div>
-        {{ form_end(SortieType) }}
+        //Ajout du champ token puisque render_rest= false
+        {{ form_row(SortieType._token) }}
+        {{ form_end(SortieType, {render_rest: false}) }}
     </section>
 
     <!-- Popup "Ajouter un lieu" -->
@@ -89,65 +90,7 @@
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <!--Script qui affiche dynamiquement les infos des villes et des lieux-->
         <script src="{{ asset('/js/formSortieLieuParVille.js') }}" defer></script>
-
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                // Affichage du formulaire dans la modale
-                document.getElementById("add_place_button").addEventListener("click", function(e) {
-                    e.preventDefault();
-
-                    // Effectuez une requête AJAX pour récupérer le contenu du formulaire
-                    let xhr = new XMLHttpRequest();
-
-                    xhr.open("GET", "/sorties/lieu/afficher"); // L'URL associée à votre action du contrôleur
-
-                    xhr.onload = function() {
-                        if (xhr.status === 200) {
-                            // Ajoutez le contenu de la modale dans le DOM
-                            console.log(xhr.responseText)
-                            console.log(xhr.status)
-                            document.getElementById("popup_add_place").innerHTML = xhr.responseText;
-                            console.log(document.getElementById("popup_add_place").innerHTML)
-                            // Affichez la modale
-                            document.getElementById("popup_add_place").style.display = "block";
-                        } else {
-                            console.error("Erreur lors de la requête AJAX");
-                        }
-                    };
-                    xhr.send();
-                });
-
-                // Enregistrement des données
-                document.addEventListener("click", function(e) {
-                    if (e.target.id === "confirm_add_place_button") {
-                        e.preventDefault();
-                        let formData = new FormData(document.getElementById("form_lieu"));
-
-                        let xhr = new XMLHttpRequest();
-                        xhr.open("POST", "/sorties/lieu/creation"); // L'URL associée à votre action du contrôleur
-                        xhr.onload = function() {
-                            if (xhr.status === 200) {
-                                // Gérer la réponse du serveur en cas de succès (vous pouvez ajouter la logique souhaitée ici)
-                                console.log("Données enregistrées avec succès !");
-
-                                // Cacher la modale après l'enregistrement
-                                document.getElementById("popup_add_place").style.display = "none";
-                            } else {
-                                console.error("Erreur lors de la soumission du formulaire en AJAX");
-                            }
-                        };
-                        xhr.send(formData);
-                    }
-                });
-
-                // Cacher la modale lorsque l'utilisateur clique sur le bouton "Fermer" ou en dehors de la modale
-                document.addEventListener("click", function(e) {
-                    if (e.target.classList.contains("modal")) {
-                        document.querySelector(".modal").style.display = "none";
-                    }
-                });
-            });
-        </script>
+        <script src="{{ asset('/js/formCreationLieu.js') }}" defer></script>
 
     {% endblock %}
 

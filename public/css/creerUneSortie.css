@@ -180,6 +180,10 @@ button#add_place_button:hover {
   grid-row: 8;
 }
 
+.row9 {
+  grid-row: 9;
+}
+
 @media screen and (max-width: 769px) {
 
   .header_menu_nav {

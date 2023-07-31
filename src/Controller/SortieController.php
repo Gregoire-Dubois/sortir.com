@@ -28,20 +28,19 @@ class SortieController extends AbstractController
 
         $sortieForm = $this->createForm(SortiesFilterType::class);
         $sortieForm->handleRequest($request);
-        $sortiesAll= "";
-        $data= "";
+        $sortiesAll = "";
+        $data = "";
 
-        if ($sortieForm->isSubmitted() && $sortieForm->isValid())
-        {
+        if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
 
             $data = $sortieForm->getData();
             //dump($data);
-            $sortiesAll = $sortieRepository-> selectAllSorties($data);
-           // dump($sortieForm->getData());
+            $sortiesAll = $sortieRepository->selectAllSorties($data);
+            // dump($sortieForm->getData());
 
         }
 
-       //$sortiesAll = $sortieRepository-> selectAllSorties($data);
+        //$sortiesAll = $sortieRepository-> selectAllSorties($data);
 
         return $this->render('sortie/liste.html.twig', [
             'sorties' => $sortiesAll,
@@ -75,24 +74,24 @@ class SortieController extends AbstractController
      */
     public function creerSortie(Request $request, EtatRepository $etatRepository, EntityManagerInterface $em): Response
     {
-        $sortie = New Sortie();
+        $sortie = new Sortie();
         //On fixe une date de création
         $sortie->setDateCreation(new \DateTime());
         $sortie->setDateModification(new \DateTime());
 
         //On paramètre des propositions de date cohérentes dans le formulaire
-        $sortie->setDateDebut((new \DateTimeImmutable())->setTime(21,0));
+        $sortie->setDateDebut((new \DateTimeImmutable())->setTime(21, 0));
         $sortie->setDateLimiteInscription($sortie->getDateDebut()->sub(new \DateInterval("PT8H")));
 
         $sortieType = $this->createForm(SortieType::class, $sortie);
 
         $sortieType->handleRequest($request);
 
-        if ($sortieType-> isSubmitted() && $sortieType->isValid()){
+        if ($sortieType->isSubmitted() && $sortieType->isValid()) {
             //On passe la sortie à l'état Créée si on clique sur créer
             if ($sortieType->getClickedButton() && 'publier' === $sortieType->getClickedButton()->getName()) {
-                        $sortie->setEtat($etatRepository->findOneBy(['libelle' => 'Ouverte']));}
-            else {
+                $sortie->setEtat($etatRepository->findOneBy(['libelle' => 'Ouverte']));
+            } else {
                 $sortie->setEtat($etatRepository->findOneBy(['libelle' => 'Créée']));
             }
 
@@ -122,20 +121,44 @@ class SortieController extends AbstractController
     /**
      * @Route("/sorties/annuler/{id}", name="sortie_annulerSortie")
      */
-    public function annulerSortie(int $id): Response
+    public function annulerSortie(int $id, Request $request, EtatRepository $etatRepository, SortieRepository $sortieRepository, EntityManagerInterface $em): Response
     {
-        return $this->redirectToRoute('sortie_listeSortie');
+        //Recherche de la sortie concernées avec les jointures idoines
+        $sortie = $sortieRepository->findSortieByIdWithDetails($id);
+        //On prépare l'alimentation du champ dateModif
+        $sortie->setDateModification(new \DateTime());
+
+        //si l'id n'existe pas
+        if (!$sortie) {
+            throw $this->createNotFoundException('Sortie non trouvée.');
+        }
+        $sortieType = $this->createForm(SortieType::class, $sortie, ['only_motif' => true, 'validation_groups' => ['update_motif']]);
+        $sortieType->handleRequest($request);
+
+        if ($sortieType->isSubmitted() && $sortieType->isValid()) {
+            //On passe la sortie à l'état annulée
+            $sortie->setEtat($etatRepository->findOneBy(['libelle' => 'Annulée']));
+            //On enregistre le mofif
+            //$em->persist($sortie);
+            $em->flush();
+            $this->addFlash('success', 'La sortie a bien été annulée');
+            return $this->redirectToRoute('sortie_listeSortie');
+        }
+        return $this->render('sortie/annulation.html.twig', [
+            'SortieType' => $sortieType->createView(),
+            'sortie' => $sortie
+        ]);
     }
 
     /**
      * @Route("/sorties/inscription/{id}", name="sortie_inscription", requirements={"id"="\d+"}, methods={"POST"})
      */
     public function inscriptionSortie(
-        Request $request,
-        Sortie $sortie,
-        EntityManagerInterface $entityManager,
+        Request                   $request,
+        Sortie                    $sortie,
+        EntityManagerInterface    $entityManager,
         CsrfTokenManagerInterface $csrfTokenManager
-    ) : Response
+    ): Response
     {
         $token = new CsrfToken('inscription_sortie', $request->request->get('_csrf_token'));
         if (!$csrfTokenManager->isTokenValid($token)) {
@@ -145,10 +168,9 @@ class SortieController extends AbstractController
         $url = $request->headers->get('referer');
         $participantConnecte = $this->getUser();
 
-        if($sortie->getEtat()->getLibelle() == 'Ouverte'
-            && $sortie->getDateLimiteInscription()>=new \DateTime('now')
-            && !$sortie->getParticipants()->contains($participantConnecte))
-        {
+        if ($sortie->getEtat()->getLibelle() == 'Ouverte'
+            && $sortie->getDateLimiteInscription() >= new \DateTime('now')
+            && !$sortie->getParticipants()->contains($participantConnecte)) {
 
             //dump($sortie->getEtat()->getLibelle());
             //dump($sortie->getDateLimiteInscription());
@@ -163,31 +185,31 @@ class SortieController extends AbstractController
             //dump($participantConnecte);
             $entityManager->flush();
             //dump($sortie);
-            $this->addFlash('success', 'Vous êtes bien inscrit/e pour la sortie '.$sortie->getNom().' !');
-        }else{
-            $this->addFlash('error', 'Vous ne pouvez pas vous inscrire pour la sortie '.$sortie->getNom().' !');
+            $this->addFlash('success', 'Vous êtes bien inscrit/e pour la sortie ' . $sortie->getNom() . ' !');
+        } else {
+            $this->addFlash('error', 'Vous ne pouvez pas vous inscrire pour la sortie ' . $sortie->getNom() . ' !');
         }
 
 
-
         //On renvoit vers l'URL qui a émis la requête
-        if($url){
+        if ($url) {
             return $this->redirect($url);
-        }else{
+        } else {
             return $this->redirectToRoute('sortie_listeSortie');
         }
 
 
     }
+
     /**
      * @Route("/sorties/desistement/{id}", name="sortie_desistement", requirements={"id"="\d+"}, methods={"POST"})
      */
     public function desistementSortie(
-        Request $request,
-        Sortie $sortie,
-        EntityManagerInterface $entityManager,
+        Request                   $request,
+        Sortie                    $sortie,
+        EntityManagerInterface    $entityManager,
         CsrfTokenManagerInterface $csrfTokenManager
-    ) : Response
+    ): Response
     {
         $token = new CsrfToken('desistement_sortie', $request->request->get('_csrf_token'));
         if (!$csrfTokenManager->isTokenValid($token)) {
@@ -197,8 +219,8 @@ class SortieController extends AbstractController
         $url = $request->headers->get('referer');
         $participantConnecte = $this->getUser();
 
-        if($sortie->getDateDebut()>=new \DateTime('now')
-            && $sortie->getParticipants()->contains($participantConnecte)){
+        if ($sortie->getDateDebut() >= new \DateTime('now')
+            && $sortie->getParticipants()->contains($participantConnecte)) {
             dump($sortie->getEtat()->getLibelle());
             dump($sortie->getDateLimiteInscription());
             dump(new \DateTime('now'));
@@ -212,17 +234,16 @@ class SortieController extends AbstractController
             dump($participantConnecte);
             $entityManager->flush();
             dump($sortie);
-            $this->addFlash('success', 'Vous êtes bien désinscrit/e pour la sortie '.$sortie->getNom().' !');
-        }else{
-            $this->addFlash('error', 'Vous ne pouvez pas vous désinscrire pour la sortie '.$sortie->getNom().' !');
+            $this->addFlash('success', 'Vous êtes bien désinscrit/e pour la sortie ' . $sortie->getNom() . ' !');
+        } else {
+            $this->addFlash('error', 'Vous ne pouvez pas vous désinscrire pour la sortie ' . $sortie->getNom() . ' !');
         }
 
 
-
         //On renvoit vers l'URL qui a émis la requête ou main_accueil
-        if($url){
-            return $this->redirect($url );
-        }else{
+        if ($url) {
+            return $this->redirect($url);
+        } else {
             return $this->redirectToRoute('sortie_listeSortie');
         }
 

@@ -20,16 +20,17 @@
 	<header>
         {% include('inc/nav.html.twig') %}
     </header>
-    {% endblock %}
-    {% for label, messages in app.flashes %}
-        {% for message in messages %}
-            <div class="flash alert-{{ label }}">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endfor %}
+    {%  endblock %}
 
     <main>
+        {% for type, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="default_flash-message {{ type }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+
 		{% block body %}{% endblock %}
     </main>
 
