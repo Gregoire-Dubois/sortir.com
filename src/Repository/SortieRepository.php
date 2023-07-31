@@ -131,7 +131,12 @@ class SortieRepository extends ServiceEntityRepository
         }
 
         if ($sortiesPassees) {
-            $queryBuilder->andWhere('s.dateDebut < :now')
+            $oneMonthAgo = new \DateTime();
+            $oneMonthAgo->modify('-1 month');
+
+            $queryBuilder->andWhere('s.dateDebut >= :oneMonthAgo')
+                ->andWhere('s.dateDebut <= :now')
+                ->setParameter('oneMonthAgo', $oneMonthAgo)
                 ->setParameter('now', new \DateTime());
         }
 
