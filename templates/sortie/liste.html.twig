@@ -19,7 +19,6 @@
                 <th>Organisateur</th>
                 <th>Etat</th>
                 <th>Actions</th>
-
             </tr>
         </thead>
             <tbody>
@@ -28,7 +27,7 @@
                 <td>{{ sortie.nom }}</td>
                 <td>{{ sortie.dateDebut|date('d-m-Y') }}</td>
                 <td>{{ sortie.dateLimiteInscription|date('d-m-Y') }}</td>
-                <td>{{ sortie.nbInscritptionMax }}</td>
+                <td>{{ sortie.participants.count }} / {{ sortie.nbInscritptionMax }} </td>
                 <td>  {%if app.user in  sortie.participants %} X</td>
                 {% endif %}</td>
                 <td>{{ sortie.organisateur }}</td>

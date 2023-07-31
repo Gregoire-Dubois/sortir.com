@@ -154,6 +154,8 @@ class SortieRepository extends ServiceEntityRepository
                 ->setParameter('now', new \DateTime());
         }
 
+
+
         $query = $queryBuilder->getQuery();
         $results = $query->getResult();
 
@@ -165,8 +167,6 @@ class SortieRepository extends ServiceEntityRepository
     {
         return $this->security->getUser();
     }
-
-
 
 }
 
