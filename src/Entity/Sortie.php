@@ -62,13 +62,13 @@ class Sortie
      *
      * @Assert\NotBlank(message="Veuillez indiquez un nombre maximum de participants")
      * @Assert\LessThanOrEqual(500, message="Le nombre maximum de participants ne peut exéder 500 personnes")
+     * @Assert\GreaterThanOrEqual(1, message="La sortie doit avoir un participant minimum")
      */
     private $nbInscritptionMax;
 
     /**
      * @ORM\Column(type="text")
      *
-     * Assert\GreaterThanOrEqual(1, message="La sortie doit avoir un participant minimum")
      */
     private $description;
 
@@ -106,7 +106,7 @@ class Sortie
 
     /**
      * @ORM\ManyToOne(targetEntity=Lieu::class, inversedBy="sorties")
-     * @ORM\JoinColumn(nullable=true)
+     * @ORM\JoinColumn(nullable=false)
      */
     private $lieu;
 
