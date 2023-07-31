@@ -73,7 +73,7 @@ class Sortie
     private $description;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(type="text", nullable=true)(groups={"update_motif"})
      */
     private $motif;
 
