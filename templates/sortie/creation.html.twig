@@ -11,12 +11,12 @@
 {% endblock %}
 
 {% block body %}
+
     <section class="default_container">
         <h2>Créer une sortie</h2>
         <!-- Formulaire de création d'une sortie-->
         {{ form_start(SortieType, {'attr': {'class': 'form_container', 'id' : 'form_sortie'}}) }}
         <!-- Bloc Formulaire -->
-
         <label for="event_name" class="column1 row1 default_label">Nom de la sortie :</label>
         <div class="column2-5 row1 default_input"
              id="event_name">{{ form_row(SortieType.nom, {'label': false, 'attr': {'required': 'required'}}) }}</div>
@@ -74,8 +74,9 @@
             <div class="default_tertiary_button" id="creation_event_save">{{ form_row(SortieType.publier) }}</div>
             <div></div><button class="default_secondary_button" id="creation_event_cancel" formnovalidate>Annuler</button></div>
 
-        </div>
-        {{ form_end(SortieType) }}
+        //Ajout du champ token puisque render_rest= false
+        {{ form_row(SortieType._token) }}
+        {{ form_end(SortieType, {render_rest: false}) }}
     </section>
 
     <!-- Popup "Ajouter un lieu" -->

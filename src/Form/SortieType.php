@@ -75,6 +75,8 @@ class SortieType extends AbstractType
                 'disabled' => true,
             ])
 
+            ->add('motif')
+
         ->add('creer', SubmitType::class, [
             'label' => 'Créer'
         ])
