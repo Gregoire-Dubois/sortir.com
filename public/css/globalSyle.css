@@ -237,6 +237,18 @@ h2 {
   border: 3px solid var(--secondary-color);
 }
 
+/* Message d'erreur de validation de formulaire par défaut */
+.default_error_message {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding-left: 0.5vw;
+  font-size: 1.7vh;
+  font-style: italic;
+  color: white;
+}
+
 /* Bouton par défaut */
 .default_principal_button {
   height: 100%;
