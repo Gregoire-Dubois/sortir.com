@@ -1,72 +1,147 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}
+    {{ parent() }} | Accueil
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/accueil.css') }}">
+{% endblock %}
+
 {% block body %}
 
+    <!-- Infos : nom utilisateurs et date du jour -->
+    <div class="info_login_container">
+        {% set currentDate = "now"|date("d/m/Y") %} {# Récupéreration de la date du jour #}
+        {% set currentUser = app.user.nom %} {# Récupérer du nom de l'utilisateur connecté #}
+        <div class="today_date"><p>Date du jour : </p><p id="today_date_value">{{ currentDate }}</p></div>
+        <div class="username"><p>Participant : </p><p id="username_value">{{ currentUser }}</p></div>
+    </div>
+    <section class="default_container">
+        <h2>Liste et Filtres des Sorties</h2>
+        <!-- Bloc filtres et recherches de la sortie -->
+        {{ form_start(sortieForm, {'attr': {'novalidate': 'novalidate'}, 'render_form': false}) }}
+        <div class="filter_container">
 
-    {{ form_start(sortieForm) }}
-    {{ form_widget(sortieForm) }}
-    <button>Rechercher</button>
-    {{ form_end(sortieForm) }}
+            <!-- Filtre par nom du campus -->
+            <label class="column1 row1 default_label" for="campus_filter">Campus :</label>
+            {{ form_widget(sortieForm.campus, {'label': false, 'attr': {'class': 'column2 row1 default_select', 'name': 'campus_filter', 'id': 'campus_filter'}}) }}
 
-    <table>
-        <thead>
-            <tr>
-                <th>Nom de la sortie</th>
-                <th>Date de la sortie</th>
-                <th>Clôture</th>
-                <th>Inscrits / places</th>
-                <th>Inscrit</th>
-                <th>Organisateur</th>
-                <th>Etat</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-            <tbody>
-            {% for sortie in sorties %}
-            <tr>
-                <td>{{ sortie.nom }}</td>
-                <td>{{ sortie.dateDebut|date('d-m-Y') }}</td>
-                <td>{{ sortie.dateLimiteInscription|date('d-m-Y') }}</td>
-                <td>{{ sortie.participants.count }} / {{ sortie.nbInscritptionMax }} </td>
-                <td>  {%if app.user in  sortie.participants %} X</td>
-                {% endif %}</td>
-                <td>{{ sortie.organisateur }}</td>
-                <td>{{ sortie.etat.libelle }}</td>
+            <!-- Recherche par le nom de la sortie -->
+            <label class="column1 row2 default_label" for="event_name_search">Le nom de la sortie contient :</label>
+            {{ form_widget(sortieForm.name, {'label': false, 'attr': {'class': 'column2 row2 default_input', 'type': 'text', 'id': 'event_name_search'}}) }}
 
-                {% if is_granted('ROLE_ADMIN') %}
-                    <td><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}">Afficher</a></td>
-                    <td><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}">- Modifier</a></td>
+            <!-- Filtre par date de début et date de fin -->
+            <label class="column3 row1 default_label" for="start_date_filter">Entre:</label>
+            {{ form_widget(sortieForm.from, {'label': false, 'attr': {'class': 'column4 row1 default_input', 'type': 'date', 'id': 'start_date_filter'}}) }}
 
-                {% elseif is_granted('ROLE_PARTICIPANT') and app.USER and sortie.organisateur.id == app.user.id %}
-                    <td><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}">Afficher</a></td>
-                    <td><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}">- Modifier</a></td>
+            <label class="column3 row2 default_label" for="end_date_filter">Et:</label>
+            {{ form_widget(sortieForm.to, {'label': false, 'attr': {'class': 'column4 row2 default_input', 'type': 'date', 'id': 'end_date_filter'}}) }}
 
-                {% elseif is_granted('ROLE_PARTICIPANT') %}
+            <!-- Filtres checkbox - Premier bloc -->
+            <label class="column5 row1 default_label">
+                {{ form_widget(sortieForm.organized, {'label': false, 'attr': {'type': 'checkbox', 'id': 'organizer_filter'}}) }}
+                Sorties dont je suis l'organisateur/trice
+            </label>
+
+            <label class="column5 row2 default_label">
+                {{ form_widget(sortieForm.subscribed, {'label': false, 'attr': {'type': 'checkbox', 'id': 'registered_filter'}}) }}
+                Sorties auxquelles je suis inscrit/e
+            </label>
+
+            <!-- Filtres checkbox - Second bloc -->
+            <label class="column6 row1 default_label">
+                {{ form_widget(sortieForm.notSubscribed, {'label': false, 'attr': {'type': 'checkbox', 'id': 'not_registered_filter'}}) }}
+                Sorties auxquelles je ne suis pas inscrit/e
+            </label>
+
+            <label class="column6 row2 default_label">
+                {{ form_widget(sortieForm.over, {'label': false, 'attr': {'type': 'checkbox', 'id': 'event_past_filter'}}) }}
+                Sorties passées
+            </label>
+
+            <!-- Bouton "Rechercher" -->
+            <button type="submit" class="default_principal_button" id="bouton-search_event">Rechercher</button>
+        </div>
+
+        {{ form_end(sortieForm) }}
+
+        <!-- Bloc Tableau -->
+        <div class="default_table_wrapper">
+            <table class="default_table">
+
+                <colgroup>
+                    <col class="event_column1">
+                    <col class="event_column2">
+                    <col class="event_column3">
+                    <col class="event_column4">
+                    <col class="event_column5">
+                    <col class="event_column6">
+                    <col class="event_column7">
+                    <col class="event_column8">
+                </colgroup>
+
+                <!-- Titre du tableau -->
+                <thead>
+                <tr>
+                    <th>Nom de la sortie</th>
+                    <th>Date de la sortie</th>
+                    <th>Date de clôture</th>
+                    <th>Inscrits / Places</th>
+                    <th>État</th>
+                    <th>Inscrit</th>
+                    <th>Organisateur</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <!-- Contenu du tableau -->
+                <tbody>
+                <!-- 2 lignes d'exemples à automatiser -->
+                {% for sortie in sorties %}
+                <tr>
+                    <td>{{ sortie.nom }}</td>
+                    <td>{{ sortie.dateDebut|date('d-m-Y') }}</td>
+                    <td>{{ sortie.dateLimiteInscription|date('d-m-Y') }}</td>
+                    <td>{{ sortie.participants.count }} / {{ sortie.nbInscritptionMax }}</td>
+                    <td>{{ sortie.etat.libelle }}</td>
+                    <td>{%if app.user in  sortie.participants %}X{% endif %}</td>
+                    <td>{{ sortie.organisateur }}</td>
+
+                    <td>{% if is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}" class="default_principal_button">Afficher</a>
+                    <a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}" class="default_secondary_button">Modifier</a>
+
+                    {% elseif is_granted('ROLE_PARTICIPANT') and app.USER and sortie.organisateur.id == app.user.id %}
+                    <a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}" class="default_principal_button">Afficher</a>
+                    <a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}" class="default_secondary_button">Modifier</a>
+
+                    {% elseif is_granted('ROLE_PARTICIPANT') %}
                     {% if app.user in sortie.participants %}
-                        <td><a href="{{ path('sortie_desistement', { 'id': sortie.id }) }}"></a>{% include('inc/desister.html.twig') %}</td>
-                        <td><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}">Afficher</a></td>
+                        <a href="{{ path('sortie_desistement', { 'id': sortie.id }) }}" class="default_tertiary_button">{% include('inc/desister.html.twig') %}</a>
+                        <a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}" class="default_principal_button">Afficher</a>
 
                     {% else %}
-                        <td><a href="{{ path('sortie_inscription', { 'id': sortie.id }) }}"></a>{% include('inc/inscrire.html.twig') %}</td>
-                        <td><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}">Afficher</a></td>
+                        <a href="{{ path('sortie_inscription', { 'id': sortie.id }) }}" class="default_tertiary_button">{% include('inc/inscrire.html.twig') %}</a>
+                        <a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}" class="default_principal_button">Afficher</a>
 
                     {% endif %}
 
-                {% elseif is_granted('ROLE_PARTICIPANT') %}
-                    <td><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}">Afficher</a></td>
+                    {% elseif is_granted('ROLE_PARTICIPANT') %}
+                    <a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}" class="default_principal_button">Afficher</a>
 
-                {% endif %}
+                    {% endif %}</td>
+                </tr>
+                {% endfor %}
 
-            </tr>
-            </tbody>
-        {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
 
-    </table>
-
-{% endblock %}
-
-
-{% block title %}
+    <div class="event_creation">
+        <a href="{{ path("sortie_creerSortie") }}" class="default_principal_button" id="event_create" title="event_create">Créer une sortie</a>
+    </div>
 
 {% endblock %}
 
