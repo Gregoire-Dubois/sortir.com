@@ -7,6 +7,7 @@ use App\Entity\Sortie;
 use App\Form\LieuType;
 use App\Form\SortiesFilterType;
 use App\Form\SortieType;
+use App\Form\VilleType;
 use App\Repository\EtatRepository;
 use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -104,9 +105,11 @@ class SortieController extends AbstractController
             return $this->redirectToRoute('sortie_listeSortie');
         }
         $lieuType = $this->createForm(LieuType::class);
+        $villeType = $this->createForm(VilleType::class);
         return $this->render('sortie/creation.html.twig', [
             'SortieType' => $sortieType->createView(),
-            'LieuType' => $lieuType->createView()
+            'LieuType' => $lieuType->createView(),
+            'VilleType' => $villeType->createView()
         ]);
     }
 

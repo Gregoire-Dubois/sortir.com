@@ -32,6 +32,8 @@ class Ville
      *
      * @Assert\NotBlank(message="Veuillez indiquez un code postal")
      * @Assert\Length(min=5, max=5, exactMessage="Un code postal contient 5 chiffres")
+     * @Assert\Regex(
+     *     pattern="/^\d{5}$/")
      */
     private $codePostal;
 

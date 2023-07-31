@@ -17,6 +17,8 @@ class LieuController extends AbstractController
     /**
      * @Route("/sorties/lieu/afficher", name="lieu_afficher", methods={"GET"})
      */
+
+    //Sert à l'affichage du formulaire dans la pop-up
     public function create(Request $request, EntityManagerInterface $em)
     {
         // Créer une instance du formulaire LieuType
@@ -31,6 +33,8 @@ class LieuController extends AbstractController
     /**
      * @Route("/sorties/lieu/creation", name="lieu_creation_submit", methods={"POST"})
      */
+
+    //Sert à la soumission du formulaire dans la pop-up
     public function createSubmit(Request $request, EntityManagerInterface $em)
     {
         // Créer une instance du formulaire LieuType

@@ -74,10 +74,16 @@
             <div class="default_tertiary_button" id="creation_event_save">{{ form_row(SortieType.publier) }}</div>
             <div></div><button class="default_secondary_button" id="creation_event_cancel" formnovalidate>Annuler</button></div>
 
-        //Ajout du champ token puisque render_rest= false
+        <!--Ajout du champ token puisque render_rest= false-->
         {{ form_row(SortieType._token) }}
         {{ form_end(SortieType, {render_rest: false}) }}
     </section>
+
+    <!-- Popup "Ajouter une ville" -->
+    <div class="default_popup_container" id="popup_add_city">
+        <!-- Overlay pour donner un arrière-plan assombri -->
+        <div class="default_popup_overlay" id="popup_overlay"></div>
+    </div>
 
     <!-- Popup "Ajouter un lieu" -->
     <div class="default_popup_container" id="popup_add_place">
@@ -91,6 +97,7 @@
         <!--Script qui affiche dynamiquement les infos des villes et des lieux-->
         <script src="{{ asset('/js/formSortieLieuParVille.js') }}" defer></script>
         <script src="{{ asset('/js/formCreationLieu.js') }}" defer></script>
+        <script src="{{ asset('/js/formCreationVille.js') }}" defer></script>
 
     {% endblock %}
 
