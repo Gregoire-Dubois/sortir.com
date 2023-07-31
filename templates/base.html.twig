@@ -13,6 +13,8 @@
             <link rel="stylesheet" href="{{ asset('css/globalSyle.css') }}">
             <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
         {% endblock %}
+
+        {% block javascripts %}{% endblock %}
     </head>
     <body>
 
@@ -21,16 +23,19 @@
         {% include('inc/nav.html.twig') %}
     </header>
     {% endblock %}
-    {% for label, messages in app.flashes %}
-        {% for message in messages %}
-            <div class="flash alert-{{ label }}">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endfor %}
 
     <main>
-		{% block body %}{% endblock %}
+		{% block body %}
+			<!-- Affichage des messages flash dans le block body -->
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="default_flash {{ label }}_flash">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endfor %}
+
+        {% endblock %}
     </main>
 
     <footer>

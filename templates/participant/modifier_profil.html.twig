@@ -11,9 +11,7 @@
 <h2>Mon Profil</h2>
 
 <!-- Bloc "Formulaire" -->
-<form class="my_profil_form">
-
-    {{ form_start(participantForm, {'attr': {'novalidate': 'novalidate'}, 'render_form': false}) }}
+    {{ form_start(participantForm, {'attr': {'class': 'my_profil_form', 'novalidate': 'novalidate'}, 'render_form': false}) }}
 
     <label class="column3 row1 default_label" for="my_profil_username">Pseudo :</label>
     {{ form_widget(participantForm.pseudo, {'label': false, 'attr': {'class': 'column4 row1 default_input', 'id': 'my_profil_username', 'required': 'required'}}) }}
@@ -34,15 +32,13 @@
     {{ form_widget(participantForm.campus, {'label': false, 'attr': {'class': 'column4 row6 default_select', 'id': 'my_profil_campus', 'required': 'required'}}) }}
 
     <label class="column1 row6 default_label" for="my_profil_photo">Ma photo :</label>
-    {{ form_widget(participantForm.photo, {'label': false, 'attr': {'class': 'column2 row6', 'id': 'my_profil_photo', 'accept': 'image/*', 'required': 'false'}}) }}
+    {{ form_widget(participantForm.photo, {'label': false, 'attr': {'type':'file', 'class': 'column2 row6', 'id': 'my_profil_photo', 'accept': 'image/*', 'required': false}}) }}
 
     <label class="column3 row7 default_label" for="my_profil_password">Mot de passe :</label>
     {{ form_widget(participantForm.plainPassword.first, {'label': false, 'attr': {'class': 'column4 row7 default_input', 'id': 'my_profil_password', 'required': 'required'}}) }}
 
     <label class="column3 row8 default_label" for="my_profil_confirm_password">Confirmation :</label>
     {{ form_widget(participantForm.plainPassword.second, {'label': false, 'attr': {'class': 'column4 row8 default_input', 'id': 'my_profil_confirm_password', 'required': 'required'}}) }}
-    <!--<div class="column4 row8 default_input" id="my_profil_confirm_password"></div>-->
-
 
     <!-- Bloc "Photo de profil" -->
     <div class="photo_profil_border">
@@ -55,9 +51,6 @@
     <button type="submit" class="default_principal_button" id="my_profil_save">Enregistrer</button>
     <a href="{{ path("sortie_listeSortie") }}" class="default_secondary_button" id="my_profil_cancel" title="Annuler">Annuler</a>
 
-</form>
-</div>
-
     {{ form_end(participantForm) }}
-
+</div>
 {% endblock %}
