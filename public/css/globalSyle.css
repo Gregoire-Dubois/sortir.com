@@ -236,6 +236,16 @@ h2 {
 .default_textarea:focus {
   border: 3px solid var(--secondary-color);
 }
+/* Flash message de confirmation par défaut */
+.default_flash-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 6vh;
+  font-size: 2.7vh;
+  color: white;
+}
 
 /* Message d'erreur de validation de formulaire par défaut */
 .default_error_message {
