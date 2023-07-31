@@ -55,13 +55,14 @@ class ParticipantController extends AbstractController
                 try
                 {
                     $file->move($this->getParameter('upload_photo'), $newFilename);
+                    $participant->setPhoto($newFilename);
                 }
                 catch (FileException $e)
                 {
                     //TODO: Message d'erreur?
                 }
             }
-            $participant->setPhoto($newFilename);
+
 
             $entityManager->persist($participant);
             $entityManager->flush();
@@ -74,7 +75,9 @@ class ParticipantController extends AbstractController
         {
             $entityManager->refresh($participant);
         }
-
+        foreach ($participantForm->getErrors(true, true) as $error) {
+            $this->addFlash('error', $error->getMessage());
+        }
         return $this->render('participant/modifier_profil.html.twig', [
             'participantForm' => $participantForm->createView(),
             'participant'=>$participant,
