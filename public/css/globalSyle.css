@@ -266,6 +266,7 @@ h2 {
   font-size: 1.7vh;
   font-style: italic;
   color: white;
+  overflow-y: hidden;
 }
 
 /* Bouton par défaut */
