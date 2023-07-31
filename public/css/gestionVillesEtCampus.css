@@ -1,0 +1,175 @@
+/* Style global */
+main {
+  justify-content: space-evenly;
+  align-items: center;
+  width: 100%;
+  margin: auto;
+}
+
+/* Gestion des villes et des campus - Global */
+.default_container {
+  justify-content: flex-start;
+  align-items: start;
+  height: fit-content;
+  max-height: 60vh;
+}
+
+.city_management_container,
+.campus_management_container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 550px;
+}
+
+.city_management_search_container,
+.campus_management_search_container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  height: 17vh;
+  padding: 0 0.5vw 0 0.5vw;
+}
+
+.city_management_search_title,
+.campus_management_search_title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 4vh;
+  margin-bottom: 1vh;
+  border-radius: 5px;
+  font-size: 2.3vh;
+}
+
+/* Formulaire - Recherche de villes et de campus - Global */
+.city_management_search_form,
+.campus_management_search_form {
+  display: grid;
+  grid-template-columns: 0.5fr 9vw 15vw 0.5fr;
+  grid-template-rows: 4vh 4vh;
+  row-gap: 1.5vh;
+  column-gap: 1.5vw;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.default_label {
+  display: flex;
+  align-items: center;
+}
+
+/* Formulaire - Recherche de villes et de campus - Spécifique */
+.city_management_search,
+.campus_management_search {
+  grid-column: 2/4;
+  grid-row: 2;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding-bottom: 2px;
+}
+
+.city_management_search_form label,
+.campus_management_search_form label {
+  grid-column: 2/3;
+  grid-row: 1;
+}
+
+.city_management_search_form input,
+.campus_management_search_form input {
+  grid-column: 3/4;
+  grid-row: 1;
+}
+
+.default_table_wrapper {
+  max-height: 35vh;
+  border-top: 1px solid white;
+}
+
+/* Liste des villes et des campus - Global */
+.default_table tr:last-child td {
+  background-color: var(--tertiary-color);
+  border-right: 1px solid var(--primary-color);
+}
+
+.default_table tr:last-child td:last-child {
+  background-color: var(--tertiary-color);
+  border-right: none;
+}
+
+/* Liste des villes - Spécifique */
+.city_column1 {
+  width: 35%;
+}
+
+.city_column2 {
+  width: 20%;
+}
+
+.city_column3 {
+  width: 45%;
+}
+
+/* Liste des campus - Spécifique */
+.campus_column1 {
+  width: 50%;
+}
+
+.campus_column2 {
+  width: 50%;
+}
+
+/* Spécifique input */
+input#new_city,
+input#new_cp,
+input#new_campus {
+  height: 4vh;
+  width: 100%;
+  text-align: center;
+  border: none;
+}
+
+/* Spécifique boutons */
+form button.default_principal_button {
+  width: 100%;
+}
+
+table button.default_principal_button,
+table button.default_secondary_button,
+table button.default_tertiary_button {
+  width: 6.5vw;
+}
+
+table button.default_principal_button {
+  border: 1px solid var(--secondary-color);
+}
+
+table button.default_secondary_button {
+  font-style: normal;
+}
+
+table button.default_tertiary_button {
+  margin-right: 0.5vw;
+}
+
+table button.default_principal_button:hover {
+  background-color: var(--primary-color);
+  font-style: italic;
+}
+
+table button.default_secondary_button:hover {
+  background-color: var(--tertiary-color);
+  color: var(--primary-color);
+  font-style: italic;
+}
+
+table button.default_tertiary_button:hover {
+  background-color: var(--secondary-color);
+  color: white;
+  font-style: italic;
+}
