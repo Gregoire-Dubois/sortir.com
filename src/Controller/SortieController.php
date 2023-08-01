@@ -209,9 +209,9 @@ class SortieController extends AbstractController
 
 
             $entityManager->persist($sortie);
-            dump($participantConnecte);
+            //dump($participantConnecte);
             $entityManager->flush();
-            dump($sortie);
+            //dump($sortie);
             $this->addFlash('success', 'Vous êtes bien désinscrit/e pour la sortie '.$sortie->getNom().' !');
         }else{
             $this->addFlash('error', 'Vous ne pouvez pas vous désinscrire pour la sortie '.$sortie->getNom().' !');
