@@ -174,9 +174,11 @@ class SortieRepository extends ServiceEntityRepository
             //$queryBuilder->andWhere('s.dateDebut >= :oneMonthAgo')
             //    ->andWhere('s.dateDebut <= :now')
             $andConditions = $queryBuilder->expr()->andX();
-            $andConditions->add('DATE_ADD(s.dateDebut, s.duree, \'MINUTE\') > :oneMonthAgo');
-            $andConditions->add('DATE_ADD(s.dateDebut, s.duree, \'MINUTE\') < :now');
-            dump('DATE_ADD(s.dateDebut, s.duree, \'MINUTE\')');
+            //$andConditions->add('DATE_ADD(s.dateDebut, s.duree, \'MINUTE\') > :oneMonthAgo');
+            $andConditions->add('s.dateDebut > :oneMonthAgo');
+            //$andConditions->add('DATE_ADD(s.dateDebut, s.duree, \'MINUTE\') < :now');
+            $andConditions->add('s.dateDebut < :now');
+            //dump('DATE_ADD(s.dateDebut, s.duree, \'MINUTE\')');
 
             $orConditions->add($andConditions);
             $queryBuilder->setParameter(':oneMonthAgo', $oneMonthAgo);
@@ -191,7 +193,7 @@ class SortieRepository extends ServiceEntityRepository
 */
 
 
-        dump($queryBuilder->getDQL());
+        //dump($queryBuilder->getDQL());
 
         $queryBuilder->andWhere($orConditions);
 
