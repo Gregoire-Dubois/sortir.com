@@ -1,22 +1,62 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Inscription{% endblock %}
+{% block title %}
+    {{ parent() }} | Inscription
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/creationParticipant.css') }}">
+{% endblock %}
 
 {% block body %}
-    <h1>Inscription</h1>
 
-    {{ form_start(registrationForm, {'attr':{'novalidate':'novalidate'}} )}}
+<section class="default_container">
+    <h2>Inscription</h2>
 
-        {{ form_widget(registrationForm) }}
+    {{ form_start(registrationForm, {'attr':{'class': 'register_form form_container', 'novalidate':'novalidate'}, 'render_form': false}) }}
 
-        <button type="submit" class="btn">Inscrire</button>
+    <label for="user_username" class="column1 row1 default_label">Pseudo :</label>
+    {{ form_widget(registrationForm.pseudo, {'label': false, 'attr': {'class': 'column2 row1 default_input', 'id': 'user_username', 'required': 'required'}}) }}
+    <div class="column2 row2 default_error_message">{{ form_errors(registrationForm.pseudo) }}</div>
+
+    <label for="user_first_name" class="column1 row3 default_label">Prénom :</label>
+    {{ form_widget(registrationForm.prenom, {'label': false, 'attr': {'class': 'column2 row3 default_input', 'id': 'user_first_name', 'required': 'required'}}) }}
+    <div class="column2 row4 default_error_message">{{ form_errors(registrationForm.prenom) }}</div>
+
+    <label for="user_lastname" class="column1 row5 default_label">Nom :</label>
+    {{ form_widget(registrationForm.nom, {'label': false, 'attr': {'class': 'column2 row5 default_input', 'id': 'user_lastname', 'required': 'required'}}) }}
+    <div class="column2 row6 default_error_message">{{ form_errors(registrationForm.nom) }}</div>
+
+    <label for="user_phone" class="column1 row7 default_label">Téléphone :</label>
+    {{ form_widget(registrationForm.telephone, {'label': false, 'attr': {'class': 'column2 row7 default_input', 'id': 'user_phone', 'required': 'required'}}) }}
+    <div class="column2 row8 default_error_message">{{ form_errors(registrationForm.telephone) }}</div>
+
+    <label for="user_email" class="column3 row1 default_label">Email :</label>
+    {{ form_widget(registrationForm.email, {'label': false, 'attr': {'class': 'column4-5 row1 default_input', 'id': 'user_email', 'required': 'required'}}) }}
+    <div class="column4 row2 default_error_message">{{ form_errors(registrationForm.email) }}</div>
+
+    <label for="user_campus" class="column3 row3 default_label">Campus :</label>
+    {{ form_widget(registrationForm.campus, {'label': false, 'attr': {'class': 'column4-5 row3 default_select', 'id': 'user_campus', 'required': 'required'}}) }}
+    <div class="column4 row4 default_error_message">{{ form_errors(registrationForm.campus) }}</div>
+
+    <label for="user_password" class="column3 row5 default_label">Mot de Passe :</label>
+    {{ form_widget(registrationForm.plainPassword, {'label': false, 'attr': {'class': 'column4-5 row5 default_input', 'id': 'user_password', 'required': 'required'}}) }}
+    <div class="column4 row6 default_error_message">{{ form_errors(registrationForm.plainPassword) }}</div>
+
+    <label class="column3-5 row7 default_label" id="user_role_label">
+        Souhaitez-vous que ce participant soit administrateur ?
+        {{ form_widget(registrationForm.role, {'label': false, 'attr': {'type': 'radio', 'class': 'user_role', 'required': 'required'}}) }}
+        </label>
+
+    <button type="submit" class="column2 row9 default_principal_button">Inscrire</button>
+
+    <a href="{{ path("sortie_listeSortie") }}" title="accueil" class="column2 row11 default_secondary_button">Annuler</a>
+
+    <a href="{{ path("app_import_csv") }}" title="importcsv" class="column3-4 row9 default_tertiary_button">Vous avez un fichier CSV?</a>
+
+    <a href="{{ path("admin_desactiver") }}" title="desactiverParticipant" class="column3-4 row11 default_tertiary_button">Désactiver des participants</a>
 
     {{ form_end(registrationForm) }}
-
-    <a href="{{ path("sortie_listeSortie") }}" title="accueil"><button type="button">Annuler</button></a>
-
-    <a href="{{ path("app_import_csv") }}" title="importcsv">Vous avez un fichier CSV?</a>
-
-    <a href="{{ path("admin_desactiver") }}" title="desactiverParticipant">Désactiver des participants</a>
 
 {% endblock %}
