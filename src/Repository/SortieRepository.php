@@ -69,17 +69,17 @@ class SortieRepository extends ServiceEntityRepository
 
     public function selectAllSorties(?SearchSortie $data)
     {
-        $campus = null;
-        $nomSortie = null;
-        $dateDebut = null;
-        $dateFin = null;
-        $organisateur = null;
-        $nonInscrit = null;
-        $sortiesPassees =null;
-        $inscrit = null;
+        /*if($data== null){
+            $queryBuilder = $this->createQueryBuilder('s');
+            $queryBuilder->select('DISTINCT s');
+            // ->innerJoin('s.etat', 'e')
+            // ->innerJoin('s.organisateur', 'p')
+            $queryBuilder->join('s.campus', 'c');
 
-        if ($data !== null)
-        {
+            $results = $this->findAll();
+
+
+        }elseif ($data !== null) {*/
             // Récupérer les valeurs des filtres depuis le formulaire
             $campus = $data->getCampus();
             $nomSortie = $data->getName();
@@ -96,126 +96,124 @@ class SortieRepository extends ServiceEntityRepository
 
             $etatArchive = $this->etatRepository->findbyLibelle("Archivée");
             $etatOuvert = $this->etatRepository->findbyLibelle("Ouverte");
-        }
 
 
+            $queryBuilder = $this->createQueryBuilder('s');
 
-        $queryBuilder = $this->createQueryBuilder('s');
+            $oneMonthAgo = new \DateTime();
+            $oneMonthAgo->modify('-1 month');
 
-        $oneMonthAgo = new \DateTime();
-        $oneMonthAgo->modify('-1 month');
-
-        $queryBuilder->select('DISTINCT s');
-           // ->innerJoin('s.etat', 'e')
-           // ->innerJoin('s.organisateur', 'p')
-           $queryBuilder->join('s.campus', 'c');
+            $queryBuilder->select('DISTINCT s');
+            // ->innerJoin('s.etat', 'e')
+            // ->innerJoin('s.organisateur', 'p')
+            $queryBuilder->join('s.campus', 'c');
             $queryBuilder->leftJoin('s.participants', 'part');
             $queryBuilder->where('s.etat != :etatArchive');
             $queryBuilder->setParameter(':etatArchive', $etatArchive);
 
-           // ->leftJoin('s.lieu', 'l')
-           // ->leftJoin('l.ville', 'v')
-           /* ->where(
-                $queryBuilder->expr()->orX(
-                    's.dateDebut >= :oneMonthAgo',
-                    's.dateLimiteInscription > :currentDate'
-                )
-            )*/
+            // ->leftJoin('s.lieu', 'l')
+            // ->leftJoin('l.ville', 'v')
+            /* ->where(
+                 $queryBuilder->expr()->orX(
+                     's.dateDebut >= :oneMonthAgo',
+                     's.dateLimiteInscription > :currentDate'
+                 )
+             )*/
             //->addOrderBy('s.dateDebut', 'DESC')
             //->setParameter('oneMonthAgo', $oneMonthAgo, \Doctrine\DBAL\Types\Types::DATETIME_MUTABLE)
             //->setParameter('currentDate', new \DateTime(), \Doctrine\DBAL\Types\Types::DATETIME_MUTABLE);
 
 
-        if ($campus) {
-            $queryBuilder->andWhere('s.campus = :campus')
-                ->setParameter(':campus', $campus);
-        }
+            if ($campus) {
+                $queryBuilder->andWhere('s.campus = :campus')
+                    ->setParameter(':campus', $campus);
+            }
 
-        if ($nomSortie) {
-            $queryBuilder->andWhere('s.nom LIKE :nomSortie')
-                ->setParameter(':nomSortie', '%' . $nomSortie . '%');
-        }
+            if ($nomSortie) {
+                $queryBuilder->andWhere('s.nom LIKE :nomSortie')
+                    ->setParameter(':nomSortie', '%' . $nomSortie . '%');
+            }
 
-      /*  if ($nomSortie) {
-            $queryBuilder->andWhere('s.nom LIKE :nomSortie')
-                ->setParameter('nomSortie', '%' . $nomSortie . '%');
-        }*/
+            /*  if ($nomSortie) {
+                  $queryBuilder->andWhere('s.nom LIKE :nomSortie')
+                      ->setParameter('nomSortie', '%' . $nomSortie . '%');
+              }*/
 
-        if ($dateDebut) {
-            $queryBuilder->andWhere('s.dateDebut >= :date_debut')
-                ->setParameter(':date_debut', $dateDebut);
-        }
+            if ($dateDebut) {
+                $queryBuilder->andWhere('s.dateDebut >= :date_debut')
+                    ->setParameter(':date_debut', $dateDebut);
+            }
 
-        if ($dateFin) {
-            $queryBuilder->andWhere('s.dateDebut <= :date_fin')
-                ->setParameter(':date_fin', $dateFin);
-        }
+            if ($dateFin) {
+                $queryBuilder->andWhere('s.dateDebut <= :date_fin')
+                    ->setParameter(':date_fin', $dateFin);
+            }
 
-        $orConditions = $queryBuilder->expr()->orX();
+            $orConditions = $queryBuilder->expr()->orX();
 
-        if ($organisateur) {
-            //$queryBuilder->andWhere('s.organisateur = :organisateur')
-            $orConditions->add('s.organisateur = :user');
+            if ($organisateur) {
+                //$queryBuilder->andWhere('s.organisateur = :organisateur')
+                $orConditions->add('s.organisateur = :user');
 
-           // $queryBuilder->setParameter(':organisateur', $this->getUser());
-        }
+                // $queryBuilder->setParameter(':organisateur', $this->getUser());
+            }
 
-        if ($inscrit){
-            //$queryBuilder->andWhere(':user MEMBER OF s.participants')
-            $orConditions->add(':user MEMBER OF s.participants');
+            if ($inscrit) {
+                //$queryBuilder->andWhere(':user MEMBER OF s.participants')
+                $orConditions->add(':user MEMBER OF s.participants');
 
-        }
+            }
 
-        if ($nonInscrit) {
-            //$queryBuilder->andWhere(':user NOT MEMBER OF s.participants')
-            $andConditions2=$queryBuilder->expr()->andX();
-            $andConditions2->add(':user NOT MEMBER OF s.participants');
-            $andConditions2->add('s.etat = :etatOuvert');
-            $queryBuilder->setParameter(':etatOuvert', $etatOuvert);
+            if ($nonInscrit) {
+                //$queryBuilder->andWhere(':user NOT MEMBER OF s.participants')
+                $andConditions2 = $queryBuilder->expr()->andX();
+                $andConditions2->add(':user NOT MEMBER OF s.participants');
+                $andConditions2->add('s.etat = :etatOuvert');
+                $queryBuilder->setParameter(':etatOuvert', $etatOuvert);
 
-            $orConditions->add($andConditions2);
-            //$queryBuilder->setParameter(':user', $this->getUser());
+                $orConditions->add($andConditions2);
+                //$queryBuilder->setParameter(':user', $this->getUser());
 
-        }
+            }
 
-        if ($sortiesPassees) {
-            $oneMonthAgo = new \DateTime();
-            $oneMonthAgo->modify('-1 month');
+            if ($sortiesPassees) {
+                $oneMonthAgo = new \DateTime();
+                $oneMonthAgo->modify('-1 month');
 
-            dump($oneMonthAgo);
+                dump($oneMonthAgo);
 
-            //$queryBuilder->andWhere('s.dateDebut >= :oneMonthAgo')
-            //    ->andWhere('s.dateDebut <= :now')
-            $andConditions = $queryBuilder->expr()->andX();
-            //$andConditions->add('DATE_ADD(s.dateDebut, s.duree, \'MINUTE\') > :oneMonthAgo');
-            $andConditions->add('s.dateDebut > :oneMonthAgo');
-            //$andConditions->add('DATE_ADD(s.dateDebut, s.duree, \'MINUTE\') < :now');
-            $andConditions->add('s.dateDebut < :now');
-            //dump('DATE_ADD(s.dateDebut, s.duree, \'MINUTE\')');
+                //$queryBuilder->andWhere('s.dateDebut >= :oneMonthAgo')
+                //    ->andWhere('s.dateDebut <= :now')
+                $andConditions = $queryBuilder->expr()->andX();
+                //$andConditions->add('DATE_ADD(s.dateDebut, s.duree, \'MINUTE\') > :oneMonthAgo');
+                $andConditions->add('s.dateDebut > :oneMonthAgo');
+                //$andConditions->add('DATE_ADD(s.dateDebut, s.duree, \'MINUTE\') < :now');
+                $andConditions->add('s.dateDebut < :now');
+                //dump('DATE_ADD(s.dateDebut, s.duree, \'MINUTE\')');
 
-            $orConditions->add($andConditions);
-            $queryBuilder->setParameter(':oneMonthAgo', $oneMonthAgo);
-            $queryBuilder->setParameter(':now', new \DateTime());
-        }
+                $orConditions->add($andConditions);
+                $queryBuilder->setParameter(':oneMonthAgo', $oneMonthAgo);
+                $queryBuilder->setParameter(':now', new \DateTime());
+            }
 
-/*
-        if($sortiesOuvertes){
-            $queryBuilder->andWhere('s.dateLimiteInscription >= :now')
-            ->setParameter('now', new  \DateTime());
-        }
-*/
+            /*
+                    if($sortiesOuvertes){
+                        $queryBuilder->andWhere('s.dateLimiteInscription >= :now')
+                        ->setParameter('now', new  \DateTime());
+                    }
+            */
 
 
-        //dump($queryBuilder->getDQL());
+            //dump($queryBuilder->getDQL());
 
-        $queryBuilder->andWhere($orConditions);
+            $queryBuilder->andWhere($orConditions);
 
-        if($organisateur || $nonInscrit || $inscrit) {
-            $queryBuilder->setParameter(':user', $this->getUser());
-        }
-        $query = $queryBuilder->getQuery();
-        $results = $query->getResult();
-
+            if ($organisateur || $nonInscrit || $inscrit) {
+                $queryBuilder->setParameter(':user', $this->getUser());
+            }
+            $query = $queryBuilder->getQuery();
+            $results = $query->getResult();
+      //  }
         return $results;
 
     }
