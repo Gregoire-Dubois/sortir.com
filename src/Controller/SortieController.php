@@ -117,7 +117,7 @@ class SortieController extends AbstractController
     }
 
     /**
-     * @Route("/sorties/modifier/{id}", name="sortie_modifierSortie", requirements={"id"="\d+"})
+     * @Route("/sorties/modifier/{id}", name="sortie_modifierSortie", requirements={"id"="\d+"}, methods={"POST"})
      */
     public function modifierSortie(int $id, Request $request, EtatRepository $etatRepository, SortieRepository $sortieRepository, EntityManagerInterface $em): Response
     {
@@ -131,14 +131,16 @@ class SortieController extends AbstractController
             throw $this->createNotFoundException('Sortie non trouvée.');
         }
 
-
-
         //On récupère la ville pour l'afficher dans le sélecteur
-        $ville = $sortie->getLieu()->getVille();
+        $lieu = $sortie->getLieu();
+        $ville = $lieu->getVille();
+        //On réapplique le lieu pour ne pas avoir null à l'enregistrement
+        //$sortie = setLieu($lieu);
         $sortieType = $this->createForm(SortieType::class, $sortie);
 
         //On affiche la ville enregistrée en base pour cette sortie
         $sortieType->get('ville')->setData($ville);
+        //$sortieType->get('lieu')->setData($lieu);
 
         $sortieType->handleRequest($request);
 

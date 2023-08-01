@@ -15,8 +15,10 @@
     <div class="info_login_container">
         {% set currentDate = "now"|date("d/m/Y") %} {# Récupéreration de la date du jour #}
         {% set currentUser = app.user.nom %} {# Récupérer du nom de l'utilisateur connecté #}
-        <div class="today_date"><p>Date du jour : </p><p id="today_date_value">{{ currentDate }}</p></div>
-        <div class="username"><p>Participant : </p><p id="username_value">{{ currentUser }}</p></div>
+        <div class="today_date"><p>Date du jour : </p>
+            <p id="today_date_value">{{ currentDate }}</p></div>
+        <div class="username"><p>Participant : </p>
+            <p id="username_value">{{ currentUser }}</p></div>
     </div>
     <section class="default_container">
         <h2>Liste et Filtres des Sorties</h2>
@@ -100,44 +102,68 @@
                 <tbody>
                 <!-- 2 lignes d'exemples à automatiser -->
                 {% for sortie in sorties %}
-                <tr>
-                    <td>{{ sortie.nom }}</td>
-                    <td>{{ sortie.dateDebut|date('d-m-Y') }}</td>
-                    <td>{{ sortie.dateLimiteInscription|date('d-m-Y') }}</td>
-                    <td>{{ sortie.participants.count }} / {{ sortie.nbInscritptionMax }}</td>
-                    <td>{{ sortie.etat.libelle }}</td>
-                    <td>{%if app.user in  sortie.participants %}X{% endif %}</td>
-                    <td>{{ sortie.organisateur }}</td>
+                    <tr>
+                        <td>{{ sortie.nom }}</td>
+                        <td>{{ sortie.dateDebut|date('d-m-Y') }}</td>
+                        <td>{{ sortie.dateLimiteInscription|date('d-m-Y') }}</td>
+                        <td>{{ sortie.participants.count }} / {{ sortie.nbInscritptionMax }}</td>
+                        <td>{{ sortie.etat.libelle }}</td>
+                        <td>{% if app.user in  sortie.participants %}X{% endif %}</td>
+                        <td>{{ sortie.organisateur }}</td>
 
-                    <td>
-                        {% if is_granted('ROLE_ADMIN') %}
-                        <div class="table_link"><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}"><button class="default_principal_button">Afficher</button></a></div>
-                        <div class="table_link"><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}"><button class="default_secondary_button_button">Modifier</button></a></div>
+                        <td>
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <div class="table_link"><a
+                                            href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}">
+                                        <button class="default_principal_button">Afficher</button>
+                                    </a></div>
+                                <div class="table_link"><a
+                                            href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}">
+                                        <button class="default_secondary_button_button">Modifier</button>
+                                    </a></div>
 
-                        {% elseif is_granted('ROLE_PARTICIPANT') and app.USER and sortie.organisateur.id == app.user.id %}
-                        <div class="table_link"><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}"><button class="default_principal_button">Afficher</button></a></div>
-                        <div class="table_link"><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}"><button class="default_secondary_button">Modifier</button></a></div>
+                            {% elseif is_granted('ROLE_PARTICIPANT') and app.USER and sortie.organisateur.id == app.user.id %}
+                                <div class="table_link"><a
+                                            href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}">
+                                        <button class="default_principal_button">Afficher</button>
+                                    </a></div>
+                                <div class="table_link">
+                                    <form action="{{ path('sortie_modifierSortie', { 'id': sortie.id }) }}"
+                                          method="post">
+                                        <input type="hidden" name="_method" value="POST">
 
-                        {% elseif is_granted('ROLE_PARTICIPANT') %}
-                            {% if app.user in sortie.participants %}
-                                <div class="table_link">{% include('inc/desister.html.twig') %}</div>
-                                <div class="table_link"><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}"><button class="default_principal_button">Afficher</button></a></div>
 
-                            {% else %}
-                                <div class="table_link">{% include('inc/inscrire.html.twig') %}</div>
-                                <div class="table_link"><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}"><button class="default_principal_button">Afficher</button></a></div>
+                                        <button type="submit" class="default_secondary_button">Modifier</button>
+                                    </form>
+                                </div>
+
+                            {% elseif is_granted('ROLE_PARTICIPANT') %}
+                                {% if app.user in sortie.participants %}
+                                    <div class="table_link">{% include('inc/desister.html.twig') %}</div>
+                                    <div class="table_link"><a
+                                                href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}">
+                                            <button class="default_principal_button">Afficher</button>
+                                        </a></div>
+
+                                {% else %}
+                                    <div class="table_link">{% include('inc/inscrire.html.twig') %}</div>
+                                    <div class="table_link"><a
+                                                href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}">
+                                            <button class="default_principal_button">Afficher</button>
+                                        </a></div>
+                                {% endif %}
                             {% endif %}
-                    	{% endif %}
-        			</td>
-                </tr>
-        		{% endfor %}
+                        </td>
+                    </tr>
+                {% endfor %}
                 </tbody>
             </table>
         </div>
     </section>
 
     <div class="event_creation">
-        <a href="{{ path("sortie_creerSortie") }}" class="default_principal_button" id="event_create" title="event_create">Créer une sortie</a>
+        <a href="{{ path("sortie_creerSortie") }}" class="default_principal_button" id="event_create"
+           title="event_create">Créer une sortie</a>
     </div>
 
 {% endblock %}

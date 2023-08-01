@@ -79,7 +79,7 @@ class SortieType extends AbstractType
                         //'label' => 'Lieu :',
                         'placeholder' => 'Sélectionner un lieu',
                         'class' => Lieu::class,
-                        'disabled' => true,
+                        //'disabled' => true,
                     ])
                     ->add('creer', SubmitType::class, [
                         'label' => 'Créer'
