@@ -26,7 +26,7 @@ main{
   flex-direction: column;
   justify-content: flex-start;
   height: fit-content;
-  max-height: 68vh;
+  max-height: 70vh;
 }
 
 /* Partie "Filtres du tableau des sorties"*/
@@ -44,7 +44,7 @@ main{
 }
 
 .default_table_wrapper {
-  height: 55vh;
+  max-height: 50vh;
 }
 
 /* Format Spécifique*/
@@ -54,6 +54,16 @@ main{
   height: 30px;
   margin-right: 10px;
 }
+
+#unsubscribe_link,
+#subscribe_link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 50%;
+  height: 100%;
+}
+
 /* Disposition par lignes et par colonnes*/
 .column1 {
   grid-column: 1/2;
@@ -121,15 +131,15 @@ main{
 
 /* Paramétrage de la liste des sorties */
 .event_column1 {
-  width: 25%;
+  width: 20%;
 }
 
 .event_column2 {
-  width: 12.5%;
+  width: 10%;
 }
 
 .event_column3 {
-  width: 12.5%;
+  width: 10%;
 }
 
 .event_column4 {
@@ -149,7 +159,23 @@ main{
 }
 
 .event_column8 {
-  width: 10%;
+  width: 20%;
+}
+
+.table_link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  height: 100%;
+}
+
+.default_table td:last-child {
+  display: flex;
+  justify-content: space-around;
+  height: fit-content;
+  width: 100%;
+  margin-top: 0.5vh;
 }
 
 /* Bouton "Création Sortie"*/
@@ -159,11 +185,6 @@ main{
   align-items: center;
   height: 4vh;
   margin: 1vh 1.25vw 1vh 0.25vw;
-}
-
-.default_principal_button {
-  width: fit-content;
-  height: 100%;
 }
 
 #event_create {

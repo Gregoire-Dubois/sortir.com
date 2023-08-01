@@ -50,6 +50,7 @@
         <label for="event_city" class="column6 row3 default_label">Ville :</label>
         {{ form_widget(SortieType.ville, {'label': false, 'attr': {'class': 'column7-8 row3 default_select', 'id': 'event_city', 'required': 'required'}}) }}
         <div class="column7-8 row4 default_error_message">{{ form_errors(SortieType.ville) }}</div>
+        <button id="add_city_button" formnovalidate>+</button>
 
         <label for="event_place" class="column6 row5 default_label">Lieu :</label>
         {{ form_widget(SortieType.lieu, {'label': false, 'attr': {'class': 'column7-8 row5 default_select', 'id': 'event_place', 'required': 'required'}}) }}
