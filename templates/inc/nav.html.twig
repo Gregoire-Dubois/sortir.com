@@ -13,7 +13,7 @@
     {% if is_granted("ROLE_ADMIN")  %}
     <ul class="admin_menu_nav">
         <li><p class="administrator_li">Administrateur</p></li>
-        <li><a href="#" id="administrator_cities_campus">Villes & Campus</a></li>
+        <li><a href="{{ path('admin_villes_et_campus') }}" id="administrator_cities_campus">Villes & Campus</a></li>
         <li><a href="{{ path('app_register') }}" id="administrator_users">Utilisateurs</a></li>
     </ul>
     {% endif %}

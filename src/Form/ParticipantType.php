@@ -15,7 +15,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
+
 
 class ParticipantType extends AbstractType
 {
@@ -69,6 +69,7 @@ class ParticipantType extends AbstractType
             ->add('photo',FileType::class,[
                 'label'=>'Photo',
                 'mapped' => false,
+                'required'=>false,
                 'constraints' => [ new Image( [
                     'mimeTypes' => [
                         'image/jpeg',

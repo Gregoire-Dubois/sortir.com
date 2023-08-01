@@ -1,29 +1,30 @@
 /* Formulaire global */
+main {
+  display: flex;
+  flex-direction: column;
+  padding: 0 15%;
+}
+
 .default_container {
-  width: 900px;
-  margin: calc((93vh - 60vh) / 2) auto;
+  width: 100%;
+  margin: 0;
 }
 
 .form_container{
   display: grid;
-  grid-template-columns: 3.5fr 1fr 0.5fr 0.5fr 1fr 2fr 1.2fr 2.8fr 0.5fr;
-  grid-template-rows: repeat(8,4vh);
-  row-gap: 2vh;
+  grid-template-columns: 3fr 1fr 0.5fr 0.5fr 1.5fr 2fr 2fr 2fr 0.5fr;
+  grid-template-rows: repeat(8,4vh 3vh);
   column-gap: 1.5vw;
   width: 100%;
   margin: auto;
-  padding: 2.25vh 1vw 2.5vh 1vw;
-}
-
-div {
-  display: grid;
+  padding: 2.25vh 1vw 0 1vw;
 }
 
 /* Formulaire - Spécifique */
 /* Nombre de place (personnes) */
 #event_person_number{
   grid-column: 3/5;
-  grid-row: 4;
+  grid-row: 7;
   display: flex;
   align-items: center;
   color: white;
@@ -32,7 +33,7 @@ div {
 /* Durée de l'évènement */
 #event_duration_unit{
   grid-column: 3/5;
-  grid-row: 5;
+  grid-row: 9;
   display: flex;
   align-items: center;
   color: white;
@@ -40,12 +41,11 @@ div {
 
 /* Description de l'évènement */
 #event_description {
-  grid-row: 6/8;
+  grid-row: 11/14;
   resize: none;
 }
 
-/*Boutons "Ajouter une ville" */
-#add_city_button,
+/*Boutons "Ajouter un lieu" */
 #add_place_button {
   height: 4vh;
   width: 2.25vw;
@@ -58,23 +58,10 @@ div {
   font-size: 2.5vh;
 }
 
-button#add_city_button:active {
-  border-style: outset;
-  transform: translateY(2px);
-}
-
-button#add_city_button:hover {
-  background-color: var(--secondary-color);
-}
-
-#add_city_button{
-  grid-column: 9/10;
-  grid-row: 2;
-}
 /*Boutons "Ajouter un lieu" */
 #add_place_button {
   grid-column: 9/10;
-  grid-row: 3;
+  grid-row: 5;
 }
 
 button#add_place_button:active {
@@ -90,13 +77,11 @@ button#add_place_button:hover {
 /* Bloc boutons "Enregistrer", "Publier", "Annuler" */
 .creation_event_button {
   grid-column: 1/10;
-  grid-row: 8;
+  grid-row: 15;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
   height: 4vh;
-  margin-top: 0.75vh;
-  padding-bottom: 0.75vh;
 }
 
 .creation_event_button button {
@@ -152,6 +137,10 @@ button#add_place_button:hover {
   align-items: center;
 }
 
+.row1 {
+  grid-row: 1;
+}
+
 .row2 {
   grid-row: 2;
 }
@@ -178,6 +167,42 @@ button#add_place_button:hover {
 
 .row8 {
   grid-row: 8;
+}
+
+.row9 {
+  grid-row: 9;
+}
+
+.row10 {
+  grid-row: 10;
+}
+
+.row11 {
+  grid-row: 11;
+}
+
+.row12 {
+  grid-row: 12;
+}
+
+.row13 {
+  grid-row: 13;
+}
+
+.row14 {
+  grid-row: 14;
+}
+
+.row15 {
+  grid-row: 15;
+}
+
+.row16 {
+  grid-row: 16;
+}
+
+.row11-13 {
+  grid-row: 11/14;
 }
 
 @media screen and (max-width: 769px) {

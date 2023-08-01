@@ -6,6 +6,7 @@ use App\Entity\Participant;
 use App\Form\ImportType;
 use App\Form\ParticipantType;
 use App\Repository\CampusRepository;
+use App\Repository\ParticipantRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,6 +14,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\Security\Csrf\CsrfToken;
+use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 class ParticipantController extends AbstractController
@@ -55,13 +58,14 @@ class ParticipantController extends AbstractController
                 try
                 {
                     $file->move($this->getParameter('upload_photo'), $newFilename);
+                    $participant->setPhoto($newFilename);
                 }
                 catch (FileException $e)
                 {
                     //TODO: Message d'erreur?
                 }
             }
-            $participant->setPhoto($newFilename);
+
 
             $entityManager->persist($participant);
             $entityManager->flush();
@@ -74,7 +78,9 @@ class ParticipantController extends AbstractController
         {
             $entityManager->refresh($participant);
         }
-
+        /*foreach ($participantForm->getErrors(true, true) as $error) {
+            $this->addFlash('error', $error->getMessage());
+        }*/
         return $this->render('participant/modifier_profil.html.twig', [
             'participantForm' => $participantForm->createView(),
             'participant'=>$participant,
@@ -203,4 +209,45 @@ class ParticipantController extends AbstractController
 
 
     }
+
+    /**
+     * @Route("/admin/desactiver", name="admin_desactiver")
+     */
+    public function desactiverParticants(
+        ParticipantRepository $participantRepository,
+        Request $request,
+        CsrfTokenManagerInterface $csrfTokenManager,
+        EntityManagerInterface $entityManager){
+
+        $participantsActifs = $participantRepository->selectParticipantsActifs($this->getUser());
+
+        if($request->isMethod('POST')){
+            $token = new CsrfToken('desactivation_participant', $request->request->get('_csrf_token'));
+            if (!$csrfTokenManager->isTokenValid($token)) {
+                throw $this->createAccessDeniedException('Jeton CSRF invalide.');
+            }
+            dump($request);
+            $participantsSelectionnes= $request->request->get('participants', []);
+            dump($participantsSelectionnes);
+            $listeParticipantsDesactives = [];
+            foreach ($participantsSelectionnes as $participantId){
+                $participant = $participantRepository->find($participantId);
+                $participant->setActif(false);
+                $listeParticipantsDesactives[]=$participant->getPseudo();
+                $entityManager->persist($participant);
+                $entityManager->flush();
+            }
+
+            $this->addFlash('success', 'Les participants suivants ont bien été désactivés :' . implode(', ', $listeParticipantsDesactives) . ' .');
+            return $this->redirectToRoute('admin_desactiver');
+        }
+
+
+        return $this->render('admin/participant/desactiver.html.twig',[
+            'participantsActifs'=>$participantsActifs
+        ]);
+    }
+
+
+
 }

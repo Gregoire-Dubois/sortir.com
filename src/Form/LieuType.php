@@ -25,8 +25,9 @@ class LieuType extends AbstractType
             ->add('latitude')
             ->add('longitude')
             ->add('ville', EntityType::class, [
-                'label' => 'ville',
+                'label' => 'Ville',
                 'class' => Ville::class,
+                'placeholder' => 'Sélectionner une ville',
                 'choice_label' => 'nom',
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('v')

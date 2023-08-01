@@ -13,7 +13,7 @@ class RechercheVilleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('rechercheNom', TextType::class, [
+            ->add('rechercheNomVille', TextType::class, [
                 'required' => false,
                 'attr' => [
                     'placeholder' => 'Nom de la ville',

@@ -23,104 +23,113 @@ class SortieType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder
-            ->add('nom', null, [
-                'label' => 'Nom de la sortie :',
-                //'help' => 'Le nom doit être composé de 3 à 100 caractères'
-            ])
-            ->add('dateDebut', null, [
-                'label' => 'Date et heure de la sortie :',
-                'widget' => 'single_text',
-                'required' => false,
-            ])
-            ->add('dateLimiteInscription', null, [
-                'label' => 'Date de clôture des inscriptions :',
-                'widget' => 'single_text',
-                //'help' => 'La date de clôture ne peut être supérieure à la date de sortie'
-            ])
-            ->add('nbInscritptionMax', IntegerType::class, [
-                'label' => 'Nombre de places :',
-                //'data"' => '1'
-            ])
-            ->add('duree', IntegerType::class, [
-                'label' => 'Durée en minutes :',
-                //'data' => '15',
-                //'help' => 'Une sortie doit être au minimum de 15 minutes'
-            ])
-            ->add('description')
-            ->add('campus', EntityType::class, [
-                'label' => 'Campus :',
-                'class' => Campus::class,
-                'choice_label' => 'nom'
-            ])
-            ->add('ville', EntityType::class, [
-                'label' => 'Ville :',
-                'placeholder' => 'Sélectionner une ville',
-                'class' => Ville::class,
-                'choice_label' => 'nom',
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('v')
-                        ->orderBy('v.nom', 'ASC');
-                },
-                'mapped' => false,
-                'required' => false
-            ])
-
-            //Affichage par défaut du formulaire de Lieu, avant toute action sur le formulaire Ville
-            //Désactivé par défaut
-            ->add('lieu', EntityType::class, [
-                //'label' => 'Lieu :',
-                'placeholder' => 'Sélectionner un lieu',
-                'class' => Lieu::class,
-                'disabled' => true,
-            ])
-
-        ->add('creer', SubmitType::class, [
-            'label' => 'Créer'
-        ])
-        ->add('publier', SubmitType::class, [
-            'label' => 'Publier'
-        ]);
-
-        $formModifier = function (FormInterface $form, Ville $ville = null) {
-            $lieux = $ville === null ? [] : $ville->getLieux();
-
-            $form->add('lieu', EntityType::class, [
-                'class' => Lieu::class,
-                'choice_label' => 'nom',
-                'placeholder' => 'Sélectionnez un lieu',
-                'choices' => $lieux
+        if ($options['only_motif']) {
+            $builder->add('motif')
+            ->add('creer', SubmitType::class, [
+                'label' => 'Créer'
             ]);
-        };
+        } else {
 
-        //Ecoute de la soumission sur le formulaire Ville.
-        //On passe le résultat à $formModifier
-        $builder->get('ville')->addEventListener(
-            FormEvents::POST_SUBMIT,
-            function (FormEvent $event) use ($formModifier) {
-                $ville = $event->getForm()->getData();
-                $parent = $event->getForm()->getParent();
-                $formModifier($parent, $ville);
-            }
-        );
+            $builder
+                ->add('nom', null, [
+                    'label' => 'Nom de la sortie :',
+                    //'help' => 'Le nom doit être composé de 3 à 100 caractères'
+                ])
+                ->add('dateDebut', null, [
+                    'label' => 'Date et heure de la sortie :',
+                    'widget' => 'single_text',
+                    'required' => false,
+                ])
+                ->add('dateLimiteInscription', null, [
+                    'label' => 'Date de clôture des inscriptions :',
+                    'widget' => 'single_text',
+                    //'help' => 'La date de clôture ne peut être supérieure à la date de sortie'
+                ])
+                ->add('nbInscritptionMax', IntegerType::class, [
+                    'label' => 'Nombre de places :',
+                    //'data"' => '1'
+                ])
+                ->add('duree', IntegerType::class, [
+                    'label' => 'Durée en minutes :',
+                    //'data' => '15',
+                    //'help' => 'Une sortie doit être au minimum de 15 minutes'
+                ])
+                ->add('description')
+                ->add('campus', EntityType::class, [
+                    'label' => 'Campus :',
+                    'class' => Campus::class,
+                    'choice_label' => 'nom'
+                ])
+                ->add('ville', EntityType::class, [
+                    'label' => 'Ville :',
+                    'placeholder' => 'Sélectionner une ville',
+                    'class' => Ville::class,
+                    'choice_label' => 'nom',
+                    'query_builder' => function (EntityRepository $er) {
+                        return $er->createQueryBuilder('v')
+                            ->orderBy('v.nom', 'ASC');
+                    },
+                    'mapped' => false,
+                    'required' => false
+                ])
 
-        $builder->get('lieu')->addEventListener(
-            FormEvents::POST_SUBMIT,
-            function (FormEvent $event) {
-                $event->getForm()->getData();
-                $event->getForm()->getParent();
+                //Affichage par défaut du formulaire de Lieu, avant toute action sur le formulaire Ville
+                //Désactivé par défaut
+                ->add('lieu', EntityType::class, [
+                    //'label' => 'Lieu :',
+                    'placeholder' => 'Sélectionner un lieu',
+                    'class' => Lieu::class,
+                    'disabled' => true,
+                ])
+                ->add('creer', SubmitType::class, [
+                    'label' => 'Créer'
+                ])
+                ->add('publier', SubmitType::class, [
+                    'label' => 'Publier'
+                ]);
 
-            }
-        );
+            $formModifier = function (FormInterface $form, Ville $ville = null) {
+                $lieux = $ville === null ? [] : $ville->getLieux();
 
-        //Ajout d'action pour Javascript mais peut-être présent par défaut ?
-        $builder->setAction($options['action']);
+                $form->add('lieu', EntityType::class, [
+                    'class' => Lieu::class,
+                    'choice_label' => 'nom',
+                    'placeholder' => 'Sélectionnez un lieu',
+                    'disabled' => $ville === null,
+                    'choices' => $lieux
+                ]);
+            };
+
+            //Ecoute de la soumission sur le formulaire Ville.
+            //On passe le résultat à $formModifier
+            $builder->get('ville')->addEventListener(
+                FormEvents::POST_SUBMIT,
+                function (FormEvent $event) use ($formModifier) {
+                    $ville = $event->getForm()->getData();
+                    $parent = $event->getForm()->getParent();
+                    $formModifier($parent, $ville);
+                }
+            );
+
+            $builder->get('lieu')->addEventListener(
+                FormEvents::POST_SUBMIT,
+                function (FormEvent $event) {
+                    $event->getForm()->getData();
+                    $event->getForm()->getParent();
+
+                }
+            );
+
+            //Ajout d'action pour Javascript mais peut-être présent par défaut ?
+            $builder->setAction($options['action']);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Sortie::class,
+            'only_motif' => false,
         ]);
     }
 }
