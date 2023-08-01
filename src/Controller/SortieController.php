@@ -76,6 +76,9 @@ class SortieController extends AbstractController
     public function creerSortie(Request $request, EtatRepository $etatRepository, EntityManagerInterface $em): Response
     {
         $sortie = new Sortie();
+
+        //On checke l'utilisateur courant
+        $campus=$this->getUser()->getCampus();
         //On fixe une date de création
         $sortie->setDateCreation(new \DateTime());
         $sortie->setDateModification(new \DateTime());
@@ -83,7 +86,7 @@ class SortieController extends AbstractController
         //On paramètre des propositions de date cohérentes dans le formulaire
         $sortie->setDateDebut((new \DateTimeImmutable())->setTime(21, 0));
         $sortie->setDateLimiteInscription($sortie->getDateDebut()->sub(new \DateInterval("PT8H")));
-
+        $sortie->setCampus($campus);
         $sortieType = $this->createForm(SortieType::class, $sortie);
 
         $sortieType->handleRequest($request);
@@ -114,7 +117,7 @@ class SortieController extends AbstractController
     }
 
     /**
-     * @Route("/sorties/modifier/{id}", name="sortie_modifierSortie", requirements={"id"="\d+"},)
+     * @Route("/sorties/modifier/{id}", name="sortie_modifierSortie", requirements={"id"="\d+"})
      */
     public function modifierSortie(int $id, Request $request, EtatRepository $etatRepository, SortieRepository $sortieRepository, EntityManagerInterface $em): Response
     {
@@ -128,7 +131,14 @@ class SortieController extends AbstractController
             throw $this->createNotFoundException('Sortie non trouvée.');
         }
 
+
+
+        //On récupère la ville pour l'afficher dans le sélecteur
+        $ville = $sortie->getLieu()->getVille();
         $sortieType = $this->createForm(SortieType::class, $sortie);
+
+        //On affiche la ville enregistrée en base pour cette sortie
+        $sortieType->get('ville')->setData($ville);
 
         $sortieType->handleRequest($request);
 
@@ -149,6 +159,7 @@ class SortieController extends AbstractController
         $villeType = $this->createForm(VilleType::class);
         return $this->render('sortie/modification.html.twig', [
             'SortieType' => $sortieType->createView(),
+            'sortie' => $sortie,
             'LieuType' => $lieuType->createView(),
             'VilleType' => $villeType->createView()
         ]);

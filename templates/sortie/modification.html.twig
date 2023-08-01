@@ -50,23 +50,24 @@
         <label for="event_city" class="column6 row3 default_label">Ville :</label>
         {{ form_widget(SortieType.ville, {'label': false, 'attr': {'class': 'column7-8 row3 default_select', 'id': 'event_city', 'required': 'required'}}) }}
         <div class="column7-8 row4 default_error_message">{{ form_errors(SortieType.ville) }}</div>
+        <button id="add_city_button" formnovalidate>+</button>
 
         <label for="event_place" class="column6 row5 default_label">Lieu :</label>
-        {{ form_widget(SortieType.lieu, {'label': false, 'attr': {'class': 'column7-8 row5 default_select', 'id': 'event_place', 'required': 'required'}}) }}
+        {{ form_widget(SortieType.lieu, {'label': false, 'attr': {'class': 'column7-8 row5 default_select', 'id': 'event_place', 'required': 'required' }}) }}
         <div class="column7-8 row6 default_error_message">{{ form_errors(SortieType.lieu) }}</div>
         <button id="add_place_button" formnovalidate>+</button>
 
         <label class="column6 row7 default_label">Rue</label>
-        <span class="column7-9 row7 default_span" id="event_street"></span>
+        <span class="column7-9 row7 default_span" id="event_street">{{ sortie.lieu.rue }}</span>
 
         <label class="column6 row9 default_label">Code postal</label>
-        <span class="column7 row9 default_span" id="event_postal_code"></span>
+        <span class="column7 row9 default_span" id="event_postal_code">{{ sortie.lieu.ville.codePostal }}</span>
 
         <label class="column6 row11 default_label">Latitude</label>
-        <span class="column7 row11 default_span" id="event_latitude"></span>
+        <span class="column7 row11 default_span" id="event_latitude">{{ sortie.lieu.latitude }}</span>
 
         <label class="column6 row13 default_label">Longitude</label>
-        <span class="column7 row13 default_span" id="event_longitude"></span>
+        <span class="column7 row13 default_span" id="event_longitude">{{ sortie.lieu.longitude }}</span>
 
         <div class="row15 creation_event_button">
             {{ form_widget(SortieType.creer, {'attr': {'class': 'default_principal_button', 'id': 'creation_event_save'}}) }}
