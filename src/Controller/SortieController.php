@@ -34,7 +34,7 @@ class SortieController extends AbstractController
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
 
             $data = $sortieForm->getData();
-            //dump($data);
+            dump($data);
             $sortiesAll = $sortieRepository->selectAllSorties($data);
             // dump($sortieForm->getData());
 
