@@ -1,0 +1,104 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ parent() }} | Créer une sortie
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/creerUneSortie.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/popupAjouterUnLieu.css') }}">
+{% endblock %}
+
+{% block body %}
+
+    <section class="default_container">
+        <h2>Modifier une sortie</h2>
+        <!-- Formulaire de création d'une sortie-->
+        {{ form_start(SortieType, {'attr': {'class': 'form_container', 'id' : 'form_sortie', 'novalidate': 'novalidate'}, 'render_form': false}) }}
+        <!-- Bloc Formulaire -->
+        <label for="event_name" class="column1 row1 default_label">Nom de la sortie :</label>
+        {{ form_widget(SortieType.nom, {'label': false, 'attr': {'class': 'column2-5 row1 default_input', 'id': 'event_name', 'required': 'required'}}) }}
+        <div class="column2-5 row2 default_error_message">{{ form_errors(SortieType.nom) }}</div>
+
+        <label for="event_date_begin" class="column1 row3 default_label">Date et heure de la sortie :</label>
+        {{ form_widget(SortieType.dateDebut, {'label': false, 'attr': {'class': 'column2-4 row3 default_input', 'id': 'event_date_begin', 'required': 'required'}}) }}
+        <div class="column2-5 row4 default_error_message">{{ form_errors(SortieType.dateDebut) }}</div>
+
+        <label for="event_deadline_registration" class="column1 row5 default_label">Date limite d'inscription :</label>
+        {{ form_widget(SortieType.dateLimiteInscription, {'label': false, 'attr': {'class': 'column2-4 row5 default_input', 'id': 'event_deadline_registration', 'required': 'required'}}) }}
+        <div class="column2-5 row6 default_error_message">{{ form_errors(SortieType.dateLimiteInscription) }}</div>
+
+        <label for="event_number_places" class="column1 row7 default_label">Nombre de places :</label>
+        {{ form_widget(SortieType.nbInscritptionMax, {'label': false, 'attr': {'class': 'column2 row7 default_input', 'id': 'event_number_places', 'required': 'required'}}) }}
+        <div class="column2-5 row8 default_error_message">{{ form_errors(SortieType.nbInscritptionMax) }}</div>
+        <span id="event_person_number">personnes</span>
+
+        <label for="event_duration" class="column1 row9 default_label">Durée :</label>
+        {{ form_widget(SortieType.duree, {'label': false, 'attr': {'class': 'column2 row9 default_input', 'id': 'event_duration', 'required': 'required'}}) }}
+        <div class="column2-5 row10 default_error_message">{{ form_errors(SortieType.duree) }}</div>
+        <span id="event_duration_unit">minutes</span>
+
+        <label for="event_description" class="column1 row11 default_label">Description et infos :</label>
+        {{ form_widget(SortieType.description, {'label': false, 'attr': {'class': 'column2-5 row11-13 default_textarea', 'id': 'event_description', 'required': 'required'}}) }}
+        <div class="column2-5 row12 default_error_message">{{ form_errors(SortieType.description) }}</div>
+
+        <label class="column6 row1 default_label">Campus</label>
+        {{ form_widget(SortieType.campus, {'label': false, 'attr': {'class': 'column7-9 row1 default_span', 'id': 'event_campus', 'required': 'required'}}) }}
+        <div class="column7-9 row2 default_error_message">{{ form_errors(SortieType.campus) }}</div>
+
+        <label for="event_city" class="column6 row3 default_label">Ville :</label>
+        {{ form_widget(SortieType.ville, {'label': false, 'attr': {'class': 'column7-8 row3 default_select', 'id': 'event_city', 'required': 'required'}}) }}
+        <div class="column7-8 row4 default_error_message">{{ form_errors(SortieType.ville) }}</div>
+
+        <label for="event_place" class="column6 row5 default_label">Lieu :</label>
+        {{ form_widget(SortieType.lieu, {'label': false, 'attr': {'class': 'column7-8 row5 default_select', 'id': 'event_place', 'required': 'required'}}) }}
+        <div class="column7-8 row6 default_error_message">{{ form_errors(SortieType.lieu) }}</div>
+        <button id="add_place_button" formnovalidate>+</button>
+
+        <label class="column6 row7 default_label">Rue</label>
+        <span class="column7-9 row7 default_span" id="event_street"></span>
+
+        <label class="column6 row9 default_label">Code postal</label>
+        <span class="column7 row9 default_span" id="event_postal_code"></span>
+
+        <label class="column6 row11 default_label">Latitude</label>
+        <span class="column7 row11 default_span" id="event_latitude"></span>
+
+        <label class="column6 row13 default_label">Longitude</label>
+        <span class="column7 row13 default_span" id="event_longitude"></span>
+
+        <div class="row15 creation_event_button">
+            {{ form_widget(SortieType.creer, {'attr': {'class': 'default_principal_button', 'id': 'creation_event_save'}}) }}
+            {{ form_widget(SortieType.publier, {'attr': {'class': 'default_tertiary_button', 'id': 'creation_event_publish'}}) }}
+            <button class="default_secondary_button" id="creation_event_cancel" formnovalidate>Annuler</button>
+        </div>
+
+        <!--Ajout du champ token puisque render_rest= false-->
+        {{ form_row(SortieType._token) }}
+        {{ form_end(SortieType, {render_rest: false}) }}
+    </section>
+
+    <!-- Popup "Ajouter une ville" -->
+    <div class="default_popup_container" id="popup_add_city">
+        <!-- Overlay pour donner un arrière-plan assombri -->
+        <div class="default_popup_overlay" id="popup_overlay"></div>
+    </div>
+
+    <!-- Popup "Ajouter un lieu" -->
+    <div class="default_popup_container" id="popup_add_place">
+        <!-- Overlay pour donner un arrière-plan assombri -->
+        <div class="default_popup_overlay" id="popup_overlay"></div>
+    </div>
+
+    {% block javascripts %}
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <!--Script qui affiche dynamiquement les infos des villes et des lieux-->
+        <script src="{{ asset('/js/formSortieLieuParVille.js') }}" defer></script>
+        <script src="{{ asset('/js/formCreationLieu.js') }}" defer></script>
+        <script src="{{ asset('/js/formCreationVille.js') }}" defer></script>
+
+    {% endblock %}
+
+{% endblock %}

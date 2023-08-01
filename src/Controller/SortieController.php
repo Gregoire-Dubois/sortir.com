@@ -114,6 +114,47 @@ class SortieController extends AbstractController
     }
 
     /**
+     * @Route("/sorties/modifier/{id}", name="sortie_modifierSortie", requirements={"id"="\d+"},)
+     */
+    public function modifierSortie(int $id, Request $request, EtatRepository $etatRepository, SortieRepository $sortieRepository, EntityManagerInterface $em): Response
+    {
+        //Recherche de la sortie concernées avec les jointures idoines
+        $sortie = $sortieRepository->findSortieByIdWithDetails($id);
+        //On prépare l'alimentation du champ dateModif
+        $sortie->setDateModification(new \DateTime());
+
+        //si l'id n'existe pas
+        if (!$sortie) {
+            throw $this->createNotFoundException('Sortie non trouvée.');
+        }
+
+        $sortieType = $this->createForm(SortieType::class, $sortie);
+
+        $sortieType->handleRequest($request);
+
+        if ($sortieType->isSubmitted() && $sortieType->isValid()) {
+            //On passe la sortie à l'état Publiée si on clique sur publier
+            if ($sortieType->getClickedButton() && 'publier' === $sortieType->getClickedButton()->getName()) {
+                $sortie->setEtat($etatRepository->findOneBy(['libelle' => 'Ouverte']));
+            }
+
+            //On enregistre le créateur (utilisateur connecté)
+            $sortie->setModifiePar($this->getUser());
+            //$em->persist($sortie);
+            $em->flush();
+            $this->addFlash('success', 'La modification de la sortie a bien été enregistrée');
+            return $this->redirectToRoute('sortie_listeSortie');
+        }
+        $lieuType = $this->createForm(LieuType::class);
+        $villeType = $this->createForm(VilleType::class);
+        return $this->render('sortie/modification.html.twig', [
+            'SortieType' => $sortieType->createView(),
+            'LieuType' => $lieuType->createView(),
+            'VilleType' => $villeType->createView()
+        ]);
+    }
+
+    /**
      * @Route("/sorties/publier/{id}", name="sortie_publierSortie")
      */
     public function publierSortie(int $id): Response
