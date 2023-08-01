@@ -46,7 +46,8 @@ main {
 }
 
 /*Boutons "Ajouter un lieu" */
-#add_place_button {
+#add_place_button,
+#add_city_button {
   height: 4vh;
   width: 2.25vw;
   background-color: var(--primary-color);
@@ -64,12 +65,19 @@ main {
   grid-row: 5;
 }
 
-button#add_place_button:active {
+#add_city_button {
+  grid-column: 9/10;
+  grid-row: 3;
+}
+
+button#add_place_button:active,
+button#add_city_button:active{
   border-style: outset;
   transform: translateY(2px);
 }
 
-button#add_place_button:hover {
+button#add_place_button:hover,
+button#add_city_button:hover {
   background-color: #097FC2;
   border-color: #097FC2;
 }
