@@ -65,20 +65,33 @@ class SortieRepository extends ServiceEntityRepository
 
     }
 
-    public function selectAllSorties(SearchSortie $data)
+    public function selectAllSorties(?SearchSortie $data)
     {
+        $campus = null;
+        $nomSortie = null;
+        $dateDebut = null;
+        $dateFin = null;
+        $organisateur = null;
+        $nonInscrit = null;
+        $sortiesPassees =null;
+        $inscrit = null;
 
-        // Récupérer les valeurs des filtres depuis le formulaire
-        $campus = $data->getCampus();
-        $nomSortie = $data->getName();
-        $dateDebut = $data->getFrom();
-        $dateFin = $data->getTo();
-        $organisateur = $data->isOrganized();
-        //$nonOrganisateur = $data->is['non_organisateur'];
-        $nonInscrit = $data->isNotSubscribed();
-        $inscrit = $data->isSubscribed();
-        $sortiesPassees = $data->isOver();
-        //$sortiesOuvertes = $data->isOpen();
+        if ($data !== null)
+        {
+            // Récupérer les valeurs des filtres depuis le formulaire
+            $campus = $data->getCampus();
+            $nomSortie = $data->getName();
+            $dateDebut = $data->getFrom();
+            $dateFin = $data->getTo();
+            $organisateur = $data->isOrganized();
+            //$nonOrganisateur = $data->is['non_organisateur'];
+            $nonInscrit = $data->isNotSubscribed();
+            $inscrit = $data->isSubscribed();
+            $sortiesPassees = $data->isOver();
+            //$sortiesOuvertes = $data->isOpen();
+        }
+
+
 
         $queryBuilder = $this->createQueryBuilder('s');
 

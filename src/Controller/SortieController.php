@@ -29,7 +29,7 @@ class SortieController extends AbstractController
         $sortieForm = $this->createForm(SortiesFilterType::class);
         $sortieForm->handleRequest($request);
         $sortiesAll = "";
-        $data = "";
+        $data = null;
 
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
 
@@ -39,6 +39,7 @@ class SortieController extends AbstractController
             // dump($sortieForm->getData());
 
         }
+        $sortiesAll = $sortieRepository->selectAllSorties($data);
 
         //$sortiesAll = $sortieRepository-> selectAllSorties($data);
 
