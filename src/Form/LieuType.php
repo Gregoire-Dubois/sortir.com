@@ -4,14 +4,16 @@ namespace App\Form;
 
 use App\Entity\Lieu;
 use App\Entity\Ville;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class LieuType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options): void
+    public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('nom', null, [
@@ -23,10 +25,16 @@ class LieuType extends AbstractType
             ->add('latitude')
             ->add('longitude')
             ->add('ville', EntityType::class, [
-                'label' => 'ville',
+                'label' => 'Ville',
                 'class' => Ville::class,
-                'choice_label' => 'nom'
+                'placeholder' => 'Sélectionner une ville',
+                'choice_label' => 'nom',
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('v')
+                        ->orderBy('v.nom', 'ASC');
+                },
             ])
+            //->add('Valider', SubmitType::class)
         ;
     }
 

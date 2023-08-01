@@ -1,10 +1,22 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}{% endblock %}
+
+
+
 {% block body %}
 
+<section class="default_container">
+    <h2>Créer une participant</h2>
+    <!-- Formulaire de création d'une sortie-->
+    {{ form_start(RegistrationFormType, {'attr': {'class': 'form_container', 'id' : 'form_sortie', 'novalidate': 'novalidate'}, 'render_form': false}) }}
+
+    <label for="user_username" class="column1 row1 default_label">Pseudo :</label>
+    {{ form_widget(RegistrationFormType.pseudo, {'label': false, 'attr': {'class': 'column2 row1 default_input', 'id': 'user_username', 'required': 'required'}}) }}
+    <div class="column2 row2 default_error_message">{{ form_errors(RegistrationFormType.pseudo) }}</div>
+
+    {{ form_row(RegistrationFormType._token) }}
+    {{ form_end(RegistrationFormType, {render_rest: false}) }}
 {% endblock %}
 
-{% block title %}
-
-{% endblock %}
 

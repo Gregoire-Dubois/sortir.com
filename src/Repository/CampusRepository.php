@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Campus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Exception;
 
 /**
  * @extends ServiceEntityRepository<Campus>
@@ -39,28 +40,31 @@ class CampusRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return Campus[] Returns an array of Campus objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('c.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * @throws Exception
+     */
+    public function modifierCampus(int $id, string $nom): Campus
+    {
+        $entityManager = $this->getEntityManager();
+        $campus = $this->find($id);
 
-//    public function findOneBySomeField($value): ?Campus
-//    {
-//        return $this->createQueryBuilder('c')
-//            ->andWhere('c.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        if (!$campus) {
+            throw new Exception('Campus non trouvé.');
+        }
+
+        $campus->setNom($nom);
+
+        $entityManager->flush();
+
+        return $campus;
+    }
+
+    public function rechercheParNomCampus($rechercheCampus)
+    {
+        return $this->createQueryBuilder('v')
+            ->where('v.nom LIKE :search')
+            ->setParameter('search', '%'.$rechercheCampus.'%')
+            ->getQuery()
+            ->getResult();
+    }
 }

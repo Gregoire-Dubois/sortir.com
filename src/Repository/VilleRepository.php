@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Ville;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Exception;
 
 /**
  * @extends ServiceEntityRepository<Ville>
@@ -39,28 +40,36 @@ class VilleRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return Ville[] Returns an array of Ville objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('v')
-//            ->andWhere('v.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('v.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * @throws Exception
+     */
+    public function modifierVille(int $id, string $nom, string $codePostal): Ville
+    {
+        $entityManager = $this->getEntityManager();
+        $ville = $this->find($id);
 
-//    public function findOneBySomeField($value): ?Ville
-//    {
-//        return $this->createQueryBuilder('v')
-//            ->andWhere('v.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        if (!$ville) {
+            throw new Exception('Ville non trouvée.');
+        }
+
+        $ville->setNom($nom);
+        $ville->setCodePostal($codePostal);
+
+        $entityManager->flush();
+
+        return $ville;
+    }
+
+    public function rechercheParNomVille($rechercheVille)
+    {
+        dump($rechercheVille);
+
+        return $this->createQueryBuilder('v')
+            ->where('v.nom LIKE :search')
+            ->setParameter('search', '%'.$rechercheVille.'%')
+            ->getQuery()
+            ->getResult();
+    }
+
+
 }

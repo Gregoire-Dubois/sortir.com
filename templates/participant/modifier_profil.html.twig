@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/modifierProfil.css') }}">
+{% endblock %}
+
+{% block body %}
+
+    <div class="default_container">
+        <h2>Mon Profil</h2>
+
+        <!-- Bloc "Formulaire" -->
+        {{ form_start(participantForm, {'attr': {'class': 'my_profil_form', 'novalidate': 'novalidate'}, 'render_form': false}) }}
+
+        <label class="column3 row1 default_label" for="my_profil_username">Pseudo :</label>
+        {{ form_widget(participantForm.pseudo, {'label': false, 'attr': {'class': 'column4 row1 default_input', 'id': 'my_profil_username', 'required': 'required'}}) }}
+        <div class="column4 row2 default_error_message">{{ form_errors(participantForm.pseudo) }}</div>
+
+        <label class="column3 row3 default_label" for="my_profil_username">Prénom :</label>
+        {{ form_widget(participantForm.prenom, {'label': false, 'attr': {'class': 'column4 row3 default_input', 'id': 'my_profil_first_name', 'required': 'required'}}) }}
+        <div class="column4 row4 default_error_message">{{ form_errors(participantForm.prenom) }}</div>
+
+        <label class="column3 row5 default_label" for="my_profil_last_name">Nom :</label>
+        {{ form_widget(participantForm.nom, {'label': false, 'attr': {'class': 'column4 row5 default_input', 'id': 'my_profil_last_name', 'required': 'required'}}) }}
+        <div class="column4 row6 default_error_message">{{ form_errors(participantForm.nom) }}</div>
+
+        <label class="column3 row7 default_label" for="my_profil_phone">Téléphone :</label>
+        {{ form_widget(participantForm.telephone, {'label': false, 'attr': {'class': 'column4 row7 default_input', 'id': 'my_profil_phone', 'required': 'required'}}) }}
+        <div class="column4 row8 default_error_message">{{ form_errors(participantForm.telephone) }}</div>
+
+        <label class="column3 row9 default_label" for="my_profil_mail">Email :</label>
+        {{ form_widget(participantForm.email, {'label': false, 'attr': {'class': 'column4 row9 default_input', 'id': 'my_profil_mail', 'required': 'required'}}) }}
+        <div class="column4 row10 default_error_message">{{ form_errors(participantForm.email) }}</div>
+
+        <label class="column3 row11 default_label" for="my_profil_campus">Campus :</label>
+        {{ form_widget(participantForm.campus, {'label': false, 'attr': {'class': 'column4 row11 default_select', 'id': 'my_profil_campus', 'required': 'required'}}) }}
+        <div class="column4 row12 default_error_message">{{ form_errors(participantForm.campus) }}</div>
+
+        <label class="column1 row11 default_label" for="my_profil_photo">Ma photo :</label>
+        {{ form_widget(participantForm.photo, {'label': false, 'attr': {'type':'file', 'class': 'column2 row11', 'id': 'my_profil_photo', 'accept': 'image/*', 'required': false}}) }}
+        <div class="column4 row12 default_error_message">{{ form_errors(participantForm.photo) }}</div>
+
+        <label class="column3 row13 default_label" for="my_profil_password">Mot de passe :</label>
+        {{ form_widget(participantForm.plainPassword.first, {'label': false, 'attr': {'class': 'column4 row13 default_input', 'id': 'my_profil_password'}}) }}
+        <div class="column4 row15 default_error_message">{{ form_errors(participantForm.plainPassword.first) }}</div>
+
+        <label class="column3 row15 default_label" for="my_profil_confirm_password">Confirmation :</label>
+        {{ form_widget(participantForm.plainPassword.second, {'label': false, 'attr': {'class': 'column4 row15 default_input', 'id': 'my_profil_confirm_password'}}) }}
+        <div class="column4 row16 default_error_message">{{ form_errors(participantForm.plainPassword.second) }}</div>
+
+        <!-- Bloc "Photo de profil" -->
+        <div class="photo_profil_border">
+            {% if (participant.photo) %}
+                <img src="{{ asset('photos/' ~ participant.photo) }}" alt="Photo de profil">
+            {% endif %}
+        </div>
+
+        <!-- Partie boutons -->
+        <button type="submit" class="default_principal_button" id="my_profil_save">Enregistrer</button>
+        <a href="{{ path("sortie_listeSortie") }}" class="default_secondary_button" id="my_profil_cancel" title="Annuler">Annuler</a>
+
+        {{ form_end(participantForm) }}
+    </div>
+{% endblock %}

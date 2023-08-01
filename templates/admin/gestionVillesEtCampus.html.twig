@@ -1,0 +1,199 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} {{ parent() }} | Gestion des villes {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/gestionVillesEtCampus.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/modifierVilleEtLieu.css') }}">
+{% endblock %}
+
+{% block javascripts %}
+	<script src=" {{ asset('/js/modifierVilleEtCampus.js') }}" defer></script>
+{% endblock %}
+
+{% block body %}
+    <div class="default_flash_container">
+{{ parent() }}
+<!-- Affichage de l'Add-Flash en cas de recherche de ville infructueuse -->
+    {% if app.flashes('error_recherche_ville')|length > 0 %}
+        {% for flashMessage in app.flashes('error_recherche_ville') %}
+            <div class="default_flash {{ label }}_flash">{{ flashMessage }}</div>
+        {% endfor %}
+    {% endif %}
+    <!-- Affichage de l'Add-Flash en cas de recherche de campus infructueuse -->
+    {% if app.flashes('error_recherche_campus')|length > 0 %}
+        {% for flashMessage in app.flashes('error_recherche_campus') %}
+            <div class="default_flash {{ label }}_flash">{{ flashMessage }}</div>
+        {% endfor %}
+    {% endif %}
+    </div>
+
+    <!-- Partie Gestion des villes -->
+<section class="default_container">
+
+    <div class="city_management_container">
+        <!-- Titre du bloc "Gérer les villes" -->
+        <h2>Gérer les villes</h2>
+        <!-- Partie "Recherche par le nom" -->
+        <div class="city_management_search_container">
+            <!-- Titre du bloc "Recherche par le nom de la ville" -->
+            <div class="city_management_search_title"><h3>Filtrer les villes</h3></div>
+            <!-- Formulaire "Recherche par le nom de la ville" -->
+            <form method="get" class="city_management_search_form">
+            {{ form_start(rechercheVilleForm, {'attr': {novalidate: 'novalidate'}, 'render_form': false}) }}
+                <!-- 1ère ligne : Recherche par le nom de la ville -->
+                <label for="city_management_search_bar" class="default_label" >Le nom contient :</label>
+                {{ form_widget(rechercheVilleForm.rechercheNomVille, {'label': false, 'attr': {'class': 'default_input', 'id':'city_management_search_bar'}})  }}
+                <!-- 2ème ligne: Bouton "Rechercher" -->
+                <div class="city_management_search" ><button type="submit" class="default_principal_button" id="city_management_button">Rechercher</button></div>
+                {{ form_end(rechercheVilleForm) }}
+            </form>
+        </div>
+
+        <!-- Tableau "Liste des villes" -->
+        <div class="default_table_wrapper">
+            <table class="default_table">
+
+                <colgroup>
+                    <col class="city_column1">
+                    <col class="city_column2">
+                    <col class="city_column3">
+                </colgroup>
+
+                <thead>
+                <tr>
+                    <th>Ville</th>
+                    <th>Code postal</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <!-- Lignes de données -->
+                {% if villes is empty %}
+                {# Afficher toutes les villes par défaut #}
+                {% for listeVille in listeVilles %}
+                    <tr>
+                        <td>{{ listeVille.nom }}</td>
+                        <td>{{ listeVille.codePostal }}</td>
+                        <td>
+                            <button type="button" class="default_tertiary_button modifier_ville_button" onclick="ouvrirModalModifier('{{ entity_id }}')">Modifier</button>
+                            <form action="{{ path('admin_supprimer_ville', {'id': ville.id}) }}" method="post" style="display: inline;">
+                                <button type="submit" class="default_secondary_button" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette ville ?')">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                {% else %}
+                {# Aucune recherche n'a été effectuée, afficher toutes les villes par défaut #}
+                {% for ville in villes %}
+                <tr>
+                    <td>{{ ville.nom }}</td>
+                    <td>{{ ville.codePostal }}</td>
+                    <td>
+                        <button type="button" class="default_tertiary_button modifier_ville_button" onclick="ouvrirModalModifier('{{ ville.id }}')">Modifier</button>
+                        <form action="{{ path('admin_supprimer_ville', {'id': ville.id}) }}" method="post" style="display: inline;">
+                            <button type="submit" class="default_secondary_button" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette ville ?')">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% endif %}
+                <!-- Ligne pour ajouter de nouvelles données -->
+                {{ form_start(villeForm, {'action': path('admin_villes_et_campus')}) }}
+                <tr class="add_row">
+                    <td>{{ form_widget(villeForm.nom, {'attr': {'class': 'default_input', 'id':'new_city', 'placeholder':'Ville', 'required': 'required'}}) }}</td>
+                    <td>{{ form_widget(villeForm.codePostal, {'attr': {'class': 'default_input', 'id':'new_cp','placeholder':'Code Postal', 'type':'text', 'required': 'required'}}) }}</td>
+                    <td>
+                        <button type="submit" id="add_city_button" class="default_principal_button">Ajouter</button>
+                    </td>
+                </tr>
+                {{ form_end(villeForm) }}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+
+
+<!-- Partie Gestion des campus -->
+<section class="default_container">
+    <div class="campus_management_container">
+        <!-- Titre du bloc "Gérer les campus" -->
+        <h2>Gérer les campus</h2>
+        <!-- Partie "Recherche par le nom" -->
+        <div class="campus_management_search_container">
+            <!-- Titre du bloc "Recherche par le nom du campus" -->
+            <div class="campus_management_search_title"><h3>Filtrer les campus</h3></div>
+            <!-- Formulaire "Recherche par le nom du campus" -->
+            <form class="campus_management_search_form">
+            {{ form_start(rechercheCampusForm, {'attr': {novalidate: 'novalidate'}, 'render_form': false}) }}
+                <!-- 1ère ligne : Recherche par le nom du campus -->
+                <label for="campus_management_search_bar" class="default_label">Le nom contient :</label>
+                {{ form_widget(rechercheCampusForm.rechercheNomCampus, {'label': false, 'attr': {'class': 'default_input', 'id':'campus_management_search_bar'}})  }}
+                <!-- 2ème ligne: Bouton "Rechercher" -->
+                <div class="campus_management_search" ><button type="submit" id="campus_management_button" class="default_principal_button">Rechercher</button></div>
+                {{ form_end(rechercheCampusForm) }}
+            </form>
+        </div>
+        <div class="default_table_wrapper">
+            <table class="default_table">
+
+                <colgroup>
+                    <col class="campus_column1">
+                    <col class="campus_column2">
+                </colgroup>
+
+                <thead>
+                <tr>
+                    <th>Campus</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Lignes de données -->
+                {% if campus is empty %}
+                {# Afficher tous les campus par défaut #}
+                {% for listeCampu in listeCampus %}
+                    <tr>
+                        <td>{{ listeCampu.nom }}</td>
+                        <td>
+                            <button type="button" class="default_tertiary_button modifier_campus_button" onclick="ouvrirModalModifier('{{ campus.id }}')">Modifier</button>
+                            <form action="{{ path('admin_supprimer_campus', {'id': campus.id}) }}" method="post" style="display: inline;">
+                                <button type="submit" class="default_secondary_button" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce campus ?')">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                {% else %}
+                {# Aucune recherche n'a été effectuée, afficher tous les campus par défaut #}
+                {% for campu in campus %}
+                    <tr>
+                        <td>{{ campu.nom }}</td>
+                        <td>
+                            <button type="button" class="default_tertiary_button modifier_campus_button" onclick="ouvrirModalModifier('{{ campu.id }}')">Modifier</button>
+                            <form action="{{ path('admin_supprimer_campus', {'id': campu.id}) }}" method="post" style="display: inline;">
+                                <button type="submit" class="default_secondary_button" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce campus ?')">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                {% endif %}
+                <!-- Ligne pour ajouter de nouvelles données -->
+                {{ form_start(campusForm, {'action': path('admin_villes_et_campus')}) }}
+                <tr class="add_row">
+                    <td>{{ form_widget(campusForm.nom, {'attr': {'class': 'default_input', 'id':'new_campus', 'placeholder':'Campus', 'required': 'required'}}) }}</td>
+                    <td>
+                        <button type="submit" id="add_city_button" class="default_principal_button">Ajouter</button>
+                    </td>
+                </tr>
+                {{ form_end(campusForm) }}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

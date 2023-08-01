@@ -62,18 +62,18 @@ class Sortie
      *
      * @Assert\NotBlank(message="Veuillez indiquez un nombre maximum de participants")
      * @Assert\LessThanOrEqual(500, message="Le nombre maximum de participants ne peut exéder 500 personnes")
+     * @Assert\GreaterThanOrEqual(1, message="La sortie doit avoir un participant minimum")
      */
     private $nbInscritptionMax;
 
     /**
      * @ORM\Column(type="text")
      *
-     * Assert\GreaterThanOrEqual(1, message="La sortie doit avoir un participant minimum")
      */
     private $description;
 
     /**
-     * @ORM\Column(type="text", nullable=true)
+     * @ORM\Column(type="text", nullable=true)(groups={"update_motif"})
      */
     private $motif;
 
