@@ -109,32 +109,28 @@
                     <td>{%if app.user in  sortie.participants %}X{% endif %}</td>
                     <td>{{ sortie.organisateur }}</td>
 
-                    <td>{% if is_granted('ROLE_ADMIN') %}
-                    <a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}" class="default_principal_button">Afficher</a>
-                    <a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}" class="default_secondary_button">Modifier</a>
+                    <td>
+                        {% if is_granted('ROLE_ADMIN') %}
+                        <div class="table_link"><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}"><button class="default_principal_button">Afficher</button></a></div>
+                        <div class="table_link"><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}"><button class="default_secondary_button_button">Modifier</button></a></div>
 
-                    {% elseif is_granted('ROLE_PARTICIPANT') and app.USER and sortie.organisateur.id == app.user.id %}
-                    <a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}" class="default_principal_button">Afficher</a>
-                    <a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}" class="default_secondary_button">Modifier</a>
+                        {% elseif is_granted('ROLE_PARTICIPANT') and app.USER and sortie.organisateur.id == app.user.id %}
+                        <div class="table_link"><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}"><button class="default_principal_button">Afficher</button></a></div>
+                        <div class="table_link"><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}"><button class="default_secondary_button">Modifier</button></a></div>
 
-                    {% elseif is_granted('ROLE_PARTICIPANT') %}
-                    {% if app.user in sortie.participants %}
-                        <a href="{{ path('sortie_desistement', { 'id': sortie.id }) }}" class="default_tertiary_button">{% include('inc/desister.html.twig') %}</a>
-                        <a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}" class="default_principal_button">Afficher</a>
+                        {% elseif is_granted('ROLE_PARTICIPANT') %}
+                            {% if app.user in sortie.participants %}
+                                <div class="table_link">{% include('inc/desister.html.twig') %}</div>
+                                <div class="table_link"><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}"><button class="default_principal_button">Afficher</button></a></div>
 
-                    {% else %}
-                        <a href="{{ path('sortie_inscription', { 'id': sortie.id }) }}" class="default_tertiary_button">{% include('inc/inscrire.html.twig') %}</a>
-                        <a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}" class="default_principal_button">Afficher</a>
-
-                    {% endif %}
-
-                    {% elseif is_granted('ROLE_PARTICIPANT') %}
-                    <a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}" class="default_principal_button">Afficher</a>
-
-                    {% endif %}</td>
+                            {% else %}
+                                <div class="table_link">{% include('inc/inscrire.html.twig') %}</div>
+                                <div class="table_link"><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}"><button class="default_principal_button">Afficher</button></a></div>
+                            {% endif %}
+                    	{% endif %}
+        			</td>
                 </tr>
-                {% endfor %}
-
+        		{% endfor %}
                 </tbody>
             </table>
         </div>
