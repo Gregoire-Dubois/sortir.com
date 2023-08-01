@@ -25,10 +25,12 @@ class SortieController extends AbstractController
      */
     public function listeSortie(SortieRepository $sortieRepository, Request $request): Response
     {
+        $participantConnnecte = $this->getUser();
+        $campusParticipant = $participantConnnecte->getCampus();
 
         $sortieForm = $this->createForm(SortiesFilterType::class);
         $sortieForm->handleRequest($request);
-        $sortiesAll = $sortieRepository->findAll() ;
+        $sortiesAll = $sortieRepository->getSortiesCampus($campusParticipant, $participantConnnecte);
         //$data = null;
 
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
@@ -42,7 +44,9 @@ class SortieController extends AbstractController
        // $sortiesAll = $sortieRepository->selectAllSorties($data);
 
         //$sortiesAll = $sortieRepository-> selectAllSorties($data);
-
+        if($sortiesAll==null){
+            $this->addFlash('error', 'Il n\'y a pas de sortie correspondant à votre recherche.');
+        }
         return $this->render('sortie/liste.html.twig', [
             'sorties' => $sortiesAll,
             'sortieForm' => $sortieForm->createView(),

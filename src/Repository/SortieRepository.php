@@ -82,6 +82,7 @@ class SortieRepository extends ServiceEntityRepository
         }elseif ($data !== null) {*/
             // Récupérer les valeurs des filtres depuis le formulaire
             $campus = $data->getCampus();
+            dump($campus);
             $nomSortie = $data->getName();
             $dateDebut = $data->getFrom();
             $dateFin = $data->getTo();
@@ -96,7 +97,7 @@ class SortieRepository extends ServiceEntityRepository
 
             $etatArchive = $this->etatRepository->findbyLibelle("Archivée");
             $etatOuvert = $this->etatRepository->findbyLibelle("Ouverte");
-
+            $etatCreee = $this->etatRepository->findbyLibelle("Créée");
 
             $queryBuilder = $this->createQueryBuilder('s');
 
@@ -111,6 +112,17 @@ class SortieRepository extends ServiceEntityRepository
             $queryBuilder->where('s.etat != :etatArchive');
             $queryBuilder->setParameter(':etatArchive', $etatArchive);
 
+        $orConditions = $queryBuilder->expr()->orX();
+        $andConditions = $queryBuilder->expr()->andX();
+
+        $orConditions->add('s.etat != :etatCreee');
+        $andConditions->add('s.etat = :etatCreee');
+        $queryBuilder->setParameter(':etatCreee', $etatCreee);
+        $andConditions->add('s.organisateur = :participantConnecte');
+        $queryBuilder->setParameter(':participantConnecte', $this->getUser());
+        $orConditions->add($andConditions);
+
+        $queryBuilder->andWhere($orConditions);
             // ->leftJoin('s.lieu', 'l')
             // ->leftJoin('l.ville', 'v')
             /* ->where(
@@ -223,5 +235,41 @@ class SortieRepository extends ServiceEntityRepository
         return $this->security->getUser();
     }
 
+    public function getSortiesCampus($campusParticipant, $participantConnecte)
+    {
+
+        $etatCreee = $this->etatRepository->findbyLibelle("Créée");
+        $etatArchive = $this->etatRepository->findbyLibelle("Archivée");
+        //dump($etatArchive);
+        $queryBuilder = $this->createQueryBuilder('sortie');
+        $queryBuilder->select('DISTINCT sortie');
+
+        $queryBuilder->join('sortie.campus', 'camp');
+        $queryBuilder->where('sortie.etat != :etatArchive');
+        $queryBuilder->setParameter(':etatArchive', $etatArchive);
+
+        $andConditions2= $queryBuilder->expr()->andX();
+        //$queryBuilder->andWhere('camp = :filtreCampus');
+        $andConditions2->add('camp = :filtreCampus');
+
+        $queryBuilder->setParameter(':filtreCampus', $campusParticipant);
+
+        $orConditions = $queryBuilder->expr()->orX();
+        $andConditions = $queryBuilder->expr()->andX();
+
+        $orConditions->add('sortie.etat != :etatCreee');
+        $andConditions->add('sortie.etat = :etatCreee');
+        $queryBuilder->setParameter(':etatCreee', $etatCreee);
+        $andConditions->add('sortie.organisateur = :participantConnecte');
+        $queryBuilder->setParameter(':participantConnecte', $participantConnecte);
+        $orConditions->add($andConditions);
+        $andConditions2->add($orConditions);
+        $queryBuilder->andWhere($andConditions2);
+
+        dump($queryBuilder->getDQL());
+        $sortiesCampus = $queryBuilder->getQuery()->getResult();
+
+        return $sortiesCampus;
+    }
 }
 

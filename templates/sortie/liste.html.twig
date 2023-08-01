@@ -86,6 +86,7 @@
                 <!-- Titre du tableau -->
                 <thead>
                 <tr>
+                    <th>Campus</th>
                     <th>Nom de la sortie</th>
                     <th>Date de la sortie</th>
                     <th>Date de clôture</th>
@@ -101,6 +102,7 @@
                 <!-- 2 lignes d'exemples à automatiser -->
                 {% for sortie in sorties %}
                 <tr>
+                    <td>{{ sortie.campus.nom }}</td>
                     <td>{{ sortie.nom }}</td>
                     <td>{{ sortie.dateDebut|date('d-m-Y H:i') }}</td>
                     <td>{{ sortie.dateLimiteInscription|date('d-m-Y') }}</td>
