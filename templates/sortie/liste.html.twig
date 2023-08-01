@@ -107,7 +107,7 @@
                     <td>{{ sortie.participants.count }} / {{ sortie.nbInscritptionMax }}</td>
                     <td>{{ sortie.etat.libelle }}</td>
                     <td>{%if app.user in  sortie.participants %}X{% endif %}</td>
-                    <td>{{ sortie.organisateur }}</td>
+                    <td><a href="{{ path('participant_afficherProfil', { 'id': sortie.organisateur.id }) }}" class="default_principal_button">{{ sortie.organisateur.nom }} {{ sortie.organisateur.prenom }}</a></td>
 
                     <td>
                         {% if is_granted('ROLE_ADMIN') %}

@@ -67,25 +67,38 @@ class SortieRepository extends ServiceEntityRepository
 
     }
 
-    public function selectAllSorties(SearchSortie $data)
+    public function selectAllSorties(?SearchSortie $data)
     {
-        dump($data);
-        dump($this->getUser());
+        $campus = null;
+        $nomSortie = null;
+        $dateDebut = null;
+        $dateFin = null;
+        $organisateur = null;
+        $nonInscrit = null;
+        $sortiesPassees =null;
+        $inscrit = null;
 
-        $etatArchive = $this->etatRepository->findbyLibelle("Archivée");
-        $etatOuvert = $this->etatRepository->findbyLibelle("Ouverte");
+        if ($data !== null)
+        {
+            // Récupérer les valeurs des filtres depuis le formulaire
+            $campus = $data->getCampus();
+            $nomSortie = $data->getName();
+            $dateDebut = $data->getFrom();
+            $dateFin = $data->getTo();
+            $organisateur = $data->isOrganized();
+            //$nonOrganisateur = $data->is['non_organisateur'];
+            $nonInscrit = $data->isNotSubscribed();
+            $inscrit = $data->isSubscribed();
+            $sortiesPassees = $data->isOver();
+            //$sortiesOuvertes = $data->isOpen();
+            dump($data);
+            dump($this->getUser());
 
-        // Récupérer les valeurs des filtres depuis le formulaire
-        $campus = $data->getCampus();
-        $nomSortie = $data->getName();
-        $dateDebut = $data->getFrom();
-        $dateFin = $data->getTo();
-        $organisateur = $data->isOrganized();
-        //$nonOrganisateur = $data->is['non_organisateur'];
-        $nonInscrit = $data->isNotSubscribed();
-        $inscrit = $data->isSubscribed();
-        $sortiesPassees = $data->isOver();
-        //$sortiesOuvertes = $data->isOpen();
+            $etatArchive = $this->etatRepository->findbyLibelle("Archivée");
+            $etatOuvert = $this->etatRepository->findbyLibelle("Ouverte");
+        }
+
+
 
         $queryBuilder = $this->createQueryBuilder('s');
 
