@@ -39,7 +39,7 @@
             <input class="login_input" type="password" name="password" id="password" autocomplete="current-password" required>
             <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
             <div id="remember_me">
-                <input type="checkbox" id="remember_me_checkbox">
+                <input type="checkbox" name="_remember_me" id="remember_me_checkbox">
                 <label for="remember_me_checkbox">Se souvenir de moi</label>
             </div>
             <button type="submit" class="default_principal_button" id="connexion">Connexion</button>
