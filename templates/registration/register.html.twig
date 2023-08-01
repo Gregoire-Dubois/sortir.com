@@ -34,15 +34,15 @@
 
     <label for="user_email" class="column3 row1 default_label">Email :</label>
     {{ form_widget(registrationForm.email, {'label': false, 'attr': {'class': 'column4-5 row1 default_input', 'id': 'user_email', 'required': 'required'}}) }}
-    <div class="column4 row2 default_error_message">{{ form_errors(registrationForm.email) }}</div>
+    <div class="column4-5 row2 default_error_message">{{ form_errors(registrationForm.email) }}</div>
 
     <label for="user_campus" class="column3 row3 default_label">Campus :</label>
     {{ form_widget(registrationForm.campus, {'label': false, 'attr': {'class': 'column4-5 row3 default_select', 'id': 'user_campus', 'required': 'required'}}) }}
-    <div class="column4 row4 default_error_message">{{ form_errors(registrationForm.campus) }}</div>
+    <div class="column4-5 row4 default_error_message">{{ form_errors(registrationForm.campus) }}</div>
 
     <label for="user_password" class="column3 row5 default_label">Mot de Passe :</label>
     {{ form_widget(registrationForm.plainPassword, {'label': false, 'attr': {'class': 'column4-5 row5 default_input', 'id': 'user_password', 'required': 'required'}}) }}
-    <div class="column4 row6 default_error_message">{{ form_errors(registrationForm.plainPassword) }}</div>
+    <div class="column4-5 row6 default_error_message">{{ form_errors(registrationForm.plainPassword) }}</div>
 
     <label class="column3-5 row7 default_label" id="user_role_label">
         Souhaitez-vous que ce participant soit administrateur ?
