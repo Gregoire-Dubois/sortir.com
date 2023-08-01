@@ -9,6 +9,10 @@ main{
   justify-content: center;
 }
 
+a:-webkit-any-link {
+  color: var(--primary-color);
+}
+
 /* Container */
 .default_container {
   margin: auto;

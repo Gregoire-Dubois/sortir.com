@@ -1,24 +1,44 @@
-main{
+main {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
+  flex-direction: column;
+  padding: 0 5%;
+}
+
+a {
+  color: white;
 }
 
 .default_container {
   justify-content: flex-start;
-  height: 56.5vh;
+  max-height: 63vh;
+}
+
+#main_display_event_container {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+  align-items: start;
+  width: 100%;
+}
+
+#event_display_container {
+  width: 75%;
+  height: 63vh;
+}
+
+#participants_list_container {
+  width: 25%;
 }
 
 /* Bloc "Info Sortie" - Global */
 .event_display {
   display: grid;
-  grid-template-columns: 4fr 1fr 0.5fr 0.5fr 0.5fr 2fr 1.4fr 2.1fr;
+  grid-template-columns: 3fr 1fr 0.5fr 0.5fr 1.5fr 2fr 2fr 2fr 0.5fr;
   grid-template-rows: repeat(8,4vh);
-  width: 750px;
-  row-gap: 2vh;
+  width: 100%;
+  row-gap: 3vh;
   column-gap: 1.5vw;
-  padding: 2.25vh 1vw 2.5vh 1vw;
+  padding: 2.25vh 1vw 0 1vw;
 }
 
 /* Bloc "Info Sortie" - Spécifique */
@@ -55,11 +75,10 @@ main{
   justify-content: space-around;
   align-items: center;
   width: 100%;
-  margin-top: 0.25vh;
 }
 
 .display_event_button button {
-  height: 90%;
+  height: 4vh;
   width: 12vw;
 }
 
@@ -137,12 +156,16 @@ main{
 
 /* Partie Tableau des participants */
 .default_container .default_table_wrapper {
-  width: 274px;
+  width: 100%;
 }
 
 .default_container table td:last-child {
   text-align: start;
   padding-left: 1vw;
+}
+
+.default_container table td a {
+  color: white;
 }
 
 @media screen and (max-width: 768px) {

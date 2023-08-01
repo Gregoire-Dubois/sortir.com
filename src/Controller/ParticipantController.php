@@ -93,7 +93,7 @@ class ParticipantController extends AbstractController
     public function afficherProfil(Participant $participant): Response
     {
         if($participant === $this->getUser()){
-            return $this->redirectToRoute('participant_profil');
+            return $this->redirectToRoute('participant_afficherSonProfil');
         }else{
             return $this->render('participant/afficher_profil.html.twig', [
                 'participant'=>$participant,

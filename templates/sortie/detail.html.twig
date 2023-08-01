@@ -8,129 +8,140 @@
 {% endblock %}
 
 {% block body %}
-    <section class="default_container" id="event_display_container">
-        <!-- Titre du container -->
-        <h2>Afficher une sortie</h2>
+    <div id="main_display_event_container">
+        <section class="default_container" id="event_display_container">
+            <!-- Titre du container -->
+            <h2>Afficher une sortie</h2>
 
-        <!-- Partie "Affichage des infos sur la sortie" -->
-        <div class="event_display">
-            <label class="column1 row1 default_label">Nom de la sortie :</label>
-            <span class="column2-5 row1 default_span" id="event_name">{{ sortie.nom }}</span>
+            <!-- Partie "Affichage des infos sur la sortie" -->
+            <div class="event_display">
+                <label class="column1 row1 default_label">Nom de la sortie :</label>
+                <span class="column2-5 row1 default_span" id="event_name">{{ sortie.nom }}</span>
 
-            <label class="column1 row2 default_label">Date et heure de la sortie :</label>
-            <span class="column2-4 row2 default_span" id="event_date_begin">{{ sortie.dateDebut|date('Y-m-d H:i') }}</span>
+                <label class="column1 row2 default_label">Date et heure de la sortie :</label>
+                <span class="column2-4 row2 default_span" id="event_date_begin">{{ sortie.dateDebut|date('Y-m-d H:i') }}</span>
 
-            <label class="column1 row3 default_label">Date limite d'inscription :</label>
-            <span class="column2-4 row3 default_span" id="event_deadline_registration">{{ sortie.dateLimiteInscription|date('Y-m-d') }}</span>
+                <label class="column1 row3 default_label">Date limite d'inscription :</label>
+                <span class="column2-4 row3 default_span" id="event_deadline_registration">{{ sortie.dateLimiteInscription|date('Y-m-d') }}</span>
 
-            <label class="column1 row4 default_label">Nombre de places :</label>
-            <span class="column2 row4 default_span" id="event_number_places">{{ sortie.nbInscritptionMax }}</span>
-            <span id="event_person_number">personnes</span>
+                <label class="column1 row4 default_label">Nombre de places :</label>
+                <span class="column2 row4 default_span" id="event_number_places">{{ sortie.nbInscritptionMax }}</span>
+                <span id="event_person_number">personnes</span>
 
-            <label class="column1 row5 default_label">Durée :</label>
-            <span class="column2 row5 default_span" id="event_duration">{{ sortie.duree }}</span>
-            <span id="event_duration_unit">minutes</span>
+                <label class="column1 row5 default_label">Durée :</label>
+                <span class="column2 row5 default_span" id="event_duration">{{ sortie.duree }}</span>
+                <span id="event_duration_unit">minutes</span>
 
-            <label for="event_description" class="column1 row6 default_label">Description et infos :</label>
-            <textarea class="column2-5 default_textarea" id="event_description"  required>{{ sortie.description }}</textarea>
+                <label for="event_description" class="column1 row6 default_label">Description et infos :</label>
+                <textarea class="column2-5 default_textarea" id="event_description"  required>{{ sortie.description }}</textarea>
 
-            <label class="column6 row1 default_label">Campus</label>
-            <span class="column7-8 row1 default_span" id="event_campus">{{ sortie.campus.nom }}</span>
+                <label class="column6 row1 default_label">Campus</label>
+                <span class="column7-8 row1 default_span" id="event_campus">{{ sortie.campus.nom }}</span>
 
-            <label class="column6 row2 default_label">Ville :</label>
-            <span class="column7-8 row2 default_span" id="event_city">{{ sortie.lieu.ville.nom }}</span>
+                <label class="column6 row2 default_label">Ville :</label>
+                <span class="column7-8 row2 default_span" id="event_city">{{ sortie.lieu.ville.nom }}</span>
 
-            <label class="column6 row3 default_label">Lieu :</label>
-            <span class="column7-8 row3 default_span" id="event_place">{{ sortie.lieu.nom }}</span>
+                <label class="column6 row3 default_label">Lieu :</label>
+                <span class="column7-8 row3 default_span" id="event_place">{{ sortie.lieu.nom }}</span>
 
-            <label class="column6 row4 default_label">Rue</label>
-            <span class="column7-8 row4 default_span" id="event_street">{{ sortie.lieu.rue }}</span>
+                <label class="column6 row4 default_label">Rue</label>
+                <span class="column7-8 row4 default_span" id="event_street">{{ sortie.lieu.rue }}</span>
 
-            <label class="column6 row5 default_label">Code postal</label>
-            <span class="column7 row5 default_span" id="event_postal_code">{{ sortie.lieu.ville.codePostal }}</span>
+                <label class="column6 row5 default_label">Code postal</label>
+                <span class="column7 row5 default_span" id="event_postal_code">{{ sortie.lieu.ville.codePostal }}</span>
 
-            <label class="column6 row6 default_label">Latitude</label>
-            <span class="column7 row6 default_span" id="event_latitude">{{ sortie.lieu.latitude }}</span>
+                <label class="column6 row6 default_label">Latitude</label>
+                <span class="column7 row6 default_span" id="event_latitude">{{ sortie.lieu.latitude }}</span>
 
-            <label class="column6 row7 default_label">Longitude</label>
-            <span class="column7 row7 default_span" id="event_longitude">{{ sortie.lieu.longitude }}</span>
+                <label class="column6 row7 default_label">Longitude</label>
+                <span class="column7 row7 default_span" id="event_longitude">{{ sortie.lieu.longitude }}</span>
 
-            <div class="display_event_button">
-                <button class="default_principal_button" id="display_event_subscribe" formnovalidate>S'inscrire</button>
-                <button class="default_tertiary_button" id="display_event_unsubscribe" formnovalidate>Se désinscrire</button>
-                <button class="default_secondary_button" id="display_event_cancel" formnovalidate>Annuler</button>
+                <div class="display_event_button">
+                    {% if is_granted('ROLE_ADMIN') %}
+                    <!-- Si le participant est un Admin, il peut s'inscrire ou se désinscrire -->
+                        {% if app.user in sortie.participants %}
+                            {% if sortie.etat.libelle == 'Ouverte' or sortie.etat.libelle == 'Clôturée' %} <!-- Seulement si la sortie à un statut "Ouverte" ou "Clôturée"-->
+                            	{% include('inc/desister.html.twig') %}
+                            {% endif %}
+                        {% else %}
+                            {% if sortie.etat.libelle == 'Ouverte' %} <!-- Seulement si la sortie à un statut "Ouverte"-->
+                            	{% include('inc/inscrire.html.twig') %}
+                            {% endif %}
+                        {% endif %}
+                    <!-- Si le participant est un Admin et qu'il est organisateur, il peut modifier la sortie -->
+                        {% if sortie.organisateur.id == app.user.id %}
+                            {% if sortie.etat.libelle == 'Ouverte' or sortie.etat.libelle == 'Créée' %} <!-- Seulement si la sortie à un statut "Ouverte" ou "Créée"-->
+                            	<a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}"><button class="default_tertiary_button">Modifier</button></a>
+                            {% endif %}
+                        {% endif %}
+                    <!-- Si le participant est un Admin, il peut annuler une sortie -->
+                        {% if sortie.etat.libelle == 'Ouverte' or sortie.etat.libelle == 'Clôturée' %} <!-- Seulement si la sortie à un statut "Ouverte" ou "Clôturée"-->
+                        <a href="{{ path('sortie_annulerSortie', { 'id': sortie.id }) }}"><button class="default_secondary_button">Annuler</button></a>
+                    {% endif %}
+                        <a href="{{ path('sortie_listeSortie') }}"><button class="default_secondary_button">Retour</button></a>
+
+                    {% elseif is_granted('ROLE_PARTICIPANT') %}
+                    <!-- Si le participant n'est pas un Admin, il peut s'inscrire ou se désinscrire -->
+                        {% if app.user in sortie.participants %}
+                            {% if sortie.etat.libelle == 'Ouverte' or sortie.etat.libelle == 'Clôturée' %} <!-- Seulement si la sortie à un statut "Ouverte" ou "Clôturée"-->
+                                {% include('inc/desister.html.twig') %}
+                            {% endif %}
+                        {% else %}
+                            {% if sortie.etat.libelle == 'Ouverte' %} <!-- Seulement si la sortie à un statut "Ouverte"-->
+                                {% include('inc/inscrire.html.twig') %}
+                            {% endif %}
+                        {% endif %}
+                    <!-- Si le participant n'est pas un Admin mais qu'il est organisateur, il peut modifier et annuler la sortie -->
+                        {% if sortie.organisateur.id == app.user.id %}
+                            {% if sortie.etat.libelle == 'Créée' %} <!-- Seulement si la sortie à un statut "Créée"-->
+                                <a href="{{ path('sortie_publierSortie', { 'id': sortie.id }) }}"><button class="default_principal_button">Publier</button></a>
+                            {% endif %}
+                            {% if sortie.etat.libelle == 'Ouverte' or sortie.etat.libelle == 'Créée' %} <!-- Seulement si la sortie à un statut "Ouverte" ou "Créée"-->
+                                <a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}"><button class="default_tertiary_button">Modifier</button></a>
+                            {% endif %}
+                            {% if sortie.etat.libelle == 'Ouverte' or sortie.etat.libelle == 'Clôturée' %} <!-- Seulement si la sortie à un statut "Ouverte" ou "Clôturée"-->
+                                <a href="{{ path('sortie_annulerSortie', { 'id': sortie.id }) }}"><button class="default_secondary_button">Annuler</button></a>
+                            {% endif %}
+                        {% endif %}
+                        <a href="{{ path('sortie_listeSortie') }}"><button class="default_secondary_button">Retour</button></a>
+
+                    {% endif %}
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="default_container" id="participants_list_container">
-        <!-- Titre du container -->
-        <h2>Participants</h2>
+        <section class="default_container" id="participants_list_container">
+            <!-- Titre du container -->
+            <h2>Participants</h2>
 
-        <!-- Tableau "Liste des participants" -->
-        <div class="default_table_wrapper">
-            <table class="default_table">
-                <!-- Titre du tableau -->
-                <thead>
-                <tr>
-                    <th>Pseudo</th>
-                    <th>Nom</th>
-                </tr>
-                </thead>
-                <!-- Contenu du tableau -->
-                <tbody>
-                <!-- 3 lignes d'exemples à automatiser -->
-                <tr>
-                    <td>JBL</td>
-                    <td>Jean-Baptiste LAMARCK</td>
-                </tr>
-                <tr>
-                    <td>YC44</td>
-                    <td>Yves COUSTEAU</td>
-                </tr>
-                <tr>
-                    <td>MC</td>
-                    <td>Michel CONSTANT</td>
-                </tr>
-                <tr>
-                    <td>JBL</td>
-                    <td>Jean-Baptiste LAMARCK</td>
-                </tr>
-                <tr>
-                    <td>YC44</td>
-                    <td>Yves COUSTEAU</td>
-                </tr>
-                <tr>
-                    <td>MC</td>
-                    <td>Michel CONSTANT</td>
-                </tr>
-                <tr>
-                    <td>JBL</td>
-                    <td>Jean-Baptiste LAMARCK</td>
-                </tr>
-                <tr>
-                    <td>YC44</td>
-                    <td>Yves COUSTEAU</td>
-                </tr>
-                <tr>
-                    <td>MC</td>
-                    <td>Michel CONSTANT</td>
-                </tr>
-                <tr>
-                    <td>JBL</td>
-                    <td>Jean-Baptiste LAMARCK</td>
-                </tr>
-                <tr>
-                    <td>YC44</td>
-                    <td>Yves COUSTEAU</td>
-                </tr>
-                <tr>
-                    <td>MC</td>
-                    <td>Michel CONSTANT</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </section>
+            <!-- Tableau "Liste des participants" -->
+            <div class="default_table_wrapper">
+                <table class="default_table">
+                    <!-- Titre du tableau -->
+                    <thead>
+                    <tr>
+                        <th>Pseudo</th>
+                        <th>Nom</th>
+                    </tr>
+                    </thead>
+                    <!-- Contenu du tableau -->
+                    <tbody>
+                    {% for participant in sortie.participants %}
+                        <tr>
+                            <td>
+                                <a href="{{ path('participant_afficherProfil', {'id': participant.id}) }}">
+                                {{ participant.pseudo }}</a>
+                            </td>
+                            <td>
+                                <a href="{{ path('participant_afficherProfil', {'id': participant.id}) }}">
+                                {{ participant.prenom }} {{ participant.nom }}</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
 {% endblock %}
 
