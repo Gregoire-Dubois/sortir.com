@@ -6,9 +6,11 @@ use App\Entity\Participant;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @extends ServiceEntityRepository<Participant>
@@ -75,6 +77,22 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
     public function loadUserByUsername(string $usernameOrEmail)
     {
         return $this->loadUserByIdentifier($usernameOrEmail);
+    }
+
+    public function selectParticipantsActifs(UserInterface $participantConnecte)
+    {
+        $queryBuilder = $this->createQueryBuilder('p');
+        $queryBuilder->select('DISTINCT p');
+        $queryBuilder->where('p.actif = true');
+        $queryBuilder->andWhere('p != :participantConnecte');
+        $queryBuilder->setParameter(':participantConnecte', $participantConnecte);
+        dump($queryBuilder);
+        dump($queryBuilder->getDQL());
+
+        $participantsActifs = $queryBuilder->getQuery()->getResult();
+
+        return $participantsActifs;
+
     }
 
 
