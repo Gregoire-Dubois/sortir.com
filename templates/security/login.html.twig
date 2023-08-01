@@ -39,11 +39,12 @@
             <input class="login_input" type="password" name="password" id="password" autocomplete="current-password" required>
             <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
             <div id="remember_me">
-                <input type="checkbox" id="remember_me_checkbox">
+                <input type="checkbox" name="_remember_me" id="remember_me_checkbox">
                 <label for="remember_me_checkbox">Se souvenir de moi</label>
             </div>
             <button type="submit" class="default_principal_button" id="connexion">Connexion</button>
-            <button class="default_secondary_button" id="forgotten_password" formnovalidate>Mot de passe oublié</button>
+            <button class="default_secondary_button" id="forgotten_password" formnovalidate>
+                <a href="{{ path('app_forgot_password_request') }}">Mot de passe oublié</a></button>
         </form>
 
     </div>
