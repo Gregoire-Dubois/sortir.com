@@ -376,5 +376,20 @@ class SortieRepository extends ServiceEntityRepository
         return $sortiesOuvertes;
 
     }
+
+    /**
+     * Récupérer les sorties associées à un participant donné.
+     *
+     * @param Participant $participant
+     * @return Sortie[]
+     */
+    public function findSortiesByParticipant(Participant $participant): array
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere(':participant MEMBER OF s.participants OR s.organisateur = :participant')
+            ->setParameter('participant', $participant)
+            ->getQuery()
+            ->getResult();
+    }
 }
 

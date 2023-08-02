@@ -242,13 +242,8 @@ class ParticipantController extends AbstractController
             }
 
             $this->addFlash('success', 'Les participants suivants ont bien été désactivés :' . implode(', ', $listeParticipantsDesactives) . ' .');
-            return $this->redirectToRoute('admin_desactiver');
+            return $this->redirectToRoute('admin_listeParticipants');
         }
-
-
-        return $this->render('admin/participant/desactiver.html.twig',[
-            'participantsActifs'=>$participantsActifs
-        ]);
     }
 
     /**
@@ -280,13 +275,9 @@ class ParticipantController extends AbstractController
             }
 
             $this->addFlash('success', 'Les participants suivants ont bien été réactivés :' . implode(', ', $listeParticipantsReactives) . ' .');
-            return $this->redirectToRoute('admin_reactiver');
-        }
+            return $this->redirectToRoute('admin_listeParticipants');
+        };
 
-
-        return $this->render('admin/participant/reactiver.html.twig',[
-            'participantsInactifs'=>$participantsInactifs
-        ]);
     }
 
     /**
@@ -404,13 +395,9 @@ class ParticipantController extends AbstractController
             }
 
             $this->addFlash('success', 'Les participants suivants ont bien été supprimés :' . implode(', ', $listeParticipantsSupprimes) . ' .');
-            return $this->redirectToRoute('admin_supprimer');
+            return $this->redirectToRoute('admin_listeParticipants');
         }
 
-
-        return $this->render('admin/participant/supprimer.html.twig',[
-            'participants'=>$participants
-        ]);
     }
 
 }
