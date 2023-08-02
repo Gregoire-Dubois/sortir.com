@@ -111,7 +111,7 @@
                 {% for sortie in sorties %}
                 <tr>
                     <td class="smartphoneCache">{{ sortie.campus.nom }}</td>
-                    <td><a class="smartphoneVisible" href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}">{{ sortie.nom }}</a></td>
+                    <td ><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}">{{ sortie.nom }}</a></td>
                     <td>{{ sortie.dateDebut|date('d-m-Y H:i') }}</td>
                     <td class="smartphoneCache">{{ sortie.dateLimiteInscription|date('d-m-Y') }}</td>
                     <td class="smartphoneVisible"> {{ sortie.lieu.nom }}</td>
