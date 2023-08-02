@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Repository;
+use App\Entity\Participant;
 use App\Entity\Sortie;
 use App\Form\SearchSortie;
 use DateTime;
@@ -10,6 +11,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @extends ServiceEntityRepository<Sortie>
@@ -270,6 +272,89 @@ class SortieRepository extends ServiceEntityRepository
         $sortiesCampus = $queryBuilder->getQuery()->getResult();
 
         return $sortiesCampus;
+    }
+
+    public function selectSortiesOuvertesEtCreeesCloturee(Participant $participant)
+    {
+        $etatCree = $this->etatRepository->findbyLibelle("Créée");
+        $etatOuvert = $this->etatRepository->findbyLibelle("Ouverte");
+        $etatCloture = $this->etatRepository->findbyLibelle("Clôturée");
+
+        $queryBuilder = $this->createQueryBuilder('sortie');
+        $queryBuilder->select('DISTINCT sortie');
+        $orConditions = $queryBuilder->expr()->orX();
+        $orConditions->add('sortie.etat = :etatCree');
+        $orConditions->add('sortie.etat = :etatOuvert');
+        $orConditions->add('sortie.etat = :etatCloture');
+        $queryBuilder->setParameter(':etatCree', $etatCree);
+        $queryBuilder->setParameter(':etatOuvert', $etatOuvert);
+        $queryBuilder->setParameter(':etatCloture', $etatCloture);
+        $queryBuilder->andWhere($orConditions);
+        $queryBuilder->andWhere('sortie.organisateur = :participant');
+        $queryBuilder->setParameter(':participant', $participant);
+      //  dump($queryBuilder);
+       // dump($queryBuilder->getDQL());
+
+        $sortiesOuvertesCreees = $queryBuilder->getQuery()->getResult();
+
+        return $sortiesOuvertesCreees;
+
+    }
+
+    public function selectSortiesPassees(Participant $participant)
+    {
+        $etatEnCours = $this->etatRepository->findbyLibelle("Activité en cours");
+        //dump($etatEnCours);
+        $etatPasse = $this->etatRepository->findbyLibelle("Passée");
+        //dump($etatPasse);
+        $etatAnnule = $this->etatRepository->findbyLibelle("Annulée");
+        //dump($etatAnnule);
+        $etatArchive = $this->etatRepository->findbyLibelle("Archivée");
+        //dump($etatArchive);
+
+        $queryBuilder = $this->createQueryBuilder('sortie');
+        $queryBuilder->select('DISTINCT sortie');
+        $orConditions = $queryBuilder->expr()->orX();
+        $orConditions->add('sortie.etat = :etatEnCours');
+        $orConditions->add('sortie.etat = :etatPasse');
+        $orConditions->add('sortie.etat = :etatAnnule');
+        $orConditions->add('sortie.etat = :etatArchive');
+        $queryBuilder->setParameter(':etatEnCours', $etatEnCours);
+        $queryBuilder->setParameter(':etatPasse', $etatPasse);
+        $queryBuilder->setParameter(':etatAnnule', $etatAnnule);
+        $queryBuilder->setParameter(':etatArchive', $etatArchive);
+        $queryBuilder->andWhere($orConditions);
+        //$queryBuilder->andWhere(':participant MEMBER OF sortie.participants');
+        //$queryBuilder->setParameter(':participant', $participant);
+        //dump($queryBuilder);
+        //dump($queryBuilder->getDQL());
+
+        $sortiesPassees = $queryBuilder->getQuery()->getResult();
+        //dump($sortiesPassees);
+
+        return $sortiesPassees;
+
+    }
+
+    public function selectSortiesOuverte($participant)
+    {
+        $etatOuvert = $this->etatRepository->findbyLibelle("Ouverte");
+
+        $queryBuilder = $this->createQueryBuilder('sortie');
+        $queryBuilder->select('DISTINCT sortie');
+        $queryBuilder->where('sortie.etat = :etatOuvert');
+        $queryBuilder->andWhere(':participant MEMBER OF sortie.participants');
+        $queryBuilder->setParameter(':etatOuvert', $etatOuvert);
+        $queryBuilder->setParameter(':participant', $participant);
+
+        //dump($queryBuilder);
+        //dump($queryBuilder->getDQL());
+
+        $sortiesOuvertes = $queryBuilder->getQuery()->getResult();
+        //dump($sortiesOuvertes);
+
+        return $sortiesOuvertes;
+
     }
 }
 

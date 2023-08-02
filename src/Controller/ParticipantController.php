@@ -3,10 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\Participant;
+use App\Entity\Sortie;
 use App\Form\ImportType;
 use App\Form\ParticipantType;
 use App\Repository\CampusRepository;
 use App\Repository\ParticipantRepository;
+use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,6 +16,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
@@ -248,6 +251,165 @@ class ParticipantController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/admin/reactiver", name="admin_reactiver")
+     */
+    public function reactiverParticants(
+        ParticipantRepository $participantRepository,
+        Request $request,
+        CsrfTokenManagerInterface $csrfTokenManager,
+        EntityManagerInterface $entityManager){
 
+        $participantsInactifs = $participantRepository->selectParticipantsInactifs();
+
+        if($request->isMethod('POST')){
+            $token = new CsrfToken('reactivation_participant', $request->request->get('_csrf_token'));
+            if (!$csrfTokenManager->isTokenValid($token)) {
+                throw $this->createAccessDeniedException('Jeton CSRF invalide.');
+            }
+            dump($request);
+            $participantsSelectionnes= $request->request->get('participants', []);
+            dump($participantsSelectionnes);
+            $listeParticipantsReactives = [];
+            foreach ($participantsSelectionnes as $participantId){
+                $participant = $participantRepository->find($participantId);
+                $participant->setActif(true);
+                $listeParticipantsReactives[]=$participant->getPseudo();
+                $entityManager->persist($participant);
+                $entityManager->flush();
+            }
+
+            $this->addFlash('success', 'Les participants suivants ont bien été réactivés :' . implode(', ', $listeParticipantsReactives) . ' .');
+            return $this->redirectToRoute('admin_reactiver');
+        }
+
+
+        return $this->render('admin/participant/reactiver.html.twig',[
+            'participantsInactifs'=>$participantsInactifs
+        ]);
+    }
+
+    /**
+     * @Route("/admin/supprimer", name="admin_supprimer")
+     */
+    public function supprimerParticipants(
+        ParticipantRepository $participantRepository,
+        Request $request,
+        CsrfTokenManagerInterface $csrfTokenManager,
+        EntityManagerInterface $entityManager,
+        SortieRepository $sortieRepository){
+
+        $participants = $participantRepository->selectParticipants($this->getUser());
+
+      //  $sortie25 = $sortieRepository->find('25');
+       // dump($sortie25);
+        //dump($sortie25->getParticipants());
+        if($request->isMethod('POST')){
+            $token = new CsrfToken('suppression_participant', $request->request->get('_csrf_token'));
+            if (!$csrfTokenManager->isTokenValid($token)) {
+                throw $this->createAccessDeniedException('Jeton CSRF invalide.');
+            }
+          //  dump($request);
+            $participantsSelectionnes= $request->request->get('participants', []);
+
+            //dump($participantsSelectionnes);
+            $listeParticipantsSupprimes = [];
+
+            foreach ($participantsSelectionnes as $participantId){
+                $participant = $participantRepository->find($participantId);
+              //  dump($participant);
+                $listeParticipantsSupprimes[]=$participant->getPseudo();
+
+                //Désinscrire des sorties ouvertes
+                    //On récupère les sorties ouvertes
+                $sortiesOuvertes = $sortieRepository->selectSortiesOuverte($participant);
+                //dump($sortiesOuvertes);
+
+                    //On le désinscrit de ces sorties
+                foreach($sortiesOuvertes as $sortie) {
+                  //  dump($sortie->getParticipants());
+                   // dump($sortie->getParticipants()->contains($participant));
+                    if ($sortie->getParticipants()->contains($participant)) {
+
+                        $sortie->removeParticipant($participant);
+
+                        $entityManager->persist($sortie);
+                        //dump($participant);
+                        $entityManager->flush();
+                        //dump($sortie);
+                    }
+                }
+                //Supprimer les sorties dont il est l'organisateur
+
+                    //On récupère les sorties ouvertes et créées
+                $sortiesOuvertesOuCreees = $sortieRepository->selectSortiesOuvertesEtCreeesCloturee($participant);
+                    //On les supprime
+                foreach ($sortiesOuvertesOuCreees as $sortie){
+                    //dump($sortie);
+                    $entityManager->remove($sortie);
+                    $entityManager->flush();
+                }
+
+                $participantAnonyme = $participantRepository->find('39');
+                //Remplacer ses occurences par "utilisateur supprime" pour les sorties passees
+                    //On recupere les sorties passees
+                $sortiesPassees = $sortieRepository->selectSortiesPassees($participant);
+                //dump($sortiesPassees);
+                foreach($sortiesPassees as $sortie) {
+                    if($sortie instanceof Sortie) {
+                  //      dump($sortie->getParticipants());
+                    }
+                   // dump($sortie->getOrganisateur()===$participant);
+                    if($sortie->getOrganisateur()===$participant){
+                        $sortie->setOrganisateur($participantAnonyme);
+                        $entityManager->persist($sortie);
+                        $entityManager->flush();
+                    }elseif ($sortie->getParticipants()->contains($participant)){
+                        /*$participants = $sortie->getParticipants();
+                        $index = array_search($participant, $participants);
+                        if ($index !== false) {
+                            $participants[$index] = $participantAnonyme;
+                            $sortie->
+                            $entityManager->persist($sortie);
+                            $entityManager->flush();
+                        }*/
+                        $sortie->removeParticipant($participant);
+                        $sortie->addParticipant($participantAnonyme);
+                        $entityManager->persist($sortie);
+                        $entityManager->flush();
+                    }
+                   /* $participants = $sortie->getParticipants();
+                    dump($participants);
+                    foreach ($participants as $part){
+                        if($part == $participant){
+                            dump($part);
+                            dump($participant);
+                            $participants[$part] = "Participant supprimé";
+                        }
+                    }
+                    $sortie->setParticipants($participants);
+                    $entityManager->persist($sortie);
+                    $entityManager->flush();*/
+                }
+
+
+
+
+                //supprimer le participant
+                $entityManager->remove($participant);
+
+
+                $entityManager->flush();
+            }
+
+            $this->addFlash('success', 'Les participants suivants ont bien été supprimés :' . implode(', ', $listeParticipantsSupprimes) . ' .');
+            return $this->redirectToRoute('admin_supprimer');
+        }
+
+
+        return $this->render('admin/participant/supprimer.html.twig',[
+            'participants'=>$participants
+        ]);
+    }
 
 }

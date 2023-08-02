@@ -95,6 +95,36 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
 
     }
 
+    public function selectParticipantsInactifs()
+    {
+        $queryBuilder = $this->createQueryBuilder('p');
+        $queryBuilder->select('DISTINCT p');
+        $queryBuilder->where('p.actif = false');
+
+        dump($queryBuilder);
+        dump($queryBuilder->getDQL());
+
+        $participantsActifs = $queryBuilder->getQuery()->getResult();
+
+        return $participantsActifs;
+
+    }
+
+    public function selectParticipants(UserInterface $participantConnecte)
+    {
+        $queryBuilder = $this->createQueryBuilder('p');
+        $queryBuilder->select('DISTINCT p');
+        $queryBuilder->andWhere('p != :participantConnecte');
+        $queryBuilder->setParameter(':participantConnecte', $participantConnecte);
+        dump($queryBuilder);
+        dump($queryBuilder->getDQL());
+
+        $participants = $queryBuilder->getQuery()->getResult();
+
+        return $participants;
+
+    }
+
 
 
 //    /**
