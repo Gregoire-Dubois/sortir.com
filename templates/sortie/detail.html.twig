@@ -11,52 +11,78 @@
     <div id="main_display_event_container">
         <section class="default_container" id="event_display_container">
             <!-- Titre du container -->
-            <h2>Afficher une sortie</h2>
+            <h2 class="smartphoneCache">Afficher une sortie</h2>
 
             <!-- Partie "Affichage des infos sur la sortie" -->
             <div class="event_display">
-                <label class="column1 row1 default_label">Nom de la sortie :</label>
-                <span class="column2-5 row1 default_span" id="event_name">{{ sortie.nom }}</span>
+                <label class="column1 row1 default_label smartphoneCache">Nom de la sortie :</label>
+                <label class="column1 row1 default_label smartphoneVisible"id="nom_sortie_label">Nom de la sortie :</label>
+                <span class="column2-5 row1 default_span smartphoneCache" id="event_name">{{ sortie.nom }}</span>
+                <span class="column2-5 row1 default_span smartphoneVisible"id="nom_sortie" >{{ sortie.nom }}</span>
 
-                <label class="column1 row2 default_label">Date et heure de la sortie :</label>
-                <span class="column2-4 row2 default_span" id="event_date_begin">{{ sortie.dateDebut|date('Y-m-d H:i') }}</span>
+                <label class="column1 row2 default_label smartphoneCache">Date et heure de la sortie :</label>
+                <label class="column1 row2 default_label smartphoneVisible" id="date_heure_label">Date et heure :</label>
+                <span class="column2-4 row2 default_span smartphoneCache" id="event_date_begin">{{ sortie.dateDebut|date('Y-m-d H:i') }}</span>
+                <span class="column2-5 row2 default_span smartphoneVisible" id="date_heure">{{ sortie.dateDebut|date('Y-m-d H:i') }}</span>
 
-                <label class="column1 row3 default_label">Date limite d'inscription :</label>
-                <span class="column2-4 row3 default_span" id="event_deadline_registration">{{ sortie.dateLimiteInscription|date('Y-m-d') }}</span>
+                <label class="column1 row3 default_label smartphoneCache">Date limite d'inscription :</label>
+                <label class="column1 row3 default_label smartphoneVisible"id="ville_label">Ville:</label>
+                <span class="column2-4 row3 default_span smartphoneCache" id="event_deadline_registration">{{ sortie.dateLimiteInscription|date('Y-m-d') }}</span>
+                <span class="column2-5 row3 default_span smartphoneVisible" id="ville">{{ sortie.lieu.ville.nom }}</span>
 
-                <label class="column1 row4 default_label">Nombre de places :</label>
-                <span class="column2 row4 default_span" id="event_number_places">{{ sortie.nbInscritptionMax }}</span>
-                <span id="event_person_number">personnes</span>
+                <label class="column1 row4 default_label smartphoneCache">Nombre de places :</label>
+                <label class="column1 row4 default_label smartphoneVisible"id="lieu_label">Lieu :</label>
+                <span class="column2 row4 default_span smartphoneCache" id="event_number_places">{{ sortie.nbInscritptionMax }}</span>
+                <span class="column2-5 row4 default_span smartphoneVisible"id="lieu" >{{ sortie.lieu.nom }}</span>
+                <span id="event_person_number" class="smartphoneCache ">personnes</span>
 
-                <label class="column1 row5 default_label">Durée :</label>
-                <span class="column2 row5 default_span" id="event_duration">{{ sortie.duree }}</span>
-                <span id="event_duration_unit">minutes</span>
+                <label class="column1 row5 default_label smartphoneCache">Durée :</label>
+                <label class="column1 row5 default_label smartphoneVisible" id="rue_label">Rue :</label>
+                <span class="column2 row5 default_span smartphoneCache" id="event_duration">{{ sortie.duree }}</span>
+                <span class="column2-5 row5-6 default_span smartphoneVisible" id="rue" >{{ sortie.lieu.rue }}</span>
+                <span id="event_duration_unit" class="smartphoneCache">minutes</span>
 
-                <label for="event_description" class="column1 row6 default_label">Description et infos :</label>
-                <span class="column2-5 default_textarea" id="event_description">{{ sortie.description }}</span>
+                <label for="event_description" class="column1 row6 default_label smartphoneCache">Description et infos :</label>
+                <label for="event_description" class="column1 row7 default_label smartphoneVisible" id="cp">Code postal :</label>
+                <span class="column2-5 default_textarea smartphoneCache" id="event_description">{{ sortie.description }}</span>
+                <span class="column2-5 row7 default_span smartphoneVisible" id="cp_valeur" >{{ sortie.lieu.ville.codePostal }}</span>
 
-                <label class="column6 row1 default_label">Campus</label>
-                <span class="column7-8 row1 default_span" id="event_campus">{{ sortie.campus.nom }}</span>
+                <label class="column6 row1 default_label smartphoneCache">Campus</label>
+                <label class="column1 row8 default_label smartphoneVisible" id="latitude_label">Latitude :</label>
+                <span class="column7-8 row1 default_span smartphoneCache" id="event_campus">{{ sortie.campus.nom }}</span>
+                <span class="column2-5 row8 default_span smartphoneVisible" id="latitude">{{ sortie.lieu.latitude }}</span>
 
-                <label class="column6 row2 default_label">Ville :</label>
-                <span class="column7-8 row2 default_span" id="event_city">{{ sortie.lieu.ville.nom }}</span>
+                <label class="column6 row2 default_label smartphoneCache">Ville :</label>
+                <label class="column1 row9 default_label smartphoneVisible"id="longitude_label">Longitude : </label>
+                <span class="column7-8 row2 default_span smartphoneCache" id="event_city">{{ sortie.lieu.ville.nom }}</span>
+                <span class="column2-5 row9 default_span smartphoneVisible" id="longitude">{{ sortie.lieu.longitude }}</span>
 
-                <label class="column6 row3 default_label">Lieu :</label>
-                <span class="column7-8 row3 default_span" id="event_place">{{ sortie.lieu.nom }}</span>
+                <label class="column6 row3 default_label smartphoneCache">Lieu :</label>
+                <label class="column1 row10 default_label smartphoneVisible" id="cloture_label">Clotûre :</label>
+                <span class="column7-8 row3 default_span smartphoneCache" id="event_place">{{ sortie.lieu.nom }}</span>
+                <span class="column2-5 row10 default_span smartphoneVisible" id="cloture">{{ sortie.dateLimiteInscription|date('Y-m-d') }}</span>
 
-                <label class="column6 row4 default_label">Rue</label>
-                <span class="column7-8 row4 default_span" id="event_street">{{ sortie.lieu.rue }}</span>
+                <label class="column6 row4 default_label smartphoneCache">Rue</label>
+                <label class="column1 row11 default_label smartphoneVisible" id="nbplaces_label">Nombre de place :</label>
+                <span class="column7-8 row4 default_span smartphoneCache" id="event_street">{{ sortie.lieu.rue }}</span>
+                <span class="column2-5 row11 default_span smartphoneVisible" id="nbplaces">{{ sortie.nbInscritptionMax }} personnes</span>
 
-                <label class="column6 row5 default_label">Code postal</label>
-                <span class="column7 row5 default_span" id="event_postal_code">{{ sortie.lieu.ville.codePostal }}</span>
 
-                <label class="column6 row6 default_label">Latitude</label>
-                <span class="column7 row6 default_span" id="event_latitude">{{ sortie.lieu.latitude }}</span>
+                <label class="column6 row5 default_label smartphoneCache">Code postal</label>
+                <label class="column1 row12 default_label smartphoneVisible" id="duree_label">Durée :</label>
+                <span class="column7 row5 default_span smartphoneCache" id="event_postal_code">{{ sortie.lieu.ville.codePostal }}</span>
+                <span class="column2-5 row12 default_span smartphoneVisible" id="duree">{{ sortie.duree }} minutes</span>
 
-                <label class="column6 row7 default_label">Longitude</label>
-                <span class="column7 row7 default_span" id="event_longitude">{{ sortie.lieu.longitude }}</span>
 
-                <div class="display_event_button">
+                <label class="column6 row6 default_label smartphoneCache">Latitude</label>
+                <label class="column1 row13 default_label smartphoneVisible" id="description_label">Description et infos :</label>
+                <span class="column7 row6 default_span smartphoneCache" id="event_latitude">{{ sortie.lieu.latitude }}</span>
+                <span class="column2-5 row13-16 default_span smartphoneVisible" id="description">{{ sortie.description }}</span>
+
+                <label class="column6 row7 default_label smartphoneCache">Longitude</label>
+                <span class="column7 row7 default_span smartphoneCache" id="event_longitude">{{ sortie.lieu.longitude }}</span>
+
+                <div class="display_event_button smartphoneCache" id="bouton_sortie">
                     {% if is_granted('ROLE_ADMIN') %} <!-- Affichage des boutons pour un Administrateur -->
 
                         {% if sortie.organisateur.id == app.user.id %} <!-- Si l'utilisateur connecté est l'organisateur de la sortie -->
@@ -163,20 +189,30 @@
                     <thead>
                     <tr>
                         <th>Pseudo</th>
-                        <th>Nom</th>
+                        <th class="smartphoneCache">Nom</th>
+                        <th class="smartphoneVisible">Campus</th>
                     </tr>
                     </thead>
                     <!-- Contenu du tableau -->
                     <tbody>
+
                     {% for participant in sortie.participants %}
                         <tr>
-                            <td>
+                            <td class="smartphoneCache">
                                 <a href="{{ path('participant_afficherProfil', {'id': participant.id}) }}">
                                 {{ participant.pseudo }}</a>
                             </td>
-                            <td>
+                            <td class="smartphoneVisible">
+
+                                    {{ participant.pseudo }}
+                            </td>
+                            <td class="smartphoneCache">
                                 <a href="{{ path('participant_afficherProfil', {'id': participant.id}) }}">
                                 {{ participant.prenom }} {{ participant.nom }}</a>
+                            </td>
+                            <td class="smartphoneVisible">
+
+                                    {{ participant.campus.nom }}
                             </td>
                         </tr>
                     {% endfor %}

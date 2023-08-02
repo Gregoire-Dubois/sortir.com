@@ -8,7 +8,7 @@
     </div>
 </div>
 <!-- Menu global -->
-<nav class="header_menu_nav">
+<nav class="header_menu_nav smartphoneCache">
     <!-- Menu réservé aux administrateurs -->
     {% if is_granted("ROLE_ADMIN")  %}
     <ul class="admin_menu_nav">
@@ -25,6 +25,6 @@
     </ul>
 </nav>
 <!-- Menu hamburger pour les tablettes et smartphones -->
-<div class="hbg_user_menu_nav">
+<div class="hbg_user_menu_nav smartphoneCache">
     <div class="hbg_user_menu_icon">&#9776</div>
 </div>

@@ -12,7 +12,7 @@
 {% block body %}
 
     <!-- Infos : nom utilisateurs et date du jour -->
-    <div class="info_login_container">
+    <div class="info_login_container smartphoneCache">
         {% set currentDate = "now"|date("d/m/Y") %} {# Récupéreration de la date du jour #}
         {% set currentUser = app.user.nom %} {# Récupérer du nom de l'utilisateur connecté #}
         <div class="today_date"><p>Date du jour : </p>
@@ -20,11 +20,15 @@
         <div class="username"><p>Participant : </p>
             <p id="username_value">{{ currentUser }}</p></div>
     </div>
-    <section class="default_container">
-        <h2>Liste et Filtres des Sorties</h2>
+    <section class="default_container ">
+
+        <h2 class="smartphoneCache">Liste et Filtres des Sorties</h2>
+        <h2 class="smartphoneVisible">Mes sorties : </h2>
         <!-- Bloc filtres et recherches de la sortie -->
         {{ form_start(sortieForm, {'attr': {'novalidate': 'novalidate'}, 'render_form': false}) }}
-        <div class="filter_container">
+
+
+        <div class="filter_container smartphoneCache">
 
             <!-- Filtre par nom du campus -->
             <label class="column1 row1 default_label" for="campus_filter">Campus :</label>
@@ -75,48 +79,49 @@
             <table class="default_table">
 
                 <colgroup>
-                    <col class="event_column1">
+                    <col class="event_column1 smartphoneCache">
                     <col class="event_column2">
                     <col class="event_column3">
                     <col class="event_column4">
-                    <col class="event_column5">
-                    <col class="event_column6">
-                    <col class="event_column7">
-                    <col class="event_column8">
-                    <col class="event_column9">
+                    <col class="event_column5 smartphoneCache">
+                    <col class="event_column6 smartphoneCache">
+                    <col class="event_column7 smartphoneCache">
+                    <col class="event_column8 smartphoneCache">
+                    <col class="event_column9 smartphoneCache">
                 </colgroup>
 
                 <!-- Titre du tableau -->
                 <thead>
                 <tr>
-                    <th>Campus</th>
+                    <th class="smartphoneCache">Campus</th>
                     <th>Nom de la sortie</th>
                     <th>Date de la sortie</th>
-                    <th>Date de clôture</th>
-                    <th>Inscrits / Places</th>
-                    <th>État</th>
-                    <th>Inscrit</th>
-                    <th>Organisateur</th>
-                    <th>Actions</th>
+                    <th class="smartphoneCache">Date de clôture</th>
+                    <th class="smartphoneVisible">Lieu</th>
+                    <th class="smartphoneCache">Inscrits / Places</th>
+                    <th class="smartphoneCache">État</th>
+                    <th class="smartphoneCache">Inscrit</th>
+                    <th class="smartphoneCache">Organisateur</th>
+                    <th class="smartphoneCache">Actions</th>
                 </tr>
                 </thead>
                 <!-- Contenu du tableau -->
                 <tbody>
                 <!-- 2 lignes d'exemples à automatiser -->
                 {% for sortie in sorties %}
-                    <tr>
-                        <td>{{ sortie.campus.nom }}</td>
-                        <td>{{ sortie.nom }}</td>
-                        <td>{{ sortie.dateDebut|date('d-m-Y H:i') }}</td>
-                        <td>{{ sortie.dateLimiteInscription|date('d-m-Y') }}</td>
-                        <td>{{ sortie.participants.count }} / {{ sortie.nbInscritptionMax }}</td>
-                        <td>{{ sortie.etat.libelle }}</td>
-                        <td>{% if app.user in  sortie.participants %}X{% endif %}</td>
-                        <td>
-                            <a href="{{ path('participant_afficherProfil', { 'id': sortie.organisateur.id }) }}">{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</a>
-                        </td>
 
-                        <td>
+                <tr>
+                    <td class="smartphoneCache">{{ sortie.campus.nom }}</td>
+                    <td ><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}">{{ sortie.nom }}</a></td>
+                    <td>{{ sortie.dateDebut|date('d-m-Y H:i') }}</td>
+                    <td class="smartphoneCache">{{ sortie.dateLimiteInscription|date('d-m-Y') }}</td>
+                    <td class="smartphoneVisible"> {{ sortie.lieu.nom }}</td>
+                    <td class="smartphoneCache">{{ sortie.participants.count }} / {{ sortie.nbInscritptionMax }}</td>
+                    <td class="smartphoneCache">{{ sortie.etat.libelle }}</td>
+                    <td class="smartphoneCache">{%if app.user in  sortie.participants %}X{% endif %}</td>
+                    <td class="smartphoneCache"><a href="{{ path('participant_afficherProfil', { 'id': sortie.organisateur.id }) }}" >{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</a></td>
+
+                    <td class="smartphoneCache">
                             {% if is_granted('ROLE_ADMIN') %} <!-- Affichage des boutons pour un Administrateur -->
                                 <div class="table_link"><a
                                             href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}">
@@ -167,7 +172,7 @@
                                 {% endif %}
 
                             {% elseif is_granted('ROLE_PARTICIPANT') %} <!-- Affichage des boutons pour un Participant classique -->
-                                <div class="table_link"><a
+                                <div class="table_link smartphoneCache"><a
                                             href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}">
                                         <button class="default_principal_button">Afficher</button>
                                     </a></div>
@@ -223,7 +228,7 @@
         </div>
     </section>
 
-    <div class="event_creation">
+    <div class="event_creation smartphoneCache">
         <a href="{{ path("sortie_creerSortie") }}" class="default_principal_button" id="event_create"
            title="event_create">Créer une sortie</a>
     </div>
