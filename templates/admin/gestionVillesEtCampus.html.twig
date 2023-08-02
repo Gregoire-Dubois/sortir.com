@@ -187,23 +187,23 @@
                     {% if campus is empty %}
                         {# Afficher tous les campus par défaut #}
                         {% for listeCampu in listeCampus %}
-                            <tr>
+                            <tr class="read_campus_row_{{ listeCampu.id }}" id="read_campus_row_{{ listeCampu.id }}">
                                 <td>{{ listeCampu.nom }}</td>
                                 <td>
-                                    <button type="button" class="default_tertiary_button modifier_campus_button" onclick="afficherFormulaireEdition('{{ listeCampu.id }}', '{{ listeCampu.nom }}')">Modifier</button>
+                                    <button type="button" class="default_tertiary_button modifier_campus_button" onclick="afficherFormulaireEditionCampus('{{ listeCampu.id }}', '{{ listeCampu.nom }}')">Modifier</button>
                                     <form action="{{ path('admin_supprimer_campus', {'id': listeCampu.id}) }}" method="post" style="display: inline;">
                                         <button type="submit" class="default_secondary_button" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce campus ?')">Supprimer</button>
                                     </form>
                                 </td>
                             </tr>
-                            <tr class="edit_row" id="edit_row_{{ listeCampu.id }}" style="display: none;">
+                            <tr class="edit_campus_row" id="edit_campus_row_{{ listeCampu.id }}" style="display: none;">
                                 <td>
                                     <form action="{{ path('admin_modifier_campus', {'id': listeCampu.id}) }}" method="post" style="display: inline;">
                                         <input type="text" class="default_input" name="edit_nom_{{ listeCampu.id }}" value="{{ listeCampu.nom }}">
                                 </td>
                                 <td>
-                                    <button type="button" class="default_tertiary_button" onclick="annulerEdition('{{ listeCampu.id }}')">Annuler</button>
-                                    <button type="submit" class="default_principal_button" onclick="sauvegarderEdition('{{ listeCampu.id }}')">Enregistrer</button>
+                                    <button type="button" class="default_tertiary_button" onclick="annulerEditionCampus('{{ listeCampu.id }}')">Annuler</button>
+                                    <button type="submit" class="default_principal_button" onclick="sauvegarderEditionCampus('{{ listeCampu.id }}')">Enregistrer</button>
                                     </form>
                                 </td>
                             </tr>
@@ -211,23 +211,23 @@
                     {% else %}
                         {# Aucune recherche n'a été effectuée, afficher tous les campus par défaut #}
                         {% for campu in campus %}
-                            <tr>
+                            <tr class="read_campus_row_{{ campu.id }}" id="read_campus_row_{{ campu.id }}">
                                 <td>{{ campu.nom }}</td>
                                 <td>
-                                    <button type="button" class="default_tertiary_button modifier_campus_button" onclick="afficherFormulaireEdition('{{ campu.id }}', '{{ campu.nom }}')">Modifier</button>
+                                    <button type="button" class="default_tertiary_button modifier_campus_button" onclick="afficherFormulaireEditionCampus('{{ campu.id }}', '{{ campu.nom }}')">Modifier</button>
                                     <form action="{{ path('admin_supprimer_campus', {'id': campu.id}) }}" method="post" style="display: inline;">
                                         <button type="submit" class="default_secondary_button" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce campus ?')">Supprimer</button>
                                     </form>
                                 </td>
                             </tr>
-                            <tr class="edit_row" id="edit_row_{{ campu.id }}" style="display: none;">
+                            <tr class="edit_campus_row" id="edit_campus_row_{{ campu.id }}" style="display: none;">
                                 <td>
                                     <form action="{{ path('admin_modifier_campus', {'id': campu.id}) }}" method="post" style="display: inline;">
                                         <input type="text" class="default_input" name="edit_nom_{{ campu.id }}" value="{{ campu.nom }}">
                                 </td>
                                 <td>
-                                    <button type="button" class="default_tertiary_button" onclick="annulerEdition('{{ campu.id }}')">Annuler</button>
-                                    <button type="submit" class="default_principal_button" onclick="sauvegarderEdition('{{ campu.id }}')">Enregistrer</button>
+                                    <button type="button" class="default_tertiary_button" onclick="annulerEditionCampus('{{ campu.id }}')">Annuler</button>
+                                    <button type="submit" class="default_principal_button" onclick="sauvegarderEditionCampus('{{ campu.id }}')">Enregistrer</button>
                                     </form>
                                 </td>
                             </tr>
@@ -294,38 +294,38 @@
     </script>
 
     <script>
-        function afficherFormulaireEdition(campusId, nom) {
+        function afficherFormulaireEditionCampus(campusId, nom) {
             // Masquer la ligne de données
-            let ligneDonnees = document.querySelector(`tr.read_row_${campusId}`);
+            let ligneDonnees = document.querySelector(`tr.read_campus_row_${campusId}`);
             if (ligneDonnees) {
                 ligneDonnees.style.display = 'none';
             }
 
             // Afficher le formulaire d'édition
-            document.getElementById(`edit_row_${campusId}`).style.display = 'table-row';
+            document.getElementById(`edit_campus_row_${campusId}`).style.display = 'table-row';
             // Remplir les champs de l'édition avec les valeurs actuelles
-            document.getElementById(`edit_nom_${campusId}`).value = nom;
+            document.getElementById(`edit_campus_nom_${campusId}`).value = nom;
         }
 
-        function annulerEdition(campusId) {
+        function annulerEditionCampus(campusId) {
             // Masquer le formulaire d'édition
-            document.getElementById(`edit_row_${campusId}`).style.display = 'none';
+            document.getElementById(`edit_campus_row_${campusId}`).style.display = 'none';
             // Afficher la ligne de données
-            let ligneDonnees = document.querySelector(`tr.read_row_${campusId}`);
+            let ligneDonnees = document.querySelector(`tr.read_campus_row_${campusId}`);
             if (ligneDonnees) {
                 ligneDonnees.style.display = 'inline';
             }
         }
 
-        function sauvegarderEdition(campusId) {
+        function sauvegarderEditionCampus(campusId) {
             // Récupérer les nouvelles valeurs du formulaire d'édition
             let nouveauNom = document.getElementById(`edit_nom_${campusId}`).value;
             // Mettre à jour les données dans la ligne de données
-            document.querySelector(`tr.read_row_${campusId} td:first-child`).innerText = nouveauNom;
+            document.querySelector(`tr.read_campus_row_${campusId} td:first-child`).innerText = nouveauNom;
             // Masquer le formulaire d'édition
             document.getElementById(`edit_row_${campusId}`).style.display = 'none';
             // Afficher la ligne de données
-            document.querySelector(`tr.read_row_${campusId}`).style.display = 'inline';
+            document.querySelector(`tr.read_campus_row_${campusId}`).style.display = 'inline';
 
         }
     </script>
