@@ -118,9 +118,11 @@
                                         <button class="default_principal_button">Afficher</button>
                                     </a></div>
                                 <div class="table_link"><a
-                                            href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}">
+                                    <form action="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}"
+                                        method="post">
+                                        <input type="hidden" name="_method" value="POST">
                                         <button class="default_secondary_button_button">Modifier</button>
-                                    </a></div>
+                                    </form></div>
 
                             {% elseif is_granted('ROLE_PARTICIPANT') and app.USER and sortie.organisateur.id == app.user.id %}
                                 <div class="table_link"><a
@@ -131,8 +133,6 @@
                                     <form action="{{ path('sortie_modifierSortie', { 'id': sortie.id }) }}"
                                           method="post">
                                         <input type="hidden" name="_method" value="POST">
-
-
                                         <button type="submit" class="default_secondary_button">Modifier</button>
                                     </form>
                                 </div>
