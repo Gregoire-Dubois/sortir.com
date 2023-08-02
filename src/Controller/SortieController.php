@@ -35,7 +35,7 @@ class SortieController extends AbstractController
         //$data = null;
 
         // Initialiser les sorties à null
-        $sortiesAll = null;
+        //$sortiesAll = null;
 
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
 
