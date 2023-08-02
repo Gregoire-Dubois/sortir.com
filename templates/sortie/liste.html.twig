@@ -81,6 +81,7 @@
                     <col class="event_column6">
                     <col class="event_column7">
                     <col class="event_column8">
+                    <col class="event_column9">
                 </colgroup>
 
                 <!-- Titre du tableau -->
@@ -109,27 +110,59 @@
                     <td>{{ sortie.participants.count }} / {{ sortie.nbInscritptionMax }}</td>
                     <td>{{ sortie.etat.libelle }}</td>
                     <td>{%if app.user in  sortie.participants %}X{% endif %}</td>
-                    <td><a href="{{ path('participant_afficherProfil', { 'id': sortie.organisateur.id }) }}" class="default_principal_button">{{ sortie.organisateur.nom }} {{ sortie.organisateur.prenom }}</a></td>
+                    <td><a href="{{ path('participant_afficherProfil', { 'id': sortie.organisateur.id }) }}" >{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</a></td>
 
                     <td>
-                        {% if is_granted('ROLE_ADMIN') %}
+                        {% if is_granted('ROLE_ADMIN') %} <!-- Affichage des boutons pour un Administrateur -->
                         <div class="table_link"><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}"><button class="default_principal_button">Afficher</button></a></div>
-                        <div class="table_link"><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}"><button class="default_secondary_button_button">Modifier</button></a></div>
 
-                        {% elseif is_granted('ROLE_PARTICIPANT') and app.USER and sortie.organisateur.id == app.user.id %}
-                        <div class="table_link"><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}"><button class="default_principal_button">Afficher</button></a></div>
-                        <div class="table_link"><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}"><button class="default_secondary_button">Modifier</button></a></div>
-
-                        {% elseif is_granted('ROLE_PARTICIPANT') %}
-                            {% if app.user in sortie.participants %}
-                                <div class="table_link">{% include('inc/desister.html.twig') %}</div>
-                                <div class="table_link"><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}"><button class="default_principal_button">Afficher</button></a></div>
-
-                            {% else %}
-                                <div class="table_link">{% include('inc/inscrire.html.twig') %}</div>
-                                <div class="table_link"><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}"><button class="default_principal_button">Afficher</button></a></div>
+                        	{% if sortie.organisateur.id == app.user.id %} <!-- Si l'utilisateur connecté est l'organisateur de la sortie -->
+                                {% if sortie.etat.libelle == 'Créée' or sortie.etat.libelle == 'Ouverte' %}
+                                    <div class="table_link"><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}"><button class="default_secondary_button">Modifier</button></a></div>
+                            	{% endif %}
                             {% endif %}
-                    	{% endif %}
+
+                       		{% if sortie.etat.libelle == 'Ouverte' %} <!-- Inscription / Désinscription en fonction de l'état de la sortie -->
+                                {% if app.user in sortie.participants %}
+                                    <div class="table_link">{% include('inc/desister.html.twig') %}</div>
+                                    <div class="table_link"><a href="{{ path('sortie_annulerSortie', { 'id': sortie.id }) }}"><button class="default_secondary_button">Annuler</button></a></div>
+                                {% else %}
+                                    <div class="table_link">{% include('inc/inscrire.html.twig') %}</div>
+                                    <div class="table_link"><a href="{{ path('sortie_annulerSortie', { 'id': sortie.id }) }}"><button class="default_secondary_button">Annuler</button></a></div>
+                                {% endif %}
+                            {% elseif sortie.etat.libelle == 'Clôturée' %}
+                                {% if app.user in sortie.participants %}
+                                    <div class="table_link">{% include('inc/desister.html.twig') %}</div>
+                                    <div class="table_link"><a href="{{ path('sortie_annulerSortie', { 'id': sortie.id }) }}"><button class="default_secondary_button">Annuler</button></a></div>
+                                {% endif %}
+                            {% endif %}
+
+                        {% elseif is_granted('ROLE_PARTICIPANT') %} <!-- Affichage des boutons pour un Participant classique -->
+                            <div class="table_link"><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}"><button class="default_principal_button">Afficher</button></a></div>
+
+                            {% if sortie.organisateur.id == app.user.id %} <!-- Si l'utilisateur connecté est l'organisateur de la sortie -->
+                                {% if sortie.etat.libelle == 'Créée' %}
+                                    <div class="table_link"><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}"><button class="default_secondary_button">Modifier</button></a></div>
+                                {% elseif sortie.etat.libelle == 'Ouverte' %}
+                                    <div class="table_link"><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}"><button class="default_secondary_button">Modifier</button></a></div>
+                                    <div class="table_link"><a href="{{ path('sortie_annulerSortie', { 'id': sortie.id }) }}"><button class="default_secondary_button">Annuler</button></a></div>
+                                {% elseif sortie.etat.libelle == 'Clôturée' %}
+                                    <div class="table_link"><a href="{{ path('sortie_annulerSortie', { 'id': sortie.id }) }}"><button class="default_secondary_button">Annuler</button></a></div>
+                                {% endif %}
+                            {% endif %}
+
+                            {% if sortie.etat.libelle == 'Ouverte' %} <!-- Inscription / Désinscription en fonction de l'état de la sortie -->
+                                {% if app.user in sortie.participants %}
+                                    <div class="table_link">{% include('inc/desister.html.twig') %}</div>
+                                {% else %}
+                                    <div class="table_link">{% include('inc/inscrire.html.twig') %}</div>
+                                {% endif %}
+                            {% elseif sortie.etat.libelle == 'Clôturée' %}
+                                {% if app.user in sortie.participants %}
+                                    <div class="table_link">{% include('inc/desister.html.twig') %}</div>
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
         			</td>
                 </tr>
         		{% endfor %}
