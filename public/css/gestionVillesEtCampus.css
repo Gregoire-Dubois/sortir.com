@@ -110,6 +110,14 @@ main {
   border-right: none;
 }
 
+ tr.read_row:nth-child(even) {
+  background-color: var(--primary-color);
+}
+
+tr.read_row:nth-child(odd) {
+  background-color: var(--defaut-backgroung);
+}
+
 /* Liste des villes - Spécifique */
 .city_column1 {
   width: 35%;

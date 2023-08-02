@@ -88,14 +88,4 @@
     <!-- Overlay pour donner un arrière-plan assombri -->
     <div class="default_popup_overlay" id="popup_overlay"></div>
 
-    {% block javascripts %}
-		{{ parent() }}
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <!--Script qui affiche dynamiquement les infos des villes et des lieux-->
-        <script src="{{ asset('/js/formSortieLieuParVille.js') }}" defer></script>
-        <script src="{{ asset('/js/formCreationLieu.js') }}" defer></script>
-        <script src="{{ asset('/js/formCreationVille.js') }}" defer></script>
-
-    {% endblock %}
-
 {% endblock %}
