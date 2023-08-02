@@ -8,6 +8,7 @@
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('css/creerUneSortie.css') }}">
     <link rel="stylesheet" href="{{ asset('css/popupAjouterUnLieu.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/popupAjouterUneVille.css') }}">
 {% endblock %}
 
 {% block body %}
@@ -81,16 +82,11 @@
     </section>
 
     <!-- Popup "Ajouter une ville" -->
-    <div class="default_popup_container" id="popup_add_city">
-        <!-- Overlay pour donner un arrière-plan assombri -->
-        <div class="default_popup_overlay" id="popup_overlay"></div>
-    </div>
-
+    <div class="default_popup_container" id="popup_add_city"></div>
     <!-- Popup "Ajouter un lieu" -->
-    <div class="default_popup_container" id="popup_add_place">
-        <!-- Overlay pour donner un arrière-plan assombri -->
-        <div class="default_popup_overlay" id="popup_overlay"></div>
-    </div>
+    <div class="default_popup_container" id="popup_add_place"></div>
+    <!-- Overlay pour donner un arrière-plan assombri -->
+    <div class="default_popup_overlay" id="popup_overlay"></div>
 
     {% block javascripts %}
 
