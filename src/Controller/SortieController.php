@@ -3,6 +3,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Participant;
 use App\Entity\Sortie;
 use App\Form\LieuType;
 use App\Form\SortiesFilterType;
@@ -177,18 +178,22 @@ class SortieController extends AbstractController
             && $sortie->getDateLimiteInscription() >= new \DateTime('now')
             && !$sortie->getParticipants()->contains($participantConnecte)) {
 
-            //dump($sortie->getEtat()->getLibelle());
+            dump($sortie->getEtat()->getLibelle());
             //dump($sortie->getDateLimiteInscription());
             //dump(new \DateTime('now'));
 
-            //dump($sortie);
-            //dump($participantConnecte);
-            $sortie->addParticipant($participantConnecte);
-
+            dump($sortie);
+            dump($participantConnecte);
+            if($participantConnecte instanceof Participant) {
+                $sortie->addParticipant($participantConnecte);
+                dump($sortie->getParticipants());
+            }
 
             $entityManager->persist($sortie);
+            dump($sortie->getParticipants());
             //dump($participantConnecte);
             $entityManager->flush();
+            dump($sortie->getParticipants());
             //dump($sortie);
             $this->addFlash('success', 'Vous êtes bien inscrit/e pour la sortie ' . $sortie->getNom() . ' !');
         } else {
@@ -232,8 +237,9 @@ class SortieController extends AbstractController
 
             dump($sortie);
             dump($participantConnecte);
-            $sortie->removeParticipant($participantConnecte);
-
+            if($participantConnecte instanceof Participant) {
+                $sortie->removeParticipant($participantConnecte);
+            }
 
             $entityManager->persist($sortie);
             dump($participantConnecte);

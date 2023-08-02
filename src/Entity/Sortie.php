@@ -117,13 +117,14 @@ class Sortie
     private $organisateur;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Participant::class, inversedBy="sortiesParticipant")
+     * @ORM\ManyToMany(targetEntity=Participant::class, inversedBy="sortiesParticipant", cascade={"persist"})
      */
     private $participants;
 
     public function __construct()
     {
         $this->participants = new ArrayCollection();
+
     }
 
     public function getId(): ?int
@@ -309,10 +310,13 @@ class Sortie
 
     public function addParticipant(Participant $participant): self
     {
+        dump($participant);
+        dump(!$this->participants->contains($participant));
         if (!$this->participants->contains($participant)) {
             $this->participants[] = $participant;
         }
-
+dump($this->participants);
+        dump($this->getParticipants());
         return $this;
     }
 

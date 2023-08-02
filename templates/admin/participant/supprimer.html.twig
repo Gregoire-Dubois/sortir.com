@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<h1>Supprimer des participants</h1>
+    <form id="suppressionForm" action="{{ path('admin_supprimer') }}" method="post">
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('suppression_participant') }}">
+    <ul>
+    {% for participant in participants  %}
+        <li>
+            <input type="checkbox" name="participants[]" value="{{ participant.id }}">
+            {{ participant.pseudo }}
+        </li>
+    {% endfor %}
+    </ul>
+      <button type="submit">Supprimer ces participants</button>
+  </form>
+{% endblock %}
+
+{% block title %}
+Supprimer des participants | {{ parent() }}
+{% endblock %}
+
