@@ -1,8 +1,36 @@
-{{ form_start(LieuType, {'attr': {'id': 'form_lieu'}}) }}
+<!-- Titre du popup "Ajouter un lieu" -->
+<h2 id="popup_add_place_title">Ajouter un lieu</h2>
+
+{{ form_start(LieuType, {'attr': {'id': 'form_lieu', 'class': 'add_place_form'}}) }}
+
+<label for="add_place_name" class="column1 row1 default_label" >Nom du lieu :</label>
+{{ form_widget(LieuType.nom, {'label': false, 'attr': {'class': 'column2-3 row1 default_input', 'type': 'text', 'placeholder': 'Nom', 'required': 'required'}}) }}
+<div class="column2-3 row2 default_error_message">{{ form_errors(LieuType.nom) }}</div>
+
+<label for="add_place_street" class="column1 row3 default_label" >Adresse :</label>
+{{ form_widget(LieuType.rue, {'label': false, 'attr': {'class': 'column2-3 row3 default_input', 'type': 'text', 'placeholder': 'Adresse', 'required': 'required'}}) }}
+<div class="column2-3 row4 default_error_message">{{ form_errors(LieuType.rue) }}</div>
+
+<label for="add_place_latitude" class="column1 row5 default_label" >Latitude :</label>
+{{ form_widget(LieuType.latitude, {'label': false, 'attr': {'class': 'column2-3 row5 default_input', 'type': 'text', 'placeholder': 'Latitude', 'required': 'required'}}) }}
+<div class="column2 row6 default_error_message">{{ form_errors(LieuType.latitude) }}</div>
+
+<label for="add_place_longitude" class="column1 row7 default_label" >Longitude :</label>
+{{ form_widget(LieuType.longitude, {'label': false, 'attr': {'class': 'column2-3 row7 default_input', 'type': 'text', 'placeholder': 'Longitude', 'required': 'required'}}) }}
+<div class="column2 row8 default_error_message">{{ form_errors(LieuType.longitude) }}</div>
+
+<label for="add_place_city" class="column1 row9 default_label" >Ville :</label>
+{{ form_widget(LieuType.ville, {'label': false, 'attr': {'class': 'column2-3 row9 default_select', 'placeholder': 'Sélectionner la ville', 'required': 'required'}}) }}
+<div class="column2-3 row10 default_error_message">{{ form_errors(LieuType.ville) }}</div>
 
 {{ form_widget(LieuType) }}
-<div class="row8 creation_event_button">
+
+<div class="row11 popup_add_place_validation">
     <button type="submit" class="default_principal_button" id="confirm_add_place_button">Ajouter</button>
     <button class="default_secondary_button" id="cancel_add_place_button" formnovalidate>Annuler</button>
 </div>
+
 {{ form_end(LieuType) }}
+
+
+
