@@ -185,10 +185,20 @@ class SortieController extends AbstractController
     }
 
     /**
-     * @Route("/sorties/publier/{id}", name="sortie_publierSortie")
+     * @Route("/sorties/publier/{id}", name="sortie_publierSortie", methods={"POST"})
      */
-    public function publierSortie(int $id): Response
+    public function publierSortie(int $id, Request $request, SortieRepository $sortieRepository, EntityManagerInterface $em, EtatRepository $etatRepository): Response
     {
+
+        $sortie = $sortieRepository->findSortieByIdWithDetails($id);
+        //si l'id n'existe pas
+        if (!$sortie) {
+            throw $this->createNotFoundException('Sortie non trouvée.');
+        }
+        $sortie->setDateModification(new \DateTime());
+        $sortie->setModifiePar($this->getUser());
+        $sortie->setEtat($etatRepository->findOneBy(['libelle' => 'Ouverte']));
+        $em->flush();
         return $this->redirectToRoute('sortie_listeSortie');
     }
 

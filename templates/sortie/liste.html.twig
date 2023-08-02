@@ -121,6 +121,7 @@
                         	{% if sortie.organisateur.id == app.user.id %} <!-- Si l'utilisateur connecté est l'organisateur de la sortie -->
                                 {% if (sortie.etat.libelle == 'Créée' or sortie.etat.libelle == 'Ouverte') and  sortie.dateDebut > date()%}
                                     <div class="table_link"><form action="{{ path('sortie_modifierSortie', { 'id': sortie.id }) }}" method="post"><input type="hidden" name="_method" value="POST"><button class="default_secondary_button">Modifier</button></form></div>
+                                    <div class="table_link"><form action="{{ path('sortie_publierSortie', { 'id': sortie.id }) }}" method="post"><input type="hidden" name="_method" value="POST"><button class="default_secondary_button">Publier</button></form></div>
                             	{% endif %}
                             {% endif %}
 
@@ -146,6 +147,7 @@
                                 {% if sortie.etat.libelle == 'Créée' and sortie.dateDebut > date() %}
                                     <div class="table_link">
                                         <form action="{{ path('sortie_modifierSortie', { 'id': sortie.id }) }}" method="post"><input type="hidden" name="_method" value="POST"><button class="default_secondary_button">Modifier</button></form></div>
+                                    <div class="table_link"><form action="{{ path('sortie_publierSortie', { 'id': sortie.id }) }}" method="post"><input type="hidden" name="_method" value="POST"><button class="default_secondary_button">PublierADMIN</button></form></div>
                                 {% elseif sortie.etat.libelle == 'Ouverte' and sortie.dateDebut > date()%}
                                     <div class="table_link"><form action="{{ path('sortie_modifierSortie', { 'id': sortie.id }) }}" method="post"><input type="hidden" name="_method" value="POST"><button class="default_secondary_button">Modifier</button></form></div>
                                     <div class="table_link"><form action="{{ path('sortie_annulerSortie', { 'id': sortie.id }) }}" method="post"><input type="hidden" name="_method" value="POST"><button class="default_secondary_button">Annuler</button></form></div>
