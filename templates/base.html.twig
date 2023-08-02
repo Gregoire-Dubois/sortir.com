@@ -15,6 +15,12 @@
         {% endblock %}
 
         {% block javascripts %}
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <!--Script qui affiche dynamiquement les infos des villes et des lieux-->
+            <script src="{{ asset('/js/formSortieLieuParVille.js') }}" defer></script>
+            <script src="{{ asset('/js/formCreationLieu.js') }}" defer></script>
+            <script src="{{ asset('/js/formCreationVille.js') }}" defer></script>
+            <!--Script qui affiche le menu hamburger de la navbar en mode responsive-->
             <script src="{{ asset('/js/responsiveNavBar.js') }}" defer></script>
         {% endblock %}
     </head>
