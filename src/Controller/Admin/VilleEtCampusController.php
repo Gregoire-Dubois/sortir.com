@@ -162,6 +162,7 @@ class VilleEtCampusController extends AbstractController
      */
     public function modifierVille(int $id, Request $request, VilleRepository $villeRepository, EntityManagerInterface $em): Response
     {
+
         $ville = $em->getRepository(Ville::class)->find($id);
         $nom = $request->request->get('edit_nom_' . $id);
         $codePostal = $request->get('edit_code_postal_' . $id);
@@ -171,6 +172,7 @@ class VilleEtCampusController extends AbstractController
 
         // Redirigez vers la même page après la suppression
         return $this->redirectToRoute('admin_villes_et_campus');
+
         /*
         $form = $this->createForm(VilleType::class, $ville)
             ->add('nom', TextType::class)
@@ -198,11 +200,24 @@ class VilleEtCampusController extends AbstractController
     }
 
     /**
-     * @Route("/campus/{id}/modifier", name="modifier_campus")
+     * @Route("/campus/{id}/modifier", name="modifier_campus", methods={"POST"})
+     * @throws Exception
      */
-    public function modifierCampus(Request $request, EntityManagerInterface $entityManager, Campus $campus): Response
+    public function modifierCampus(Request $request, EntityManagerInterface $entityManager, Campus $campus, int $id, CampusRepository $campusRepository): Response
     {
-        $form = $this->createForm(VilleType::class, $campus)
+
+        $campus = $entityManager->getRepository(Campus::class)->find($id);
+        $nom = $request->request->get('edit_nom_' . $id );
+        var_dump($nom . $id);
+        $campusRepository -> modifierCampus($id, $nom);
+
+        $this -> addFlash('modifier_campus', $campus .' a été modifiée.');
+
+        return $this->redirectToRoute('admin_villes_et_campus');
+
+/*
+        // Créez le formulaire VilleType avec "data_class" défini à null
+        $form = $this->createForm(VilleType::class, null, ['data_class' => null])
             ->add('nom', TextType::class);
 
         $form->handleRequest($request);
@@ -222,6 +237,8 @@ class VilleEtCampusController extends AbstractController
             'is_ville' => false,
             'entity' => $campus,
         ]);
+*/
+
     }
 
     /**
