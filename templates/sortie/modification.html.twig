@@ -15,7 +15,7 @@
     <section class="default_container">
         <h2>Modifier une sortie</h2>
         <!-- Formulaire de création d'une sortie-->
-        {{ form_start(SortieType, {'attr': {'class': 'form_container', 'id' : 'form_sortie', 'novalidate': 'novalidate'}, 'render_form': false}) }}
+        {{ form_start(SortieType, {'attr': {'class': 'form_container', 'id' : 'form_sortie'}, 'render_form': false}) }}
         <!-- Bloc Formulaire -->
         <label for="event_name" class="column1 row1 default_label">Nom de la sortie :</label>
         {{ form_widget(SortieType.nom, {'label': false, 'attr': {'class': 'column2-5 row1 default_input', 'id': 'event_name', 'required': 'required'}}) }}
@@ -71,8 +71,10 @@
 
         <div class="row15 creation_event_button">
             {{ form_widget(SortieType.creer, {'attr': {'class': 'default_principal_button', 'id': 'creation_event_save'}}) }}
+            {% if etat == true %}
             {{ form_widget(SortieType.publier, {'attr': {'class': 'default_tertiary_button', 'id': 'creation_event_publish'}}) }}
-            <button class="default_secondary_button" id="creation_event_cancel" formnovalidate>Annuler</button>
+            {%  endif %}
+            <button type="button" class="default_secondary_button" id="creation_event_cancel" formnovalidate>Annuler</button>
         </div>
 
         <!--Ajout du champ token puisque render_rest= false-->
