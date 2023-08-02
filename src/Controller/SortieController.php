@@ -231,7 +231,8 @@ class SortieController extends AbstractController
         Request                   $request,
         Sortie                    $sortie,
         EntityManagerInterface    $entityManager,
-        CsrfTokenManagerInterface $csrfTokenManager
+        CsrfTokenManagerInterface $csrfTokenManager,
+        EtatRepository $etatRepository
     ): Response
     {
         $token = new CsrfToken('inscription_sortie', $request->request->get('_csrf_token'));
@@ -241,6 +242,9 @@ class SortieController extends AbstractController
         //On récupère l'URL qui a émis la requête
         $url = $request->headers->get('referer');
         $participantConnecte = $this->getUser();
+
+        $etatCloture = $etatRepository->findbyLibelle('Clôturée');
+
 
         if ($sortie->getEtat()->getLibelle() == 'Ouverte'
             && $sortie->getDateLimiteInscription() >= new \DateTime('now')
@@ -255,15 +259,22 @@ class SortieController extends AbstractController
             if($participantConnecte instanceof Participant) {
                 $sortie->addParticipant($participantConnecte);
               //  dump($sortie->getParticipants());
-            }
 
-            $entityManager->persist($sortie);
-            //dump($sortie->getParticipants());
-            //dump($participantConnecte);
-            $entityManager->flush();
-           // dump($sortie->getParticipants());
-            //dump($sortie);
-            $this->addFlash('success', 'Vous êtes bien inscrit/e pour la sortie ' . $sortie->getNom() . ' !');
+
+
+            //dump(count($sortie->getParticipants()));
+                if(count($sortie->getParticipants()) == $sortie->getNbInscritptionMax()){
+                    $sortie->setEtat($etatCloture);
+                }
+                $entityManager->persist($sortie);
+                //dump($sortie->getParticipants());
+                //dump($participantConnecte);
+                $entityManager->flush();
+                // dump($sortie->getParticipants());
+                //dump($sortie);
+                $this->addFlash('success', 'Vous êtes bien inscrit/e pour la sortie ' . $sortie->getNom() . ' !');}
+
+
         } else {
             $this->addFlash('error', 'Vous ne pouvez pas vous inscrire pour la sortie ' . $sortie->getNom() . ' !');
         }
@@ -286,7 +297,8 @@ class SortieController extends AbstractController
         Request                   $request,
         Sortie                    $sortie,
         EntityManagerInterface    $entityManager,
-        CsrfTokenManagerInterface $csrfTokenManager
+        CsrfTokenManagerInterface $csrfTokenManager,
+        EtatRepository $etatRepository
     ): Response
     {
         $token = new CsrfToken('desistement_sortie', $request->request->get('_csrf_token'));
@@ -296,7 +308,7 @@ class SortieController extends AbstractController
         //On récupère l'URL qui a émis la requête
         $url = $request->headers->get('referer');
         $participantConnecte = $this->getUser();
-
+        $etatOuvert = $etatRepository->findbyLibelle('Ouverte');
         if ($sortie->getDateDebut() >= new \DateTime('now')
             && $sortie->getParticipants()->contains($participantConnecte)) {
           //  dump($sortie->getEtat()->getLibelle());
@@ -307,13 +319,16 @@ class SortieController extends AbstractController
             //dump($participantConnecte);
             if($participantConnecte instanceof Participant) {
                 $sortie->removeParticipant($participantConnecte);
-            }
+                if(count($sortie->getParticipants()) < $sortie->getNbInscritptionMax()){
+                    $sortie->setEtat($etatOuvert);
+                }
 
-            $entityManager->persist($sortie);
-            //dump($participantConnecte);
-            $entityManager->flush();
-            //dump($sortie);
-            $this->addFlash('success', 'Vous êtes bien désinscrit/e pour la sortie ' . $sortie->getNom() . ' !');
+                $entityManager->persist($sortie);
+                //dump($participantConnecte);
+                $entityManager->flush();
+                //dump($sortie);
+                $this->addFlash('success', 'Vous êtes bien désinscrit/e pour la sortie ' . $sortie->getNom() . ' !');
+            }
         } else {
             $this->addFlash('error', 'Vous ne pouvez pas vous désinscrire pour la sortie ' . $sortie->getNom() . ' !');
         }
