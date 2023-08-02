@@ -230,7 +230,7 @@ class ParticipantController extends AbstractController
         CsrfTokenManagerInterface $csrfTokenManager,
         EntityManagerInterface $entityManager){
 
-        $participantsActifs = $participantRepository->selectParticipantsActifs($this->getUser());
+       // $participantsActifs = $participantRepository->selectParticipantsActifs($this->getUser());
 
         if($request->isMethod('POST')){
             $token = new CsrfToken('desactivation_participant', $request->request->get('_csrf_token'));
@@ -263,7 +263,7 @@ class ParticipantController extends AbstractController
         CsrfTokenManagerInterface $csrfTokenManager,
         EntityManagerInterface $entityManager){
 
-        $participantsInactifs = $participantRepository->selectParticipantsInactifs();
+       // $participantsInactifs = $participantRepository->selectParticipantsInactifs();
 
         if($request->isMethod('POST')){
             $token = new CsrfToken('reactivation_participant', $request->request->get('_csrf_token'));
@@ -298,7 +298,7 @@ class ParticipantController extends AbstractController
         EntityManagerInterface $entityManager,
         SortieRepository $sortieRepository){
 
-        $participants = $participantRepository->selectParticipants($this->getUser());
+      //  $participants = $participantRepository->selectParticipants($this->getUser());
 
       //  $sortie25 = $sortieRepository->find('25');
        // dump($sortie25);
