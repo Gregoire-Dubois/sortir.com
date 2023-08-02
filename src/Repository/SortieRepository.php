@@ -304,9 +304,13 @@ class SortieRepository extends ServiceEntityRepository
     public function selectSortiesPassees(Participant $participant)
     {
         $etatEnCours = $this->etatRepository->findbyLibelle("Activité en cours");
+        dump($etatEnCours);
         $etatPasse = $this->etatRepository->findbyLibelle("Passée");
+        dump($etatPasse);
         $etatAnnule = $this->etatRepository->findbyLibelle("Annulée");
+        dump($etatAnnule);
         $etatArchive = $this->etatRepository->findbyLibelle("Archivée");
+        dump($etatArchive);
 
         $queryBuilder = $this->createQueryBuilder('sortie');
         $queryBuilder->select('DISTINCT sortie');
@@ -320,8 +324,8 @@ class SortieRepository extends ServiceEntityRepository
         $queryBuilder->setParameter(':etatAnnule', $etatAnnule);
         $queryBuilder->setParameter(':etatArchive', $etatArchive);
         $queryBuilder->andWhere($orConditions);
-        $queryBuilder->andWhere(':participant MEMBER OF sortie.participants');
-        $queryBuilder->setParameter(':participant', $participant);
+        //$queryBuilder->andWhere(':participant MEMBER OF sortie.participants');
+        //$queryBuilder->setParameter(':participant', $participant);
         dump($queryBuilder);
         dump($queryBuilder->getDQL());
 

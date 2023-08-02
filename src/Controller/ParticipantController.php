@@ -292,7 +292,7 @@ class ParticipantController extends AbstractController
     /**
      * @Route("/admin/supprimer", name="admin_supprimer")
      */
-    public function supprimerParticants(
+    public function supprimerParticipants(
         ParticipantRepository $participantRepository,
         Request $request,
         CsrfTokenManagerInterface $csrfTokenManager,
@@ -350,15 +350,35 @@ class ParticipantController extends AbstractController
                     $entityManager->flush();
                 }
 
-
+                $participantAnonyme = $participantRepository->find('39');
                 //Remplacer ses occurences par "utilisateur supprime" pour les sorties passees
                     //On recupere les sorties passees
                 $sortiesPassees = $sortieRepository->selectSortiesPassees($participant);
+                dump($sortiesPassees);
                 foreach($sortiesPassees as $sortie) {
                     if($sortie instanceof Sortie) {
                         dump($sortie->getParticipants());
                     }
-                    $participants[] = $sortie->getParticipants();
+                    dump($sortie->getOrganisateur()===$participant);
+                    if($sortie->getOrganisateur()===$participant){
+                        $sortie->setOrganisateur($participantAnonyme);
+                        $entityManager->persist($sortie);
+                        $entityManager->flush();
+                    }elseif ($sortie->getParticipants()->contains($participant)){
+                        /*$participants = $sortie->getParticipants();
+                        $index = array_search($participant, $participants);
+                        if ($index !== false) {
+                            $participants[$index] = $participantAnonyme;
+                            $sortie->
+                            $entityManager->persist($sortie);
+                            $entityManager->flush();
+                        }*/
+                        $sortie->removeParticipant($participant);
+                        $sortie->addParticipant($participantAnonyme);
+                        $entityManager->persist($sortie);
+                        $entityManager->flush();
+                    }
+                   /* $participants = $sortie->getParticipants();
                     dump($participants);
                     foreach ($participants as $part){
                         if($part == $participant){
@@ -369,7 +389,7 @@ class ParticipantController extends AbstractController
                     }
                     $sortie->setParticipants($participants);
                     $entityManager->persist($sortie);
-                    $entityManager->flush();
+                    $entityManager->flush();*/
                 }
 
 
