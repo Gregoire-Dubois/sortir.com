@@ -1,6 +1,12 @@
+main {
+  display: flex;
+  flex-direction: column;
+  padding: 0 27.5%;
+}
+
 .default_container {
-  width: 640px;
-  margin: calc((93vh - 42vh) / 2) auto;
+  width: 100%;
+  margin: 0;
 }
 
 .profil_info {
@@ -35,6 +41,12 @@
 .default_secondary_button {
   grid-column: 1/2;
   grid-row: 5;
+}
+
+a.default_secondary_button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* Paramétrage des lignes et colonnes du formulaire */

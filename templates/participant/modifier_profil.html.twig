@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}{{ parent() }} | Mon Profil{% endblock %}
+
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('css/modifierProfil.css') }}">
@@ -58,7 +60,7 @@
 
         <!-- Partie boutons -->
         <button type="submit" class="default_principal_button" id="my_profil_save">Enregistrer</button>
-        <a href="{{ path("sortie_listeSortie") }}" class="default_secondary_button" id="my_profil_cancel" title="Annuler">Annuler</a>
+        <a href="{{ path("sortie_listeSortie") }}" class="default_secondary_button" id="my_profil_cancel" title="Retour">Retour</a>
 
         {{ form_end(participantForm) }}
     </div>
