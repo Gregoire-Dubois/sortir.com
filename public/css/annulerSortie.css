@@ -1,24 +1,22 @@
 /* Partie "Annulation de la sortie - Global" */
 main {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
+  flex-direction: column;
+  padding: 0 15%;
 }
 
 .default_container {
-  width: 400px;
+  width: 50%;
   margin: auto;
 }
 
 .cancel_event_container {
   display: grid;
   grid-template-columns: 1fr 0.80fr 1.2fr;
-  grid-template-rows: repeat(8,4vh);
+  grid-template-rows: repeat(7,4vh 3vh) 4vh 2.25vh;
   width: 100%;
-  row-gap: 2vh;
   column-gap: 1.5vw;
-  padding: 2.25vh 1vw 1.75vh 1vw;
+  padding: 2.25vh 1vw 0 1vw;
 }
 
 /* Partie "Annulation de la sortie - Spécifique" */
@@ -31,7 +29,7 @@ main {
   justify-content: space-evenly;
   align-items: center;
   grid-column: span 3;
-  grid-row: 8;
+  grid-row: 15;
   padding-bottom: 0.75vh
 }
 
@@ -74,16 +72,60 @@ main {
   grid-row: 4;
 }
 
-.row4-5 {
-  grid-row: 4/6;
+.row5 {
+  grid-row: 5;
 }
 
 .row6 {
   grid-row: 6;
 }
 
-.row6-7 {
-  grid-row: 6/8;
+.row7 {
+  grid-row: 7;
+}
+
+.row8 {
+  grid-row: 8;
+}
+
+.row9 {
+  grid-row: 9;
+}
+
+.row10 {
+  grid-row: 10;
+}
+
+.row11 {
+  grid-row: 11;
+}
+
+.row12 {
+  grid-row: 12;
+}
+
+.row13 {
+  grid-row: 13;
+}
+
+.row14 {
+  grid-row: 14;
+}
+
+.row15 {
+  grid-row: 15;
+}
+
+.row16 {
+  grid-row: 16;
+}
+
+.row7-9 {
+  grid-row: 7/10;
+}
+
+.row11-13 {
+  grid-row: 11/14;
 }
 
 @media screen and (max-width: 768px) {

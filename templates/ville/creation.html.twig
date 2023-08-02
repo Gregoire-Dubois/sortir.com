@@ -1,8 +1,21 @@
-{{ form_start(VilleType, {'attr': {'id': 'form_ville'}}) }}
+<!-- Titre du popup "Ajouter une ville" -->
+<h2 id="popup_add_city_title">Ajouter une ville</h2>
+
+{{ form_start(VilleType, {'attr': {'id': 'form_ville', 'class': 'add_city_form'}}) }}
+
+<label class="column1 row1 default_label" >Nom de la ville :</label>
+{{ form_widget(VilleType.nom, {'label': false, 'attr': {'class': 'column2-3 row1 default_input', 'type': 'text', 'placeholder': 'Nom', 'required': 'required'}}) }}
+<div class="column2-3 row2 default_error_message">{{ form_errors(VilleType.nom) }}</div>
+
+<label class="column1 row3 default_label" >Code Postal :</label>
+{{ form_widget(VilleType.codePostal, {'label': false, 'attr': {'class': 'column2-3 row3 default_input', 'type': 'text', 'placeholder': 'Code Postal', 'required': 'required'}}) }}
+<div class="column2-3 row4 default_error_message">{{ form_errors(VilleType.codePostal) }}</div>
 
 {{ form_widget(VilleType) }}
-<div class="row8 creation_event_button">
+
+<div class="row5 popup_add_city_validation">
     <button type="submit" class="default_principal_button" id="confirm_add_city_button">Ajouter</button>
     <button class="default_secondary_button" id="cancel_add_city_button" formnovalidate>Annuler</button>
 </div>
+
 {{ form_end(VilleType) }}

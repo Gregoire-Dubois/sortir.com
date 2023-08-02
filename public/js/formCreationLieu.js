@@ -12,9 +12,9 @@ document.addEventListener("DOMContentLoaded", function() {
         xhr.onload = function() {
             if (xhr.status === 200) {
                 document.getElementById("popup_add_place").innerHTML = xhr.responseText;
-                //console.log(document.getElementById("popup_add_place").innerHTML)
                 // Affichez la modale
                 document.getElementById("popup_add_place").style.display = "block";
+                document.getElementById("popup_overlay").style.display = "block";
 
             } else {
                 console.error("Erreur lors de la requête AJAX");
@@ -35,6 +35,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 if (xhr.status === 200) {
                     // Cacher la modale après l'enregistrement
                     document.getElementById("popup_add_place").style.display = "none";
+                    document.getElementById("popup_overlay").style.display = "none";
 
                     // Mise à jour du formulaire de sortie avec le nouveau lieu
                     let response = JSON.parse(xhr.responseText);
@@ -71,6 +72,7 @@ document.addEventListener("DOMContentLoaded", function() {
         if (e.target.id === 'cancel_add_place_button') {
             e.preventDefault();
             document.getElementById("popup_add_place").style.display = "none";
+            document.getElementById("popup_overlay").style.display = "none";
 
             // Réaffecter les données déjà saisies du formulaire de sortie
             for (let pair of sortieFormData.entries()) {
