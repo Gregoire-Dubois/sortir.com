@@ -319,7 +319,7 @@ class SortieController extends AbstractController
             //dump($participantConnecte);
             if($participantConnecte instanceof Participant) {
                 $sortie->removeParticipant($participantConnecte);
-                if(count($sortie->getParticipants()) < $sortie->getNbInscritptionMax()){
+                if(count($sortie->getParticipants()) < $sortie->getNbInscritptionMax() && $sortie->getDateLimiteInscription() >= new \DateTime('now')){
                     $sortie->setEtat($etatOuvert);
                 }
 
