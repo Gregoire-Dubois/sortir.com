@@ -127,15 +127,15 @@
                        		{% if sortie.etat.libelle == 'Ouverte' and sortie.dateDebut > date()%} <!-- Inscription / Désinscription en fonction de l'état de la sortie -->
                                 {% if app.user in sortie.participants %}
                                     <div class="table_link">{% include('inc/desister.html.twig') %}</div>
-                                    <div class="table_link"><a href="{{ path('sortie_annulerSortie', { 'id': sortie.id }) }}"><button class="default_secondary_button">Annuler</button></a></div>
+                                    <div class="table_link"><form action="{{ path('sortie_annulerSortie', { 'id': sortie.id }) }}" method="post"><input type="hidden" name="_method" value="POST"><button class="default_secondary_button">Annuler</button></form></div>
                                 {% else %}
                                     <div class="table_link">{% include('inc/inscrire.html.twig') %}</div>
-                                    <div class="table_link"><a href="{{ path('sortie_annulerSortie', { 'id': sortie.id }) }}"><button class="default_secondary_button">Annuler</button></a></div>
+                                    <div class="table_link"><form action="{{ path('sortie_annulerSortie', { 'id': sortie.id }) }}" method="post"><input type="hidden" name="_method" value="POST"><button class="default_secondary_button">Annuler</button></form></div>
                                 {% endif %}
                             {% elseif sortie.etat.libelle == 'Clôturée' and sortie.dateDebut > date() %}
                                 {% if app.user in sortie.participants %}
                                     <div class="table_link">{% include('inc/desister.html.twig') %}</div>
-                                    <div class="table_link"><a href="{{ path('sortie_annulerSortie', { 'id': sortie.id }) }}"><button class="default_secondary_button">Annuler</button></a></div>
+                                    <div class="table_link"><form action="{{ path('sortie_annulerSortie', { 'id': sortie.id }) }}" method="post"><input type="hidden" name="_method" value="POST"><button class="default_secondary_button">Annuler</button></form></div>
                                 {% endif %}
                             {% endif %}
 
@@ -148,9 +148,9 @@
                                         <form action="{{ path('sortie_modifierSortie', { 'id': sortie.id }) }}" method="post"><input type="hidden" name="_method" value="POST"><button class="default_secondary_button">Modifier</button></form></div>
                                 {% elseif sortie.etat.libelle == 'Ouverte' and sortie.dateDebut > date()%}
                                     <div class="table_link"><form action="{{ path('sortie_modifierSortie', { 'id': sortie.id }) }}" method="post"><input type="hidden" name="_method" value="POST"><button class="default_secondary_button">Modifier</button></form></div>
-                                    <div class="table_link"><a href="{{ path('sortie_annulerSortie', { 'id': sortie.id }) }}"><button class="default_secondary_button">Annuler</button></a></div>
+                                    <div class="table_link"><form action="{{ path('sortie_annulerSortie', { 'id': sortie.id }) }}" method="post"><input type="hidden" name="_method" value="POST"><button class="default_secondary_button">Annuler</button></form></div>
                                 {% elseif sortie.etat.libelle == 'Clôturée' and sortie.dateDebut > date()%}
-                                    <div class="table_link"><a href="{{ path('sortie_annulerSortie', { 'id': sortie.id }) }}"><button class="default_secondary_button">Annuler</button></a></div>
+                                    <div class="table_link"><form action="{{ path('sortie_annulerSortie', { 'id': sortie.id }) }}" method="post"><input type="hidden" name="_method" value="POST"><button class="default_secondary_button">Annuler</button></form></div>
                                 {% endif %}
                             {% endif %}
 

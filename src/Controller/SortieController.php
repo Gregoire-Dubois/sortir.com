@@ -193,7 +193,7 @@ class SortieController extends AbstractController
     }
 
     /**
-     * @Route("/sorties/annuler/{id}", name="sortie_annulerSortie")
+     * @Route("/sorties/annuler/{id}", name="sortie_annulerSortie",  methods={"POST"})
      */
     public function annulerSortie(int $id, Request $request, EtatRepository $etatRepository, SortieRepository $sortieRepository, EntityManagerInterface $em): Response
     {
