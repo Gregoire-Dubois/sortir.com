@@ -45,7 +45,7 @@
 
         <label class="column6 row1 default_label">Campus</label>
         {{ form_widget(SortieType.campus, {'label': false, 'attr': {'class': 'column7-9 row1 default_span', 'id': 'event_campus', 'required': 'required'}}) }}
-        <div class="column7-9 row2 default_error_message">{{ form_errors(SortieType.campus) }}</div>
+        <span class="column7-9 row2 default_error_message">{{ form_errors(SortieType.campus) }}</span>
 
         <label for="event_city" class="column6 row3 default_label">Ville :</label>
         {{ form_widget(SortieType.ville, {'label': false, 'attr': {'class': 'column7-8 row3 default_select', 'id': 'event_city', 'required': 'required'}}) }}
@@ -70,7 +70,7 @@
         <span class="column7 row13 default_span" id="event_longitude">{{ sortie.lieu.longitude }}</span>
 
         <div class="row15 creation_event_button">
-            {{ form_widget(SortieType.creer, {'attr': {'class': 'default_principal_button', 'id': 'creation_event_save'}}) }}
+            {{ form_widget(SortieType.creer, {'label': 'Modifier', 'attr': {'class': 'default_principal_button', 'id': 'creation_event_save'}}) }}
             {% if etat == true %}
             {{ form_widget(SortieType.publier, {'attr': {'class': 'default_tertiary_button', 'id': 'creation_event_publish'}}) }}
             {%  endif %}
