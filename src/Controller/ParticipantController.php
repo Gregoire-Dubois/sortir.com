@@ -350,15 +350,16 @@ class ParticipantController extends AbstractController
                     $entityManager->flush();
                 }
 
-                $participantAnonyme = $participantRepository->find('39');
+                $participantAnonyme = $participantRepository->findOneByEmail('testanonyme@test.com');
+                dump($participantAnonyme);
                 //Remplacer ses occurences par "utilisateur supprime" pour les sorties passees
                     //On recupere les sorties passees
                 $sortiesPassees = $sortieRepository->selectSortiesPassees($participant);
                 //dump($sortiesPassees);
                 foreach($sortiesPassees as $sortie) {
-                    if($sortie instanceof Sortie) {
+                   // if($sortie instanceof Sortie) {
                   //      dump($sortie->getParticipants());
-                    }
+                   // }
                    // dump($sortie->getOrganisateur()===$participant);
                     if($sortie->getOrganisateur()===$participant){
                         $sortie->setOrganisateur($participantAnonyme);
