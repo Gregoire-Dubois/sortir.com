@@ -33,7 +33,7 @@ class ParticipantController extends AbstractController
     }
 
     /**
-     * @Route ("/admin/utilisateurs", name="admin_listeUtilisateur")
+     * @Route ("/admin/participants", name="admin_listeParticipants")
      */
     public function listeUtilisateur(
         ParticipantRepository $participantRepository,

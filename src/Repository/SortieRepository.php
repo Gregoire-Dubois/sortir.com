@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Repository;
+use App\Entity\Participant;
 use App\Entity\Sortie;
 use App\Form\SearchSortie;
 use DateTime;

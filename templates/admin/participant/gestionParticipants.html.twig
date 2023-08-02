@@ -6,7 +6,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('css/desactiverParticipant') }}">
+    <link rel="stylesheet" href="{{ asset('css/gestionParticipant.css') }}">
 {% endblock %}
 
 {% block body %}
@@ -65,13 +65,22 @@
                                 X
                             {% endif %}
                         </td>
-                        <td></td>
+                        <td>
+                            {%  if participant.actif %}
+                            <div class="table_link">{% include('admin/participant/desactiver.html.twig') %}</div>
+                            {% else %}
+                            <div class="table_link">{% include('admin/participant/reactiver.html.twig') %}</div>
+                            {% endif %}
+                            <div class="table_link">{% include('admin/participant/supprimer.html.twig') %}</div>
+                        </td>
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
         </div>
     </section>
+
+
 
 {% endblock %}
 

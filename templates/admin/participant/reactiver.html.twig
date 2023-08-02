@@ -1,22 +1,6 @@
-{% extends 'base.html.twig' %}
+<form id="reactivationForm" action="{{ path('admin_reactiver') }}" method="post">
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token('reactivation_participant') }}">
+    <button type="submit" class="default_tertiary_button">Activer</button>
+</form>
 
-{% block body %}
-<h1>Réactiver des participants</h1>
-    <form id="reactivationForm" action="{{ path('admin_reactiver') }}" method="post">
-        <input type="hidden" name="_csrf_token" value="{{ csrf_token('reactivation_participant') }}">
-    <ul>
-    {% for participant in participantsInactifs  %}
-        <li>
-            <input type="checkbox" name="participants[]" value="{{ participant.id }}">
-            {{ participant.pseudo }}
-        </li>
-    {% endfor %}
-    </ul>
-      <button type="submit">Réactiver ces participants</button>
-  </form>
-{% endblock %}
-
-{% block title %}
-Réactiver des participants | {{ parent() }}
-{% endblock %}
 

@@ -220,35 +220,34 @@ class ParticipantController extends AbstractController
         ParticipantRepository $participantRepository,
         Request $request,
         CsrfTokenManagerInterface $csrfTokenManager,
-        EntityManagerInterface $entityManager){
+        EntityManagerInterface $entityManager)
+    {
 
         $participantsActifs = $participantRepository->selectParticipantsActifs($this->getUser());
 
-        if($request->isMethod('POST')){
+        if($request->isMethod('POST'))
+        {
             $token = new CsrfToken('desactivation_participant', $request->request->get('_csrf_token'));
-            if (!$csrfTokenManager->isTokenValid($token)) {
+            if (!$csrfTokenManager->isTokenValid($token))
+            {
                 throw $this->createAccessDeniedException('Jeton CSRF invalide.');
             }
             dump($request);
-            $participantsSelectionnes= $request->request->get('participants', []);
+            $participantsSelectionnes = $request->request->get('participants', []);
             dump($participantsSelectionnes);
             $listeParticipantsDesactives = [];
-            foreach ($participantsSelectionnes as $participantId){
+            foreach ($participantsSelectionnes as $participantId)
+            {
                 $participant = $participantRepository->find($participantId);
                 $participant->setActif(false);
-                $listeParticipantsDesactives[]=$participant->getPseudo();
+                $listeParticipantsDesactives[] = $participant->getPseudo();
                 $entityManager->persist($participant);
                 $entityManager->flush();
             }
 
             $this->addFlash('success', 'Les participants suivants ont bien été désactivés :' . implode(', ', $listeParticipantsDesactives) . ' .');
-            return $this->redirectToRoute('admin_desactiver');
+            return $this->redirectToRoute('admin_listeParticipants');
         }
-
-
-        return $this->render('admin/participant/desactiver.html.twig',[
-            'participantsActifs'=>$participantsActifs
-        ]);
     }
 
     /**
@@ -258,11 +257,13 @@ class ParticipantController extends AbstractController
         ParticipantRepository $participantRepository,
         Request $request,
         CsrfTokenManagerInterface $csrfTokenManager,
-        EntityManagerInterface $entityManager){
+        EntityManagerInterface $entityManager)
+    {
 
         $participantsInactifs = $participantRepository->selectParticipantsInactifs();
 
-        if($request->isMethod('POST')){
+        if($request->isMethod('POST'))
+        {
             $token = new CsrfToken('reactivation_participant', $request->request->get('_csrf_token'));
             if (!$csrfTokenManager->isTokenValid($token)) {
                 throw $this->createAccessDeniedException('Jeton CSRF invalide.');
@@ -271,7 +272,8 @@ class ParticipantController extends AbstractController
             $participantsSelectionnes= $request->request->get('participants', []);
             dump($participantsSelectionnes);
             $listeParticipantsReactives = [];
-            foreach ($participantsSelectionnes as $participantId){
+            foreach ($participantsSelectionnes as $participantId)
+            {
                 $participant = $participantRepository->find($participantId);
                 $participant->setActif(true);
                 $listeParticipantsReactives[]=$participant->getPseudo();
@@ -280,13 +282,9 @@ class ParticipantController extends AbstractController
             }
 
             $this->addFlash('success', 'Les participants suivants ont bien été réactivés :' . implode(', ', $listeParticipantsReactives) . ' .');
-            return $this->redirectToRoute('admin_reactiver');
-        }
+            return $this->redirectToRoute('admin_listeParticipants');
+        };
 
-
-        return $this->render('admin/participant/reactiver.html.twig',[
-            'participantsInactifs'=>$participantsInactifs
-        ]);
     }
 
     /**
@@ -297,16 +295,19 @@ class ParticipantController extends AbstractController
         Request $request,
         CsrfTokenManagerInterface $csrfTokenManager,
         EntityManagerInterface $entityManager,
-        SortieRepository $sortieRepository){
+        SortieRepository $sortieRepository)
+    {
 
         $participants = $participantRepository->selectParticipants($this->getUser());
 
       //  $sortie25 = $sortieRepository->find('25');
        // dump($sortie25);
         //dump($sortie25->getParticipants());
-        if($request->isMethod('POST')){
+        if($request->isMethod('POST'))
+        {
             $token = new CsrfToken('suppression_participant', $request->request->get('_csrf_token'));
-            if (!$csrfTokenManager->isTokenValid($token)) {
+            if (!$csrfTokenManager->isTokenValid($token))
+            {
                 throw $this->createAccessDeniedException('Jeton CSRF invalide.');
             }
           //  dump($request);
@@ -315,7 +316,8 @@ class ParticipantController extends AbstractController
             //dump($participantsSelectionnes);
             $listeParticipantsSupprimes = [];
 
-            foreach ($participantsSelectionnes as $participantId){
+            foreach ($participantsSelectionnes as $participantId)
+            {
                 $participant = $participantRepository->find($participantId);
               //  dump($participant);
                 $listeParticipantsSupprimes[]=$participant->getPseudo();
@@ -326,10 +328,12 @@ class ParticipantController extends AbstractController
                 //dump($sortiesOuvertes);
 
                     //On le désinscrit de ces sorties
-                foreach($sortiesOuvertes as $sortie) {
+                foreach($sortiesOuvertes as $sortie)
+                {
                   //  dump($sortie->getParticipants());
                    // dump($sortie->getParticipants()->contains($participant));
-                    if ($sortie->getParticipants()->contains($participant)) {
+                    if ($sortie->getParticipants()->contains($participant))
+                    {
 
                         $sortie->removeParticipant($participant);
 
@@ -344,7 +348,8 @@ class ParticipantController extends AbstractController
                     //On récupère les sorties ouvertes et créées
                 $sortiesOuvertesOuCreees = $sortieRepository->selectSortiesOuvertesEtCreeesCloturee($participant);
                     //On les supprime
-                foreach ($sortiesOuvertesOuCreees as $sortie){
+                foreach ($sortiesOuvertesOuCreees as $sortie)
+                {
                     //dump($sortie);
                     $entityManager->remove($sortie);
                     $entityManager->flush();
@@ -356,16 +361,19 @@ class ParticipantController extends AbstractController
                     //On recupere les sorties passees
                 $sortiesPassees = $sortieRepository->selectSortiesPassees($participant);
                 //dump($sortiesPassees);
-                foreach($sortiesPassees as $sortie) {
+                foreach($sortiesPassees as $sortie)
+                {
                    // if($sortie instanceof Sortie) {
                   //      dump($sortie->getParticipants());
                    // }
                    // dump($sortie->getOrganisateur()===$participant);
-                    if($sortie->getOrganisateur()===$participant){
+                    if($sortie->getOrganisateur()===$participant)
+                    {
                         $sortie->setOrganisateur($participantAnonyme);
                         $entityManager->persist($sortie);
                         $entityManager->flush();
-                    }elseif ($sortie->getParticipants()->contains($participant)){
+                    }elseif ($sortie->getParticipants()->contains($participant))
+                    {
                         /*$participants = $sortie->getParticipants();
                         $index = array_search($participant, $participants);
                         if ($index !== false) {
@@ -404,13 +412,9 @@ class ParticipantController extends AbstractController
             }
 
             $this->addFlash('success', 'Les participants suivants ont bien été supprimés :' . implode(', ', $listeParticipantsSupprimes) . ' .');
-            return $this->redirectToRoute('admin_supprimer');
+            return $this->redirectToRoute('admin_listeParticipants');
         }
 
-
-        return $this->render('admin/participant/supprimer.html.twig',[
-            'participants'=>$participants
-        ]);
     }
 
 }
