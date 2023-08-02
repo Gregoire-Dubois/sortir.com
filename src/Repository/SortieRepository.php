@@ -69,7 +69,7 @@ class SortieRepository extends ServiceEntityRepository
 
     public function selectAllSorties(?SearchSortie $data)
     {
-        /*if($data== null){
+        if($data== null){
             $queryBuilder = $this->createQueryBuilder('s');
             $queryBuilder->select('DISTINCT s');
             // ->innerJoin('s.etat', 'e')
@@ -79,7 +79,7 @@ class SortieRepository extends ServiceEntityRepository
             $results = $this->findAll();
 
 
-        }elseif ($data !== null) {*/
+        }elseif ($data !== null) {
             // Récupérer les valeurs des filtres depuis le formulaire
             $campus = $data->getCampus();
             $nomSortie = $data->getName();
@@ -213,7 +213,7 @@ class SortieRepository extends ServiceEntityRepository
             }
             $query = $queryBuilder->getQuery();
             $results = $query->getResult();
-      //  }
+        }
         return $results;
 
     }

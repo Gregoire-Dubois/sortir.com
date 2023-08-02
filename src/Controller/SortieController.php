@@ -5,6 +5,7 @@ namespace App\Controller;
 
 use App\Entity\Sortie;
 use App\Form\LieuType;
+use App\Form\SearchSortie;
 use App\Form\SortiesFilterType;
 use App\Form\SortieType;
 use App\Repository\EtatRepository;
@@ -25,30 +26,27 @@ class SortieController extends AbstractController
      */
     public function listeSortie(SortieRepository $sortieRepository, Request $request): Response
     {
-
         $sortieForm = $this->createForm(SortiesFilterType::class);
         $sortieForm->handleRequest($request);
-        $sortiesAll = $sortieRepository->findAll() ;
-        //$data = null;
+
+        // Initialiser les sorties à null
+        $sortiesAll = null;
 
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
-
             $data = $sortieForm->getData();
-            dump($data);
             $sortiesAll = $sortieRepository->selectAllSorties($data);
-            // dump($sortieForm->getData());
-
         }
-       // $sortiesAll = $sortieRepository->selectAllSorties($data);
 
-        //$sortiesAll = $sortieRepository-> selectAllSorties($data);
+        // Si les sorties ne sont pas encore initialisées, récupérer toutes les sorties
+        if ($sortiesAll === null) {
+            //  passer un objet SearchSortie vide ici car la méthode attend un argument
+            $sortiesAll = $sortieRepository->selectAllSorties(new SearchSortie());
+        }
 
         return $this->render('sortie/liste.html.twig', [
             'sorties' => $sortiesAll,
             'sortieForm' => $sortieForm->createView(),
-
         ]);
-
     }
 
     /**
