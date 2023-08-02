@@ -185,15 +185,25 @@ class SortieController extends AbstractController
     }
 
     /**
-     * @Route("/sorties/publier/{id}", name="sortie_publierSortie")
+     * @Route("/sorties/publier/{id}", name="sortie_publierSortie", methods={"POST"})
      */
-    public function publierSortie(int $id): Response
+    public function publierSortie(int $id, Request $request, SortieRepository $sortieRepository, EntityManagerInterface $em, EtatRepository $etatRepository): Response
     {
+
+        $sortie = $sortieRepository->findSortieByIdWithDetails($id);
+        //si l'id n'existe pas
+        if (!$sortie) {
+            throw $this->createNotFoundException('Sortie non trouvée.');
+        }
+        $sortie->setDateModification(new \DateTime());
+        $sortie->setModifiePar($this->getUser());
+        $sortie->setEtat($etatRepository->findOneBy(['libelle' => 'Ouverte']));
+        $em->flush();
         return $this->redirectToRoute('sortie_listeSortie');
     }
 
     /**
-     * @Route("/sorties/annuler/{id}", name="sortie_annulerSortie")
+     * @Route("/sorties/annuler/{id}", name="sortie_annulerSortie",  methods={"POST"})
      */
     public function annulerSortie(int $id, Request $request, EtatRepository $etatRepository, SortieRepository $sortieRepository, EntityManagerInterface $em): Response
     {
@@ -231,7 +241,8 @@ class SortieController extends AbstractController
         Request                   $request,
         Sortie                    $sortie,
         EntityManagerInterface    $entityManager,
-        CsrfTokenManagerInterface $csrfTokenManager
+        CsrfTokenManagerInterface $csrfTokenManager,
+        EtatRepository $etatRepository
     ): Response
     {
         $token = new CsrfToken('inscription_sortie', $request->request->get('_csrf_token'));
@@ -241,6 +252,9 @@ class SortieController extends AbstractController
         //On récupère l'URL qui a émis la requête
         $url = $request->headers->get('referer');
         $participantConnecte = $this->getUser();
+
+        $etatCloture = $etatRepository->findbyLibelle('Clôturée');
+
 
         if ($sortie->getEtat()->getLibelle() == 'Ouverte'
             && $sortie->getDateLimiteInscription() >= new \DateTime('now')
@@ -255,15 +269,22 @@ class SortieController extends AbstractController
             if($participantConnecte instanceof Participant) {
                 $sortie->addParticipant($participantConnecte);
               //  dump($sortie->getParticipants());
-            }
 
-            $entityManager->persist($sortie);
-            //dump($sortie->getParticipants());
-            //dump($participantConnecte);
-            $entityManager->flush();
-           // dump($sortie->getParticipants());
-            //dump($sortie);
-            $this->addFlash('success', 'Vous êtes bien inscrit/e pour la sortie ' . $sortie->getNom() . ' !');
+
+
+            //dump(count($sortie->getParticipants()));
+                if(count($sortie->getParticipants()) == $sortie->getNbInscritptionMax()){
+                    $sortie->setEtat($etatCloture);
+                }
+                $entityManager->persist($sortie);
+                //dump($sortie->getParticipants());
+                //dump($participantConnecte);
+                $entityManager->flush();
+                // dump($sortie->getParticipants());
+                //dump($sortie);
+                $this->addFlash('success', 'Vous êtes bien inscrit/e pour la sortie ' . $sortie->getNom() . ' !');}
+
+
         } else {
             $this->addFlash('error', 'Vous ne pouvez pas vous inscrire pour la sortie ' . $sortie->getNom() . ' !');
         }
@@ -286,7 +307,8 @@ class SortieController extends AbstractController
         Request                   $request,
         Sortie                    $sortie,
         EntityManagerInterface    $entityManager,
-        CsrfTokenManagerInterface $csrfTokenManager
+        CsrfTokenManagerInterface $csrfTokenManager,
+        EtatRepository $etatRepository
     ): Response
     {
         $token = new CsrfToken('desistement_sortie', $request->request->get('_csrf_token'));
@@ -296,7 +318,7 @@ class SortieController extends AbstractController
         //On récupère l'URL qui a émis la requête
         $url = $request->headers->get('referer');
         $participantConnecte = $this->getUser();
-
+        $etatOuvert = $etatRepository->findbyLibelle('Ouverte');
         if ($sortie->getDateDebut() >= new \DateTime('now')
             && $sortie->getParticipants()->contains($participantConnecte)) {
           //  dump($sortie->getEtat()->getLibelle());
@@ -307,13 +329,16 @@ class SortieController extends AbstractController
             //dump($participantConnecte);
             if($participantConnecte instanceof Participant) {
                 $sortie->removeParticipant($participantConnecte);
-            }
+                if(count($sortie->getParticipants()) < $sortie->getNbInscritptionMax() && $sortie->getDateLimiteInscription() >= new \DateTime('now')){
+                    $sortie->setEtat($etatOuvert);
+                }
 
-            $entityManager->persist($sortie);
-            //dump($participantConnecte);
-            $entityManager->flush();
-            //dump($sortie);
-            $this->addFlash('success', 'Vous êtes bien désinscrit/e pour la sortie ' . $sortie->getNom() . ' !');
+                $entityManager->persist($sortie);
+                //dump($participantConnecte);
+                $entityManager->flush();
+                //dump($sortie);
+                $this->addFlash('success', 'Vous êtes bien désinscrit/e pour la sortie ' . $sortie->getNom() . ' !');
+            }
         } else {
             $this->addFlash('error', 'Vous ne pouvez pas vous désinscrire pour la sortie ' . $sortie->getNom() . ' !');
         }

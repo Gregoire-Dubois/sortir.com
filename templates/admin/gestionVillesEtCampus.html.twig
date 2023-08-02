@@ -74,13 +74,28 @@
                 {% if villes is empty %}
                 {# Afficher toutes les villes par défaut #}
                 {% for listeVille in listeVilles %}
-                    <tr>
+                    <tr class="read_row_{{ ville.id }}" id="read_row_{{ ville.id }}">
                         <td>{{ listeVille.nom }}</td>
                         <td>{{ listeVille.codePostal }}</td>
                         <td>
-                            <button type="button" class="default_tertiary_button modifier_ville_button" onclick="ouvrirModalModifier('{{ entity_id }}')">Modifier</button>
-                            <form action="{{ path('admin_supprimer_ville', {'id': ville.id}) }}" method="post" style="display: inline;">
+                            <button type="button" class="default_tertiary_button modifier_ville_button" onclick="afficherFormulaireEdition('{{ listeVille.id }}', '{{ listeVille.nom }}', '{{ listeVille.codePostal }}')">Modifier</button>
+                            <form action="{{ path('admin_supprimer_ville', {'id': listeVille.id}) }}" method="post" style="display: inline;">
                                 <button type="submit" class="default_secondary_button" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette ville ?')">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr class="edit_row" id="edit_row_{{ listeVille.id }}" style="display: none;">
+                        <td>
+                            <form action="{{ path('admin_modifier_ville', {'id': ville.id}) }}" method="post" style="display: inline;">
+                            <input type="text" class="default_input" name="edit_nom_{{ listeVille.id }}" value="{{ listeVille.nom }}">
+                        </td>
+                        <td>
+                            <input type="text" class="default_input" name="edit_code_postal_{{ listeVille.id }}" value="{{ listeVille.codePostal }}">
+                        </td>
+                        <td>
+                            <button type="button" class="default_tertiary_button" onclick="annulerEdition('{{ listeVille.id }}')">Annuler</button>
+
+                                <button type="submit" class="default_principal_button" onclick="sauvegarderEdition('{{ ville.id }}')">Enregistrer</button>
                             </form>
                         </td>
                     </tr>
@@ -88,16 +103,31 @@
                 {% else %}
                 {# Aucune recherche n'a été effectuée, afficher toutes les villes par défaut #}
                 {% for ville in villes %}
-                <tr>
+                    <tr class="read_row_{{ ville.id }}" id="read_row_{{ ville.id }}">
                     <td>{{ ville.nom }}</td>
                     <td>{{ ville.codePostal }}</td>
                     <td>
-                        <button type="button" class="default_tertiary_button modifier_ville_button" onclick="ouvrirModalModifier('{{ ville.id }}')">Modifier</button>
+                        <button type="button" class="default_tertiary_button modifier_ville_button" onclick="afficherFormulaireEdition('{{ ville.id }}', '{{ ville.nom }}', '{{ ville.codePostal }}')">Modifier</button>
                         <form action="{{ path('admin_supprimer_ville', {'id': ville.id}) }}" method="post" style="display: inline;">
                             <button type="submit" class="default_secondary_button" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette ville ?')">Supprimer</button>
                         </form>
                     </td>
                 </tr>
+                    <tr class="edit_row" id="edit_row_{{ ville.id }}" style="display: none;">
+                        <td>
+                            <form action="{{ path('admin_modifier_ville', {'id': ville.id}) }}" method="post" style="display: inline;">
+                            <input type="text" class="default_input" name="edit_nom_{{ ville.id }}" value="{{ ville.nom }}">
+                        </td>
+                        <td>
+                            <input type="text" class="default_input" name="edit_code_postal_{{ ville.id }}" value="{{ ville.codePostal }}">
+                        </td>
+                        <td>
+                            <button type="button" class="default_tertiary_button" onclick="annulerEdition('{{ ville.id }}')">Annuler</button>
+
+                            <button type="submit" class="default_principal_button" onclick="sauvegarderEdition('{{ ville.id }}')">Enregistrer</button>
+                            </form>
+                        </td>
+                    </tr>
                 {% endfor %}
                 {% endif %}
                 <!-- Ligne pour ajouter de nouvelles données -->
@@ -196,4 +226,52 @@
     </div>
 </section>
 
+    <script>
+        function afficherFormulaireEdition(villeId, nom, codePostal) {
+            // Masquer la ligne de données
+            console.log(villeId, nom, codePostal)
+            //document.querySelector(`tr:not(.edit_row) [data-ville-id="${villeId}"]`).style.display = 'none';
+            let ligneDonnees = document.querySelector(`tr.read_row_${villeId}`);
+            console.log(ligneDonnees);
+            if (ligneDonnees) {
+                // Masquer la ligne de données
+                ligneDonnees.style.display = 'none';
+            }
+
+            // Afficher le formulaire d'édition
+            document.getElementById(`edit_row_${villeId}`).style.display = 'table-row';
+            // Remplir les champs de l'édition avec les valeurs actuelles
+            document.getElementById(`edit_nom_${villeId}`).value = nom;
+            document.getElementById(`edit_code_postal_${villeId}`).value = codePostal;
+        }
+
+        function annulerEdition(villeId) {
+            // Masquer le formulaire d'édition
+            document.getElementById(`edit_row_${villeId}`).style.display = 'none';
+            // Afficher la ligne de données
+            //document.querySelector(`tr:not(.edit_row) [data-ville-id="${villeId}"]`).style.display = 'table-row';
+            let ligneDonnees = document.querySelector(`tr.read_row_${villeId}`);
+            if (ligneDonnees) {
+                // Masquer la ligne de données
+                ligneDonnees.style.display = 'inline';
+            }
+        }
+
+        function sauvegarderEdition(villeId) {
+            // Récupérer les nouvelles valeurs du formulaire d'édition
+            let nouveauNom = document.getElementById(`edit_nom_${villeId}`).value;
+            let nouveauCodePostal = document.getElementById(`edit_code_postal_${villeId}`).value;
+            // Mettre à jour les données dans la ligne de données
+            document.querySelector(`tr.read_row_${villeId} td:first-child`).innerText = nouveauNom;
+            document.querySelector(`tr.read_row_${villeId} td:nth-child(2)`).innerText = nouveauCodePostal;
+            // Masquer le formulaire d'édition
+            document.getElementById(`edit_row_${villeId}`).style.display = 'none';
+            // Afficher la ligne de données
+            document.querySelector(`tr.read_row_${villeId}`).style.display = 'inline';
+            // Ici, vous pouvez envoyer les nouvelles valeurs au serveur pour mise à jour côté serveur si nécessaire
+        }
+    </script>
+
 {% endblock %}
+
+

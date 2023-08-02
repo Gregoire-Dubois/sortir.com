@@ -158,10 +158,20 @@ class VilleEtCampusController extends AbstractController
     }
 
     /**
-     * @Route("/ville/{id}/modifier", name="modifier_ville")
+     * @Route("/ville/{id}/modifier", name="modifier_ville", methods={"POST"})
      */
-    public function modifierVille(Request $request, EntityManagerInterface $entityManager, Ville $ville): Response
+    public function modifierVille(int $id, Request $request, VilleRepository $villeRepository, EntityManagerInterface $em): Response
     {
+        $ville = $em->getRepository(Ville::class)->find($id);
+        $nom = $request->request->get('edit_nom_' . $id);
+        $codePostal = $request->get('edit_code_postal_' . $id);
+        $villeRepository->modifierVille($id, $nom, $codePostal);
+
+        $this->addFlash('success_modification_ville', $ville .' a été modifiée.');
+
+        // Redirigez vers la même page après la suppression
+        return $this->redirectToRoute('admin_villes_et_campus');
+        /*
         $form = $this->createForm(VilleType::class, $ville)
             ->add('nom', TextType::class)
             ->add('codePostal', TextType::class);
@@ -184,6 +194,7 @@ class VilleEtCampusController extends AbstractController
             'is_ville' => true,
             'entity' => $ville,
         ]);
+        */
     }
 
     /**
