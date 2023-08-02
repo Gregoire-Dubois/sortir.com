@@ -57,55 +57,97 @@
                 <span class="column7 row7 default_span" id="event_longitude">{{ sortie.lieu.longitude }}</span>
 
                 <div class="display_event_button">
-                    {% if is_granted('ROLE_ADMIN') %}
-                    <!-- Si le participant est un Admin, il peut s'inscrire ou se désinscrire -->
-                        {% if app.user in sortie.participants %}
-                            {% if sortie.etat.libelle == 'Ouverte' or sortie.etat.libelle == 'Clôturée' %} <!-- Seulement si la sortie à un statut "Ouverte" ou "Clôturée"-->
-                            	{% include('inc/desister.html.twig') %}
-                            {% endif %}
-                        {% else %}
-                            {% if sortie.etat.libelle == 'Ouverte' %} <!-- Seulement si la sortie à un statut "Ouverte"-->
-                            	{% include('inc/inscrire.html.twig') %}
-                            {% endif %}
-                        {% endif %}
-                    <!-- Si le participant est un Admin et qu'il est organisateur, il peut modifier la sortie -->
-                        {% if sortie.organisateur.id == app.user.id %}
-                            {% if sortie.etat.libelle == 'Ouverte' or sortie.etat.libelle == 'Créée' %} <!-- Seulement si la sortie à un statut "Ouverte" ou "Créée"-->
-                            	<a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}"><button class="default_tertiary_button">Modifier</button></a>
-                            {% endif %}
-                        {% endif %}
-                    <!-- Si le participant est un Admin, il peut annuler une sortie -->
-                        {% if sortie.etat.libelle == 'Ouverte' or sortie.etat.libelle == 'Clôturée' %} <!-- Seulement si la sortie à un statut "Ouverte" ou "Clôturée"-->
-                        <a href="{{ path('sortie_annulerSortie', { 'id': sortie.id }) }}"><button class="default_secondary_button">Annuler</button></a>
-                    {% endif %}
-                        <a href="{{ path('sortie_listeSortie') }}"><button class="default_secondary_button">Retour</button></a>
+                    {% if is_granted('ROLE_ADMIN') %} <!-- Affichage des boutons pour un Administrateur -->
 
-                    {% elseif is_granted('ROLE_PARTICIPANT') %}
-                    <!-- Si le participant n'est pas un Admin, il peut s'inscrire ou se désinscrire -->
-                        {% if app.user in sortie.participants %}
-                            {% if sortie.etat.libelle == 'Ouverte' or sortie.etat.libelle == 'Clôturée' %} <!-- Seulement si la sortie à un statut "Ouverte" ou "Clôturée"-->
-                                {% include('inc/desister.html.twig') %}
-                            {% endif %}
-                        {% else %}
-                            {% if sortie.etat.libelle == 'Ouverte' %} <!-- Seulement si la sortie à un statut "Ouverte"-->
-                                {% include('inc/inscrire.html.twig') %}
-                            {% endif %}
-                        {% endif %}
-                    <!-- Si le participant n'est pas un Admin mais qu'il est organisateur, il peut modifier et annuler la sortie -->
-                        {% if sortie.organisateur.id == app.user.id %}
-                            {% if sortie.etat.libelle == 'Créée' %} <!-- Seulement si la sortie à un statut "Créée"-->
-                                <a href="{{ path('sortie_publierSortie', { 'id': sortie.id }) }}"><button class="default_principal_button">Publier</button></a>
-                            {% endif %}
-                            {% if sortie.etat.libelle == 'Ouverte' or sortie.etat.libelle == 'Créée' %} <!-- Seulement si la sortie à un statut "Ouverte" ou "Créée"-->
-                                <a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}"><button class="default_tertiary_button">Modifier</button></a>
-                            {% endif %}
-                            {% if sortie.etat.libelle == 'Ouverte' or sortie.etat.libelle == 'Clôturée' %} <!-- Seulement si la sortie à un statut "Ouverte" ou "Clôturée"-->
-                                <a href="{{ path('sortie_annulerSortie', { 'id': sortie.id }) }}"><button class="default_secondary_button">Annuler</button></a>
+                        {% if sortie.organisateur.id == app.user.id %} <!-- Si l'utilisateur connecté est l'organisateur de la sortie -->
+                            {% if (sortie.etat.libelle == 'Créée') and  sortie.dateDebut > date() %}
+                                <div class="table_link">
+                                    <form action="{{ path('sortie_modifierSortie', { 'id': sortie.id }) }}"
+                                          method="post"><input type="hidden" name="_method" value="POST">
+                                        <button class="default_tertiary_button">Modifier</button>
+                                    </form>
+                                </div>
+                                <div class="table_link">
+                                    <form action="{{ path('sortie_publierSortie', { 'id': sortie.id }) }}"
+                                          method="post"><input type="hidden" name="_method" value="POST">
+                                        <button class="default_principal_button">Publier</button>
+                                    </form>
+                                </div>
                             {% endif %}
                         {% endif %}
-                        <a href="{{ path('sortie_listeSortie') }}"><button class="default_secondary_button">Retour</button></a>
 
+                        {% if sortie.etat.libelle == 'Ouverte' and sortie.dateDebut > date() %} <!-- Inscription / Désinscription en fonction de l'état de la sortie -->
+                            <div class="table_link">
+                                <form action="{{ path('sortie_annulerSortie', { 'id': sortie.id }) }}"
+                                      method="post"><input type="hidden" name="_method" value="POST">
+                                    <button class="default_secondary_button">Annuler</button>
+                                </form>
+                            </div>
+                            {% if app.user in sortie.participants %}
+                                <div class="table_link">{% include('inc/desister.html.twig') %}</div>
+                            {% elseif sortie.organisateur.id != app.user.id %}
+                                <div class="table_link">{% include('inc/inscrire.html.twig') %}</div>
+                            {% endif %}
+
+
+                        {% elseif sortie.etat.libelle == 'Clôturée' and sortie.dateDebut > date() %}
+                            {% if app.user in sortie.participants %}
+                                <div class="table_link">{% include('inc/desister.html.twig') %}</div>
+                                <div class="table_link">
+                                    <form action="{{ path('sortie_annulerSortie', { 'id': sortie.id }) }}"
+                                          method="post"><input type="hidden" name="_method" value="POST">
+                                        <button class="default_secondary_button">Annuler</button>
+                                    </form>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+
+                    {% elseif is_granted('ROLE_PARTICIPANT') %} <!-- Affichage des boutons pour un Participant classique -->
+
+                        {% if sortie.organisateur.id == app.user.id %} <!-- Si l'utilisateur connecté est l'organisateur de la sortie -->
+                            {% if sortie.etat.libelle == 'Créée' and sortie.dateDebut > date() %}
+                                <div class="table_link">
+                                    <form action="{{ path('sortie_modifierSortie', { 'id': sortie.id }) }}"
+                                          method="post"><input type="hidden" name="_method" value="POST">
+                                        <button class="default_principal_button">Modifier</button>
+                                    </form>
+                                </div>
+                                <div class="table_link">
+                                    <form action="{{ path('sortie_publierSortie', { 'id': sortie.id }) }}"
+                                          method="post"><input type="hidden" name="_method" value="POST">
+                                        <button class="default_tertiary_button">Publier</button>
+                                    </form>
+                                </div>
+                            {% elseif sortie.etat.libelle == 'Ouverte' and sortie.dateDebut > date() %}
+                                <div class="table_link">
+                                    <form action="{{ path('sortie_annulerSortie', { 'id': sortie.id }) }}"
+                                          method="post"><input type="hidden" name="_method" value="POST">
+                                        <button class="default_secondary_button">Annuler</button>
+                                    </form>
+                                </div>
+                            {% elseif sortie.etat.libelle == 'Clôturée' and sortie.dateDebut > date() %}
+                                <div class="table_link">
+                                    <form action="{{ path('sortie_annulerSortie', { 'id': sortie.id }) }}"
+                                          method="post"><input type="hidden" name="_method" value="POST">
+                                        <button class="default_secondary_button">Annuler</button>
+                                    </form>
+                                </div>
+                            {% endif %}
+                        {% endif %}
+
+                        {% if sortie.etat.libelle == 'Ouverte' and sortie.dateDebut > date() and sortie.organisateur.id != app.user.id %} <!-- Inscription / Désinscription en fonction de l'état de la sortie -->
+                            {% if app.user in sortie.participants %}
+                                <div class="table_link">{% include('inc/desister.html.twig') %}</div>
+                            {% else %}
+                                <div class="table_link">{% include('inc/inscrire.html.twig') %}</div>
+                            {% endif %}
+                        {% elseif sortie.etat.libelle == 'Clôturée' and sortie.dateDebut > date() %}
+                            {% if app.user in sortie.participants %}
+                                <div class="table_link">{% include('inc/desister.html.twig') %}</div>
+                            {% endif %}
+                        {% endif %}
                     {% endif %}
+                    <a href="{{ path("sortie_listeSortie") }}"><button type="button" class="default_secondary_button" formnovalidate>Retour</button></a>
                 </div>
             </div>
         </section>
