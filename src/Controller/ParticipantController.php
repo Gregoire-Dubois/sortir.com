@@ -93,15 +93,19 @@ class ParticipantController extends AbstractController
     /**
      * @Route("/profil/{id}", name="participant_afficherProfil", requirements={"id"="\d+"})
      */
-    public function afficherProfil(Participant $participant): Response
+    public function afficherProfil(Participant $participant, ParticipantRepository $participantRepository): Response
     {
         if($participant === $this->getUser()){
             return $this->redirectToRoute('participant_afficherSonProfil');
         }else{
-            return $this->render('participant/afficher_profil.html.twig', [
-                'participant'=>$participant,
-            ]);
-
+            $participantAnonyme = $participantRepository->findOneByEmail('testanonyme@test.com');
+            if($participant === $participantAnonyme){
+                return $this->render('participant/erreur.html.twig');
+            }else {
+                return $this->render('participant/afficher_profil.html.twig', [
+                    'participant' => $participant,
+                ]);
+            }
         }
 
     }
