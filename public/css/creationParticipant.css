@@ -1,7 +1,7 @@
 main {
   display: flex;
   flex-direction: column;
-  padding: 0 17.5%;
+  padding: 0 5%;
 }
 
 .default_container{
@@ -14,7 +14,7 @@ main {
 .register_form {
   display: grid;
   grid-template-columns: 1fr 2fr 1fr 1fr 1fr;
-  grid-template-rows: repeat(6,4vh 3vh);
+  grid-template-rows: repeat(5,4vh 3vh);
   column-gap: 1.5vw;
   align-items: center;
   width: 100%;

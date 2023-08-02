@@ -1,5 +1,14 @@
 main{
-  display: block;
+  flex-direction: column;
+  padding: 0 0.25vw;
+}
+
+.default_table_wrapper {
+  max-height: 50vh;
+}
+
+.default_container {
+  width: 100%;
 }
 
 .table_link {
@@ -16,4 +25,23 @@ main{
   height: fit-content;
   width: 100%;
   margin-top: 0.5vh;
+}
+
+.user_management {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  height: 4vh;
+  margin-top: 3vh;
+}
+
+a.default_principal_button ,
+a.default_tertiary_button {
+  display: flex;
+  text-align: center;
+}
+
+button a {
+  color: white;
 }

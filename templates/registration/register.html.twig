@@ -50,20 +50,8 @@
         </label>
 
     <button type="submit" class="column2 row9 default_principal_button">Inscrire</button>
-
-    <a href="{{ path("sortie_listeSortie") }}" title="accueil" class="column2 row11 default_secondary_button">Annuler</a>
-
-    <a href="{{ path("app_import_csv") }}" title="importcsv" class="column3-4 row9 default_tertiary_button">Vous avez un fichier CSV?</a>
-
-    <a href="{{ path("admin_listeUtilisateur") }}" title="listeParticipant" class="column3-4 row11 default_tertiary_button">Gestion des participants</a>
-
-
+    <a href="{{ path("admin_listeParticipants") }}" title="liste_participants" class="column3-4 row9 default_secondary_button">Retour</a>
 
     {{ form_end(registrationForm) }}
-
-    {# Liens vers réactiver et supprimer pour les tests, à intégrer dans le css#}
-    <a href="{{ path("admin_reactiver") }}" title="reactiverParticipant" class="column3-4 row11 default_tertiary_button">Réactiver des participants</a>
-
-    <a href="{{ path("admin_supprimer") }}" title="supprimerParticipant" class="column3-4 row11 default_tertiary_button">Supprimer des participants</a>
 
 {% endblock %}
