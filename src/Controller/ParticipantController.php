@@ -179,7 +179,15 @@ class ParticipantController extends AbstractController
                     $participant->setActif($aLine[8]);
                     $participant->setPhoto($aLine[9]);
                     $campus = $campusRepository->find($aLine[11]);
-                    $participant->setCampus($campus);
+                    dump($campus);
+                    if($campus != null) {
+                        $participant->setCampus($campus);
+                    }else{
+                        $participantConnecte = $this->getUser();
+                        dump($participantConnecte);
+                        dump($participantConnecte->getCampus());
+                        $participant->setCampus($participantConnecte->getCampus());
+                    }
                     $dateFormat = 'd/m/Y H:i';
                     $date = \DateTime::createFromFormat($dateFormat,$aLine[10] );
                    // dump($date);
