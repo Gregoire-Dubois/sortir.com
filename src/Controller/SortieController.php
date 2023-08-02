@@ -7,6 +7,7 @@ use App\Entity\Sortie;
 use App\Form\LieuType;
 use App\Form\SortiesFilterType;
 use App\Form\SortieType;
+use App\Form\VilleType;
 use App\Repository\EtatRepository;
 use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -80,6 +81,9 @@ class SortieController extends AbstractController
     public function creerSortie(Request $request, EtatRepository $etatRepository, EntityManagerInterface $em): Response
     {
         $sortie = new Sortie();
+
+        //On checke l'utilisateur courant
+        $campus=$this->getUser()->getCampus();
         //On fixe une date de création
         $sortie->setDateCreation(new \DateTime());
         $sortie->setDateModification(new \DateTime());
@@ -87,7 +91,7 @@ class SortieController extends AbstractController
         //On paramètre des propositions de date cohérentes dans le formulaire
         $sortie->setDateDebut((new \DateTimeImmutable())->setTime(21, 0));
         $sortie->setDateLimiteInscription($sortie->getDateDebut()->sub(new \DateInterval("PT8H")));
-
+        $sortie->setCampus($campus);
         $sortieType = $this->createForm(SortieType::class, $sortie);
 
         $sortieType->handleRequest($request);
@@ -109,9 +113,71 @@ class SortieController extends AbstractController
             return $this->redirectToRoute('sortie_listeSortie');
         }
         $lieuType = $this->createForm(LieuType::class);
+        $villeType = $this->createForm(VilleType::class);
         return $this->render('sortie/creation.html.twig', [
             'SortieType' => $sortieType->createView(),
-            'LieuType' => $lieuType->createView()
+            'LieuType' => $lieuType->createView(),
+            'VilleType' => $villeType->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/sorties/modifier/{id}", name="sortie_modifierSortie", requirements={"id"="\d+"}, methods={"POST"})
+     */
+    public function modifierSortie(int $id, Request $request, EtatRepository $etatRepository, SortieRepository $sortieRepository, EntityManagerInterface $em): Response
+    {
+        //Recherche de la sortie concernées avec les jointures idoines
+        $sortie = $sortieRepository->findSortieByIdWithDetails($id);
+        //On prépare l'alimentation du champ dateModif
+        $sortie->setDateModification(new \DateTime());
+
+        //si l'id n'existe pas
+        if (!$sortie) {
+            throw $this->createNotFoundException('Sortie non trouvée.');
+        }
+
+        //On récupère la ville pour l'afficher dans le sélecteur
+        $ville = $sortie->getLieu()->getVille();
+        dump($sortie->getEtat());
+
+        //On vérifie l'état de la sortie pour afficher/masque le bouton publier
+        if ($sortie->getEtat()->getId() === 1) {
+            $etat = true;
+        } else {
+            $etat = false;
+        }
+
+        $sortieType = $this->createForm(SortieType::class, $sortie, [
+            'publication_false' => $etat
+        ]);
+
+        //On affiche la ville enregistrée en base pour cette sortie
+        $sortieType->get('ville')->setData($ville);
+        //$sortieType->get('lieu')->setData($lieu);
+
+        $sortieType->handleRequest($request);
+
+        if ($sortieType->isSubmitted() && $sortieType->isValid()) {
+            //On passe la sortie à l'état Publiée si on clique sur publier
+            if ($sortieType->getClickedButton() && 'publier' === $sortieType->getClickedButton()->getName()) {
+                $sortie->setEtat($etatRepository->findOneBy(['libelle' => 'Ouverte']));
+            }
+
+            //On enregistre le créateur (utilisateur connecté)
+            $sortie->setModifiePar($this->getUser());
+            //$em->persist($sortie);
+            $em->flush();
+            $this->addFlash('success', 'La modification de la sortie a bien été enregistrée');
+            return $this->redirectToRoute('sortie_listeSortie');
+        }
+        $lieuType = $this->createForm(LieuType::class);
+        $villeType = $this->createForm(VilleType::class);
+        return $this->render('sortie/modification.html.twig', [
+            'SortieType' => $sortieType->createView(),
+            'sortie' => $sortie,
+            'LieuType' => $lieuType->createView(),
+            'VilleType' => $villeType->createView(),
+            'etat' => $etat
         ]);
     }
 

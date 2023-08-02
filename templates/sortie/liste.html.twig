@@ -15,8 +15,10 @@
     <div class="info_login_container">
         {% set currentDate = "now"|date("d/m/Y") %} {# Récupéreration de la date du jour #}
         {% set currentUser = app.user.nom %} {# Récupérer du nom de l'utilisateur connecté #}
-        <div class="today_date"><p>Date du jour : </p><p id="today_date_value">{{ currentDate }}</p></div>
-        <div class="username"><p>Participant : </p><p id="username_value">{{ currentUser }}</p></div>
+        <div class="today_date"><p>Date du jour : </p>
+            <p id="today_date_value">{{ currentDate }}</p></div>
+        <div class="username"><p>Participant : </p>
+            <p id="username_value">{{ currentUser }}</p></div>
     </div>
     <section class="default_container">
         <h2>Liste et Filtres des Sorties</h2>
@@ -172,7 +174,8 @@
     </section>
 
     <div class="event_creation">
-        <a href="{{ path("sortie_creerSortie") }}" class="default_principal_button" id="event_create" title="event_create">Créer une sortie</a>
+        <a href="{{ path("sortie_creerSortie") }}" class="default_principal_button" id="event_create"
+           title="event_create">Créer une sortie</a>
     </div>
 
 {% endblock %}
