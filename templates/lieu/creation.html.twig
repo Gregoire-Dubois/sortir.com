@@ -23,8 +23,6 @@
 {{ form_widget(LieuType.ville, {'label': false, 'attr': {'class': 'column2-3 row9 default_select', 'placeholder': 'Sélectionner la ville', 'required': 'required'}}) }}
 <div class="column2-3 row10 default_error_message">{{ form_errors(LieuType.ville) }}</div>
 
-{{ form_widget(LieuType) }}
-
 <div class="row11 popup_add_place_validation">
     <button type="submit" class="default_principal_button" id="confirm_add_place_button">Ajouter</button>
     <button class="default_secondary_button" id="cancel_add_place_button" formnovalidate>Annuler</button>
