@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ parent() }} | Activation/Désactivation Participant
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/desactiverParticipant') }}">
+{% endblock %}
+
+{% block body %}
+
+    <section class="default_container">
+        <!-- Titre du container -->
+        <h2>Gestion des participants</h2>
+
+        <!-- Tableau "Liste des participants" -->
+        <div class="default_table_wrapper">
+            <table class="default_table">
+                <!-- Titre du tableau -->
+                <thead>
+                <tr>
+                    <th>Pseudo</th>
+                    <th>Prénom</th>
+                    <th>Nom</th>
+                    <th>Email</th>
+                    <th>Campus</th>
+                    <th>Date de Création</th>
+                    <th>Inscrit</th>
+                    <th>Organisateur</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <!-- Contenu du tableau -->
+                <tbody>
+                {% for participant in participants %}
+                    <tr>
+                        <td>{{ participant.pseudo }}</td>
+                        <td>{{ participant.prenom }}</td>
+                        <td>{{ participant.nom }}</td>
+                        <td>{{ participant.email }}</td>
+                        <td>{{ participant.campus }}</td>
+                        <td>{{ participant.dateCreation|date('d/m/Y') }}</td>
+
+                        <td>
+                            {% set participantInState = false %}
+                            {% for sortie in participant.sortiesParticipant %}
+                                {% if sortie.etat.libelle in ['Ouverte', 'Clôturé', 'Activité en cours'] %}
+                                    {% set participantInState = true %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if participantInState %}
+                                X
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% set organisateurInState = false %}
+                            {% for sortie in participant.sortiesOrganisateur %}
+                                {% if sortie.etat.libelle in ['Ouverte', 'Clôturé', 'Activité en cours'] %}
+                                    {% set organisateurInState = true %}
+                                {% endif %}
+                            {% endfor %}
+                            {% if organisateurInState %}
+                                X
+                            {% endif %}
+                        </td>
+                        <td></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+{% endblock %}
+
+

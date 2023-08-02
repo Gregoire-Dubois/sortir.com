@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Repository;
+use App\Entity\Participant;
 use App\Entity\Sortie;
 use App\Form\SearchSortie;
 use DateTime;
@@ -270,6 +271,21 @@ class SortieRepository extends ServiceEntityRepository
         $sortiesCampus = $queryBuilder->getQuery()->getResult();
 
         return $sortiesCampus;
+    }
+
+    /**
+     * Récupérer les sorties associées à un participant donné.
+     *
+     * @param Participant $participant
+     * @return Sortie[]
+     */
+    public function findSortiesByParticipant(Participant $participant): array
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere(':participant MEMBER OF s.participants OR s.organisateur = :participant')
+            ->setParameter('participant', $participant)
+            ->getQuery()
+            ->getResult();
     }
 }
 

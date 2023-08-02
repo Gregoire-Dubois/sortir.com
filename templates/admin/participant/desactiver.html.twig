@@ -1,22 +1,5 @@
-{% extends 'base.html.twig' %}
-
-{% block body %}
-<h1>Désactiver des participants</h1>
-    <form id="desactivationForm" action="{{ path('admin_desactiver') }}" method="post">
-        <input type="hidden" name="_csrf_token" value="{{ csrf_token('desactivation_participant') }}">
-    <ul>
-    {% for participant in participantsActifs  %}
-        <li>
-            <input type="checkbox" name="participants[]" value="{{ participant.id }}">
-            {{ participant.pseudo }}
-        </li>
-    {% endfor %}
-    </ul>
-      <button type="submit">Désactiver ces participants</button>
-  </form>
-{% endblock %}
-
-{% block title %}
-Désactiver des participants | {{ parent() }}
-{% endblock %}
+<form id="desactivationForm" action="{{ path('admin_desactiver') }}" method="post">
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token('desactivation_participant') }}">
+    <button type="submit">Désactiver</button>
+</form>
 
