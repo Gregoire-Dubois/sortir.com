@@ -35,13 +35,12 @@ class SortieController extends AbstractController
         $sortiesAll = $sortieRepository->getSortiesCampus($campusParticipant, $participantConnnecte);
         //$data = null;
 
-        // Initialiser les sorties à null
-        //$sortiesAll = null;
+
 
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
 
             $data = $sortieForm->getData();
-            dump($data);
+         //   dump($data);
             $sortiesAll = $sortieRepository->selectAllSorties($data);
             // dump($sortieForm->getData());
 
@@ -142,7 +141,7 @@ class SortieController extends AbstractController
 
         //On récupère la ville pour l'afficher dans le sélecteur
         $ville = $sortie->getLieu()->getVille();
-        dump($sortie->getEtat());
+       // dump($sortie->getEtat());
 
         //On vérifie l'état de la sortie pour afficher/masque le bouton publier
         if ($sortie->getEtat()->getId() === 1) {
@@ -247,22 +246,22 @@ class SortieController extends AbstractController
             && $sortie->getDateLimiteInscription() >= new \DateTime('now')
             && !$sortie->getParticipants()->contains($participantConnecte)) {
 
-            dump($sortie->getEtat()->getLibelle());
+          //  dump($sortie->getEtat()->getLibelle());
             //dump($sortie->getDateLimiteInscription());
             //dump(new \DateTime('now'));
 
-            dump($sortie);
-            dump($participantConnecte);
+            //dump($sortie);
+            //dump($participantConnecte);
             if($participantConnecte instanceof Participant) {
                 $sortie->addParticipant($participantConnecte);
-                dump($sortie->getParticipants());
+              //  dump($sortie->getParticipants());
             }
 
             $entityManager->persist($sortie);
-            dump($sortie->getParticipants());
+            //dump($sortie->getParticipants());
             //dump($participantConnecte);
             $entityManager->flush();
-            dump($sortie->getParticipants());
+           // dump($sortie->getParticipants());
             //dump($sortie);
             $this->addFlash('success', 'Vous êtes bien inscrit/e pour la sortie ' . $sortie->getNom() . ' !');
         } else {
@@ -300,20 +299,20 @@ class SortieController extends AbstractController
 
         if ($sortie->getDateDebut() >= new \DateTime('now')
             && $sortie->getParticipants()->contains($participantConnecte)) {
-            dump($sortie->getEtat()->getLibelle());
-            dump($sortie->getDateLimiteInscription());
-            dump(new \DateTime('now'));
+          //  dump($sortie->getEtat()->getLibelle());
+            //dump($sortie->getDateLimiteInscription());
+            //dump(new \DateTime('now'));
 
-            dump($sortie);
-            dump($participantConnecte);
+            //dump($sortie);
+            //dump($participantConnecte);
             if($participantConnecte instanceof Participant) {
                 $sortie->removeParticipant($participantConnecte);
             }
 
             $entityManager->persist($sortie);
-            dump($participantConnecte);
+            //dump($participantConnecte);
             $entityManager->flush();
-            dump($sortie);
+            //dump($sortie);
             $this->addFlash('success', 'Vous êtes bien désinscrit/e pour la sortie ' . $sortie->getNom() . ' !');
         } else {
             $this->addFlash('error', 'Vous ne pouvez pas vous désinscrire pour la sortie ' . $sortie->getNom() . ' !');

@@ -71,7 +71,7 @@ class SortieRepository extends ServiceEntityRepository
 
     public function selectAllSorties(?SearchSortie $data)
     {
-        if($data== null){
+       /* if($data== null){
             $queryBuilder = $this->createQueryBuilder('s');
             $queryBuilder->select('DISTINCT s');
             // ->innerJoin('s.etat', 'e')
@@ -81,10 +81,10 @@ class SortieRepository extends ServiceEntityRepository
             $results = $this->findAll();
 
 
-        }elseif ($data !== null) {
+        }elseif ($data !== null) {*/
             // Récupérer les valeurs des filtres depuis le formulaire
             $campus = $data->getCampus();
-            dump($campus);
+          //  dump($campus);
             $nomSortie = $data->getName();
             $dateDebut = $data->getFrom();
             $dateFin = $data->getTo();
@@ -94,12 +94,25 @@ class SortieRepository extends ServiceEntityRepository
             $inscrit = $data->isSubscribed();
             $sortiesPassees = $data->isOver();
             //$sortiesOuvertes = $data->isOpen();
-            dump($data);
-            dump($this->getUser());
-
+            //dump($data);
+            //dump($this->getUser());
+          //  $participantConnecte = $this->getUser();
             $etatArchive = $this->etatRepository->findbyLibelle("Archivée");
             $etatOuvert = $this->etatRepository->findbyLibelle("Ouverte");
             $etatCreee = $this->etatRepository->findbyLibelle("Créée");
+
+       /* dump($participantConnecte);
+        //Sélectionner les sorties où
+        $subQueryBuilder = $this->createQueryBuilder('s');
+        $subQueryBuilder->select('DISTINCT s.id')
+            ->leftJoin('s.participants', 'p')
+            ->where('p.id = :participantConnecteId');
+        $subQueryBuilder->setParameter('participantConnecteId', $participantConnecte->getId());
+
+        dump($subQueryBuilder->getDQL());
+        dump($subQueryBuilder->getQuery()->getResult());
+        $sortiesInscrite = array_column($subQueryBuilder->getQuery()->getResult(), 'id');
+        dump($sortiesInscrite);*/
 
             $queryBuilder = $this->createQueryBuilder('s');
 
@@ -111,9 +124,12 @@ class SortieRepository extends ServiceEntityRepository
             // ->innerJoin('s.organisateur', 'p')
             $queryBuilder->join('s.campus', 'c');
             $queryBuilder->leftJoin('s.participants', 'part');
+
+            //Pour ne pas afficher les sorties archivées
             $queryBuilder->where('s.etat != :etatArchive');
             $queryBuilder->setParameter(':etatArchive', $etatArchive);
 
+            //Pour afficher les sorties créées uniquement si c'est l'organisateur qui est connecté
         $orConditions = $queryBuilder->expr()->orX();
         $andConditions = $queryBuilder->expr()->andX();
 
@@ -137,7 +153,7 @@ class SortieRepository extends ServiceEntityRepository
             //->setParameter('oneMonthAgo', $oneMonthAgo, \Doctrine\DBAL\Types\Types::DATETIME_MUTABLE)
             //->setParameter('currentDate', new \DateTime(), \Doctrine\DBAL\Types\Types::DATETIME_MUTABLE);
 
-
+            //Début des filtres
             if ($campus) {
                 $queryBuilder->andWhere('s.campus = :campus')
                     ->setParameter(':campus', $campus);
@@ -175,6 +191,10 @@ class SortieRepository extends ServiceEntityRepository
             if ($inscrit) {
                 //$queryBuilder->andWhere(':user MEMBER OF s.participants')
                 $orConditions->add(':user MEMBER OF s.participants');
+                if(!$organisateur) {
+                    $orConditions->add('s.organisateur = :user');
+
+                }
 
             }
 
@@ -184,7 +204,7 @@ class SortieRepository extends ServiceEntityRepository
                 $andConditions2->add(':user NOT MEMBER OF s.participants');
                 $andConditions2->add('s.etat = :etatOuvert');
                 $queryBuilder->setParameter(':etatOuvert', $etatOuvert);
-
+                $andConditions2->add('s.organisateur != :user');
                 $orConditions->add($andConditions2);
                 //$queryBuilder->setParameter(':user', $this->getUser());
 
@@ -227,7 +247,7 @@ class SortieRepository extends ServiceEntityRepository
             }
             $query = $queryBuilder->getQuery();
             $results = $query->getResult();
-        }
+      //  }
         return $results;
 
     }
@@ -268,7 +288,7 @@ class SortieRepository extends ServiceEntityRepository
         $andConditions2->add($orConditions);
         $queryBuilder->andWhere($andConditions2);
 
-        dump($queryBuilder->getDQL());
+       // dump($queryBuilder->getDQL());
         $sortiesCampus = $queryBuilder->getQuery()->getResult();
 
         return $sortiesCampus;

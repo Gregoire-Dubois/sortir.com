@@ -182,7 +182,7 @@ class ParticipantController extends AbstractController
                     $participant->setCampus($campus);
                     $dateFormat = 'd/m/Y H:i';
                     $date = \DateTime::createFromFormat($dateFormat,$aLine[10] );
-                    dump($date);
+                   // dump($date);
                     $participant->setDateCreation($date);
                     // On persiste l'objet courant
                     $entityManager->persist($participant);
@@ -229,9 +229,9 @@ class ParticipantController extends AbstractController
             if (!$csrfTokenManager->isTokenValid($token)) {
                 throw $this->createAccessDeniedException('Jeton CSRF invalide.');
             }
-            dump($request);
+            //dump($request);
             $participantsSelectionnes= $request->request->get('participants', []);
-            dump($participantsSelectionnes);
+            //dump($participantsSelectionnes);
             $listeParticipantsDesactives = [];
             foreach ($participantsSelectionnes as $participantId){
                 $participant = $participantRepository->find($participantId);
@@ -267,9 +267,9 @@ class ParticipantController extends AbstractController
             if (!$csrfTokenManager->isTokenValid($token)) {
                 throw $this->createAccessDeniedException('Jeton CSRF invalide.');
             }
-            dump($request);
+            //dump($request);
             $participantsSelectionnes= $request->request->get('participants', []);
-            dump($participantsSelectionnes);
+            //dump($participantsSelectionnes);
             $listeParticipantsReactives = [];
             foreach ($participantsSelectionnes as $participantId){
                 $participant = $participantRepository->find($participantId);
@@ -351,7 +351,7 @@ class ParticipantController extends AbstractController
                 }
 
                 $participantAnonyme = $participantRepository->findOneByEmail('testanonyme@test.com');
-                dump($participantAnonyme);
+               // dump($participantAnonyme);
                 //Remplacer ses occurences par "utilisateur supprime" pour les sorties passees
                     //On recupere les sorties passees
                 $sortiesPassees = $sortieRepository->selectSortiesPassees($participant);
