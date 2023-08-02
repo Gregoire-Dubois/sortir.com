@@ -34,6 +34,9 @@ class SortieController extends AbstractController
         $sortiesAll = $sortieRepository->getSortiesCampus($campusParticipant, $participantConnnecte);
         //$data = null;
 
+        // Initialiser les sorties à null
+        $sortiesAll = null;
+
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
 
             $data = $sortieForm->getData();
