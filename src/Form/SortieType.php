@@ -25,74 +25,77 @@ class SortieType extends AbstractType
     {
         if ($options['only_motif']) {
             $builder->add('motif')
-            ->add('creer', SubmitType::class, [
-                'label' => 'Créer'
-            ]);
-        }
-        else {
-                $builder
-                    ->add('nom', null, [
-                        'label' => 'Nom de la sortie :',
-                        //'help' => 'Le nom doit être composé de 3 à 100 caractères'
-                    ])
-                    ->add('dateDebut', null, [
-                        'label' => 'Date et heure de la sortie :',
-                        'widget' => 'single_text',
-                        'required' => false,
-                    ])
-                    ->add('dateLimiteInscription', null, [
-                        'label' => 'Date de clôture des inscriptions :',
-                        'widget' => 'single_text',
-                        //'help' => 'La date de clôture ne peut être supérieure à la date de sortie'
-                    ])
-                    ->add('nbInscritptionMax', IntegerType::class, [
-                        'label' => 'Nombre de places :',
-                        //'data"' => '1'
-                    ])
-                    ->add('duree', IntegerType::class, [
-                        'label' => 'Durée en minutes :',
-                        //'data' => '15',
-                        //'help' => 'Une sortie doit être au minimum de 15 minutes'
-                    ])
-                    ->add('description')
-                    ->add('campus', EntityType::class, [
-                        'label' => 'Campus :',
-                        'class' => Campus::class,
-                        'choice_label' => 'nom',
-                        'disabled' => true
-                    ])
-                    ->add('ville', EntityType::class, [
-                        'label' => 'Ville :',
-                        'placeholder' => 'Sélectionner une ville',
-                        'class' => Ville::class,
-                        'choice_label' => 'nom',
-                        'query_builder' => function (EntityRepository $er) {
-                            return $er->createQueryBuilder('v')
-                                ->orderBy('v.nom', 'ASC');
-                        },
-                        'mapped' => false,
-                        'required' => false
-                    ])
+                ->add('creer', SubmitType::class, [
+                    'label' => 'Créer'
+                ]);
+        } else {
+            $builder
+                ->add('nom', null, [
+                    'label' => 'Nom de la sortie :',
+                    //'help' => 'Le nom doit être composé de 3 à 100 caractères'
+                ])
+                ->add('dateDebut', null, [
+                    'label' => 'Date et heure de la sortie :',
+                    'widget' => 'single_text',
+                    'required' => false,
+                ])
+                ->add('dateLimiteInscription', null, [
+                    'label' => 'Date de clôture des inscriptions :',
+                    'widget' => 'single_text',
+                    //'help' => 'La date de clôture ne peut être supérieure à la date de sortie'
+                ])
+                ->add('nbInscritptionMax', IntegerType::class, [
+                    'label' => 'Nombre de places :',
+                    //'data"' => '1'
+                ])
+                ->add('duree', IntegerType::class, [
+                    'label' => 'Durée en minutes :',
+                    //'data' => '15',
+                    //'help' => 'Une sortie doit être au minimum de 15 minutes'
+                ])
+                ->add('description')
+                ->add('campus', EntityType::class, [
+                    'label' => 'Campus :',
+                    'class' => Campus::class,
+                    'choice_label' => 'nom',
+                    'disabled' => true
+                ])
+                ->add('ville', EntityType::class, [
+                    'label' => 'Ville :',
+                    'placeholder' => 'Sélectionner une ville',
+                    'class' => Ville::class,
+                    'choice_label' => 'nom',
+                    'query_builder' => function (EntityRepository $er) {
+                        return $er->createQueryBuilder('v')
+                            ->orderBy('v.nom', 'ASC');
+                    },
+                    'mapped' => false,
+                    'required' => false
+                ])
 
-                    //Affichage par défaut du formulaire de Lieu, avant toute action sur le formulaire Ville
-                    //Désactivé par défaut
-                    ->add('lieu', EntityType::class, [
-                        //'label' => 'Lieu :',
-                        'placeholder' => 'Sélectionner un lieu',
-                        'class' => Lieu::class,
-                        //'disabled' => true,
-                    ])
-                    ->add('creer', SubmitType::class, [
-                        'label' => 'Créer'
-                    ]);
+                //Affichage par défaut du formulaire de Lieu, avant toute action sur le formulaire Ville
+                //Désactivé par défaut
+                ->add('lieu', EntityType::class, [
+                    //'label' => 'Lieu :',
+                    'placeholder' => 'Sélectionner un lieu',
+                    'class' => Lieu::class,
+                    //'disabled' => true,
+                ])
+                ->add('creer', SubmitType::class, [
+                    'label' => 'Créer'
+                ]);
 
-                    if ($options['publication_false']) {
+                if ($options['publication_false']) {
                     $builder
                         ->add('publier', SubmitType::class, [
                             'label' => 'Publier'
+                        ])
+                        ->add('supprimer', SubmitType::class, [
+                            'label' => 'Supprimer'
                         ]);
-                };
+                }
 
+                //Dynamisme des sélecteurs
                 $formModifier = function (FormInterface $form, Ville $ville = null) {
                     $lieux = $ville === null ? [] : $ville->getLieux();
 
@@ -115,16 +118,16 @@ class SortieType extends AbstractType
                     }
                 );
 
-            //Ecoute de la soumission sur le formulaire Ville.
-            //On passe le résultat à $formModifier
-            $builder->get('ville')->addEventListener(
-                FormEvents::PRE_SET_DATA,
-                function (FormEvent $event) use ($formModifier) {
-                    $ville = $event->getData();
-                    $parent = $event->getForm()->getParent();
-                    $formModifier($parent, $ville);
-                }
-            );
+                //Ecoute de la soumission sur le formulaire Ville.
+                //On passe le résultat à $formModifier
+                $builder->get('ville')->addEventListener(
+                    FormEvents::PRE_SET_DATA,
+                    function (FormEvent $event) use ($formModifier) {
+                        $ville = $event->getData();
+                        $parent = $event->getForm()->getParent();
+                        $formModifier($parent, $ville);
+                    }
+                );
 
                 $builder->get('lieu')->addEventListener(
                     FormEvents::POST_SUBMIT,
@@ -141,14 +144,14 @@ class SortieType extends AbstractType
         }
 
 
-    public function configureOptions(OptionsResolver $resolver): void
-    {
-        $resolver->setDefaults([
-            'data_class' => Sortie::class,
-            //'lieu_class' => Lieu::class,
-            'only_motif' => false,
-            'publication_false' => true,
-            //'sortie_modification' => false,
-        ]);
+        public
+        function configureOptions(OptionsResolver $resolver): void
+        {
+            $resolver->setDefaults([
+                'data_class' => Sortie::class,
+                //'lieu_class' => Lieu::class,
+                'only_motif' => false,
+                'publication_false' => true,
+            ]);
+        }
     }
-}

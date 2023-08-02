@@ -126,6 +126,10 @@ class Sortie
         $this->participants = new ArrayCollection();
 
     }
+    public function __toString()
+    {
+        return $this->nom;
+    }
 
     public function getId(): ?int
     {

@@ -72,7 +72,7 @@
         <div class="row15 creation_event_button">
             {{ form_widget(SortieType.creer, {'attr': {'class': 'default_principal_button', 'id': 'creation_event_save'}}) }}
             {{ form_widget(SortieType.publier, {'attr': {'class': 'default_tertiary_button', 'id': 'creation_event_publish'}}) }}
-           <button type="button" class="default_secondary_button" id="creation_event_cancel" formnovalidate>Annuler</button>
+            <a href="{{ path("sortie_listeSortie") }}"><button type="button" class="default_secondary_button" id="creation_event_cancel" formnovalidate>Annuler</button></a>
         </div>
 
         <!--Ajout du champ token puisque render_rest= false-->
