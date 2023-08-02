@@ -301,34 +301,34 @@ class ParticipantController extends AbstractController
 
         $participants = $participantRepository->selectParticipants($this->getUser());
 
-        $sortie25 = $sortieRepository->find('25');
-        dump($sortie25);
-        dump($sortie25->getParticipants());
+      //  $sortie25 = $sortieRepository->find('25');
+       // dump($sortie25);
+        //dump($sortie25->getParticipants());
         if($request->isMethod('POST')){
             $token = new CsrfToken('suppression_participant', $request->request->get('_csrf_token'));
             if (!$csrfTokenManager->isTokenValid($token)) {
                 throw $this->createAccessDeniedException('Jeton CSRF invalide.');
             }
-            dump($request);
+          //  dump($request);
             $participantsSelectionnes= $request->request->get('participants', []);
 
-            dump($participantsSelectionnes);
+            //dump($participantsSelectionnes);
             $listeParticipantsSupprimes = [];
 
             foreach ($participantsSelectionnes as $participantId){
                 $participant = $participantRepository->find($participantId);
-                dump($participant);
+              //  dump($participant);
                 $listeParticipantsSupprimes[]=$participant->getPseudo();
 
                 //Désinscrire des sorties ouvertes
                     //On récupère les sorties ouvertes
                 $sortiesOuvertes = $sortieRepository->selectSortiesOuverte($participant);
-                dump($sortiesOuvertes);
+                //dump($sortiesOuvertes);
 
                     //On le désinscrit de ces sorties
                 foreach($sortiesOuvertes as $sortie) {
-                    dump($sortie->getParticipants());
-                    dump($sortie->getParticipants()->contains($participant));
+                  //  dump($sortie->getParticipants());
+                   // dump($sortie->getParticipants()->contains($participant));
                     if ($sortie->getParticipants()->contains($participant)) {
 
                         $sortie->removeParticipant($participant);
@@ -345,7 +345,7 @@ class ParticipantController extends AbstractController
                 $sortiesOuvertesOuCreees = $sortieRepository->selectSortiesOuvertesEtCreeesCloturee($participant);
                     //On les supprime
                 foreach ($sortiesOuvertesOuCreees as $sortie){
-                    dump($sortie);
+                    //dump($sortie);
                     $entityManager->remove($sortie);
                     $entityManager->flush();
                 }
@@ -354,12 +354,12 @@ class ParticipantController extends AbstractController
                 //Remplacer ses occurences par "utilisateur supprime" pour les sorties passees
                     //On recupere les sorties passees
                 $sortiesPassees = $sortieRepository->selectSortiesPassees($participant);
-                dump($sortiesPassees);
+                //dump($sortiesPassees);
                 foreach($sortiesPassees as $sortie) {
                     if($sortie instanceof Sortie) {
-                        dump($sortie->getParticipants());
+                  //      dump($sortie->getParticipants());
                     }
-                    dump($sortie->getOrganisateur()===$participant);
+                   // dump($sortie->getOrganisateur()===$participant);
                     if($sortie->getOrganisateur()===$participant){
                         $sortie->setOrganisateur($participantAnonyme);
                         $entityManager->persist($sortie);
