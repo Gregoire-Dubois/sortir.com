@@ -1,5 +1,6 @@
 <form id="reactivationForm" action="{{ path('admin_reactiver') }}" method="post">
     <input type="hidden" name="_csrf_token" value="{{ csrf_token('reactivation_participant') }}">
+    <input type="hidden" name="participants[]" value="{{ participant.id }}">
     <button type="submit" class="default_tertiary_button">Activer</button>
 </form>
 

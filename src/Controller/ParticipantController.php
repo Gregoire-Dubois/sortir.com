@@ -249,7 +249,7 @@ class ParticipantController extends AbstractController
                 $entityManager->flush();
             }
 
-            $this->addFlash('success', 'Les participants suivants ont bien été désactivés :' . implode(', ', $listeParticipantsDesactives) . ' .');
+            $this->addFlash('success', 'Le participant suivant a bien été désactivé :' . implode(', ', $listeParticipantsDesactives) . ' .');
             return $this->redirectToRoute('admin_listeParticipants');
         }
     }
@@ -282,7 +282,7 @@ class ParticipantController extends AbstractController
                 $entityManager->flush();
             }
 
-            $this->addFlash('success', 'Les participants suivants ont bien été réactivés :' . implode(', ', $listeParticipantsReactives) . ' .');
+            $this->addFlash('success', 'Le participant suivant a bien été réactivé :' . implode(', ', $listeParticipantsReactives) . ' .');
             return $this->redirectToRoute('admin_listeParticipants');
         };
 
@@ -402,7 +402,7 @@ class ParticipantController extends AbstractController
                 $entityManager->flush();
             }
 
-            $this->addFlash('success', 'Les participants suivants ont bien été supprimés :' . implode(', ', $listeParticipantsSupprimes) . ' .');
+            $this->addFlash('success', 'Le participant suivant a bien été supprimé :' . implode(', ', $listeParticipantsSupprimes) . ' .');
             return $this->redirectToRoute('admin_listeParticipants');
         }
 
