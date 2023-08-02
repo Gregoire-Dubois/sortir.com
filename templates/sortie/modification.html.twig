@@ -73,6 +73,7 @@
             {{ form_widget(SortieType.creer, {'label': 'Modifier', 'attr': {'class': 'default_principal_button', 'id': 'creation_event_save'}}) }}
             {% if etat == true %}
             {{ form_widget(SortieType.publier, {'attr': {'class': 'default_tertiary_button', 'id': 'creation_event_publish'}}) }}
+            {{ form_widget(SortieType.supprimer, {'attr': {'class': 'default_tertiary_button', 'id': 'creation_event_publish'}}) }}
             {%  endif %}
             <button type="button" class="default_secondary_button" id="creation_event_cancel" formnovalidate>Annuler</button>
         </div>

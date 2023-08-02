@@ -143,7 +143,7 @@ class SortieController extends AbstractController
         $ville = $sortie->getLieu()->getVille();
        // dump($sortie->getEtat());
 
-        //On vérifie l'état de la sortie pour afficher/masque le bouton publier
+        //On vérifie l'état de la sortie pour afficher/masque les boutons publier et supprimer
         if ($sortie->getEtat()->getId() === 1) {
             $etat = true;
         } else {
@@ -159,6 +159,10 @@ class SortieController extends AbstractController
         //$sortieType->get('lieu')->setData($lieu);
 
         $sortieType->handleRequest($request);
+
+        if ($sortieType->isSubmitted() && $sortieType->getClickedButton() && 'supprimer' === $sortieType->getClickedButton()->getName()) {
+            return $this->redirectToRoute('sortie_supprimerSortie', ['id' => $id]);
+        }
 
         if ($sortieType->isSubmitted() && $sortieType->isValid()) {
             //On passe la sortie à l'état Publiée si on clique sur publier
@@ -232,6 +236,20 @@ class SortieController extends AbstractController
             'SortieType' => $sortieType->createView(),
             'sortie' => $sortie
         ]);
+    }
+
+    /**
+     * @Route("/sorties/supprimer/{id}", name="sortie_supprimerSortie",  methods={"GET"})
+     */
+    public function supprimerSortie(int $id, Request $request, Sortie $sortie, EntityManagerInterface $em): Response
+    {
+        $em->remove($sortie);
+        $em->flush();
+
+        $this->addFlash('success_suppression_sortie', 'La sortie ' . $sortie . ' a été supprimée.');
+
+        // Redirigez vers la même page après la suppression
+        return $this->redirectToRoute('sortie_listeSortie');
     }
 
     /**
