@@ -40,7 +40,7 @@
         <div class="column4 row12 default_error_message">{{ form_errors(participantForm.campus) }}</div>
 
         <label class="column1 row11 default_label" for="my_profil_photo">Ma photo :</label>
-        {{ form_widget(participantForm.photo, {'label': false, 'attr': {'type':'file', 'class': 'column2 row11', 'id': 'my_profil_photo', 'accept': 'image/*', 'required': false}}) }}
+        {{ form_widget(participantForm.photo, {'label': false, 'attr': {'type':'file', 'class': 'column2 row11 file-label', 'id': 'my_profil_photo', 'accept': 'image/*', 'required': false}}) }}
         <div class="column4 row12 default_error_message">{{ form_errors(participantForm.photo) }}</div>
 
         <label class="column3 row13 default_label" for="my_profil_password">Mot de passe :</label>
