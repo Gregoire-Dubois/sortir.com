@@ -53,6 +53,8 @@ class VilleController extends AbstractController
             return $this->json([
                 'success' => true,
                 'message' => 'La ville a été créée avec succès!',
+                'id' => $ville->getId(),
+                'nom' => $ville->getNom()
             ]);
         } else {
             // Réponse JSON pour renvoyer les erreurs en cas d'échec de validation du formulaire

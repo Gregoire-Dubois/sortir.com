@@ -54,6 +54,8 @@ class LieuController extends AbstractController
             return $this->json([
                 'success' => true,
                 'message' => 'Le lieu a été créé avec succès!',
+                'id' => $lieu->getId(),
+                'nom' => $lieu->getNom()
             ]);
         } else {
             // Réponse JSON pour renvoyer les erreurs en cas d'échec de validation du formulaire

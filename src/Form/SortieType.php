@@ -28,7 +28,8 @@ class SortieType extends AbstractType
             ->add('creer', SubmitType::class, [
                 'label' => 'Créer'
             ]);
-        } else {
+        }
+        else {
                 $builder
                     ->add('nom', null, [
                         'label' => 'Nom de la sortie :',
@@ -83,10 +84,14 @@ class SortieType extends AbstractType
                     ])
                     ->add('creer', SubmitType::class, [
                         'label' => 'Créer'
-                    ])
-                    ->add('publier', SubmitType::class, [
-                        'label' => 'Publier'
                     ]);
+
+                    if ($options['publication_false']) {
+                    $builder
+                        ->add('publier', SubmitType::class, [
+                            'label' => 'Publier'
+                        ]);
+                };
 
                 $formModifier = function (FormInterface $form, Ville $ville = null) {
                     $lieux = $ville === null ? [] : $ville->getLieux();
@@ -110,6 +115,17 @@ class SortieType extends AbstractType
                     }
                 );
 
+            //Ecoute de la soumission sur le formulaire Ville.
+            //On passe le résultat à $formModifier
+            $builder->get('ville')->addEventListener(
+                FormEvents::PRE_SET_DATA,
+                function (FormEvent $event) use ($formModifier) {
+                    $ville = $event->getData();
+                    $parent = $event->getForm()->getParent();
+                    $formModifier($parent, $ville);
+                }
+            );
+
                 $builder->get('lieu')->addEventListener(
                     FormEvents::POST_SUBMIT,
                     function (FormEvent $event) {
@@ -131,6 +147,7 @@ class SortieType extends AbstractType
             'data_class' => Sortie::class,
             //'lieu_class' => Lieu::class,
             'only_motif' => false,
+            'publication_false' => true,
             //'sortie_modification' => false,
         ]);
     }

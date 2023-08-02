@@ -132,11 +132,19 @@ class SortieController extends AbstractController
         }
 
         //On récupère la ville pour l'afficher dans le sélecteur
-        $lieu = $sortie->getLieu();
-        $ville = $lieu->getVille();
-        //On réapplique le lieu pour ne pas avoir null à l'enregistrement
-        //$sortie = setLieu($lieu);
-        $sortieType = $this->createForm(SortieType::class, $sortie);
+        $ville = $sortie->getLieu()->getVille();
+        dump($sortie->getEtat());
+
+        //On vérifie l'état de la sortie pour afficher/masque le bouton publier
+        if ($sortie->getEtat()->getId() === 1) {
+            $etat = true;
+        } else {
+            $etat = false;
+        }
+
+        $sortieType = $this->createForm(SortieType::class, $sortie, [
+            'publication_false' => $etat
+        ]);
 
         //On affiche la ville enregistrée en base pour cette sortie
         $sortieType->get('ville')->setData($ville);
@@ -163,7 +171,8 @@ class SortieController extends AbstractController
             'SortieType' => $sortieType->createView(),
             'sortie' => $sortie,
             'LieuType' => $lieuType->createView(),
-            'VilleType' => $villeType->createView()
+            'VilleType' => $villeType->createView(),
+            'etat' => $etat
         ]);
     }
 
