@@ -40,7 +40,9 @@ class ParticipantController extends AbstractController
         SortieRepository $sortieRepository
     ): Response {
 
-        $participants = $participantRepository->findAll();
+       //$participants = $participantRepository->findAll();
+        //Pour ne pas récupérer l'utilisateur connecté et l'utilisateur anonyme
+        $participants = $participantRepository->selectParticipants($this->getUser());
 
         foreach ($participants as $participant) {
             // Récupérer les sorties associées à chaque participant

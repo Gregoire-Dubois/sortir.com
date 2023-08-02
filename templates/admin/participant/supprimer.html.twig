@@ -1,5 +1,6 @@
 <form id="suppressionForm" action="{{ path('admin_supprimer') }}" method="post">
     <input type="hidden" name="_csrf_token" value="{{ csrf_token('suppression_participant') }}">
+    <input type="hidden" name="participants[]" value="{{ participant.id }}">
     <button type="submit" class="default_secondary_button">Supprimer</button>
 </form>
 
