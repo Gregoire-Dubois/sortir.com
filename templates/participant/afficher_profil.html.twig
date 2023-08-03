@@ -1,37 +1,47 @@
 {% extends 'base.html.twig' %}
 
-{% block body %}
+{% block title %}{{ parent() }} | Profil Participant{% endblock %}
 
-    {% if (participant.photo) %}
-        <img src="{{ asset('photos/' ~ participant.photo) }}" alt="Photo de profil">
-    {% endif %}
-
-    {% if (participant==app.user) %}
-
-    <h1>Mon profil</h1>
-
-    {{ form_start(participantForm, {'attr':{'novalidate':'novalidate'}}) }}
-
-    {{ form_widget(participantForm) }}
-
-    <button type="submit" class="btn">Enregistrer</button>
-
-    {{ form_end(participantForm) }}
-    <div>
-        <a href="{{ path("sortie_listeSortie") }}" title="accueil"><button type="button">Annuler</button></a>
-    </div>
-    {% else %}
-        <h2>{{participant.pseudo}}</h2>
-        <div>Prénom : {{ participant.prenom }}</div>
-        <div>Nom : {{ participant.nom }}</div>
-        <div>Téléphone : {{ participant.telephone }}</div>
-        <div>Email : {{ participant.email }}</div>
-        <div>Campus : {{ participant.campus.nom }}</div>
-        <div>
-            <a href="{{ path("sortie_listeSortie") }}" title="accueil"><button type="button">Retour</button></a>
-        </div>
-    {%endif %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/afficherProfil.css') }}">
 {% endblock %}
 
-{% block title %}Profil | {{ parent() }}{% endblock %}
+{% block body %}
+
+    <div class="default_container">
+        <!-- Le pseudo de l'utilisateur devrait s'afficher en titre -->
+        <h2 id="profil_username">Profil de {{ participant.pseudo }}</h2>
+        <!-- Bloc "Infos utilisateur" -->
+        <div class="profil_info">
+
+            <label class="column2 row1 default_label">Prénom :</label>
+            <span class="column3 row1 default_span" id="my_profil_first_name">{{ participant.prenom }}</span>
+
+            <label class="column2 row2 default_label">Nom :</label>
+            <span class="column3 row2 default_span" id="my_profil_last_name">{{ participant.nom }}</span>
+
+            <label class="column2 row3 default_label">Téléphone :</label>
+            <span class="column3 row3 default_span" id="my_profil_phone">{{ participant.telephone }}</span>
+
+            <label class="column2 row4 default_label">Email :</label>
+            <span class="column3 row4 default_span" id="my_profil_mail">{{ participant.email }}</span>
+
+            <label class="column2 row5 default_label">Campus :</label>
+            <span class="column3 row5 default_span" id="profil_campus">{{ participant.campus }}</span>
+
+            <!-- Bloc "Photo de profil" -->
+            <div class="photo_profil_border">
+                {% if (participant.photo) %}
+                    <img src="{{ asset('photos/' ~ participant.photo) }}" alt="Photo de profil">
+                {% endif %}
+            </div>
+
+            <a href="{{ path("sortie_listeSortie") }}" class="default_secondary_button" id="my_profil_cancel" title="Retour">Retour</a>
+        </div>
+    </div>
+
+{% endblock %}
+
+
 

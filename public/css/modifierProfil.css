@@ -54,6 +54,12 @@ a {
   align-items: center;
 }
 
+/* Masquer le message par défaut dans le label */
+.file-label:after {
+  content: none; /* Supprimer le contenu après le label */
+  /* Autres styles CSS si nécessaire */
+}
+
 
 
 /* Paramétrage des lignes et colonnes du formulaire */
@@ -142,6 +148,10 @@ a {
 }
 
 @media screen and (max-width: 768px) {
+
+  main {
+    padding: 0;
+  }
 
   .header_menu_nav {
     height: 20vh;

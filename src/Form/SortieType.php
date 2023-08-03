@@ -25,11 +25,10 @@ class SortieType extends AbstractType
     {
         if ($options['only_motif']) {
             $builder->add('motif')
-            ->add('creer', SubmitType::class, [
-                'label' => 'Créer'
-            ]);
+                ->add('creer', SubmitType::class, [
+                    'label' => 'Créer'
+                ]);
         } else {
-
             $builder
                 ->add('nom', null, [
                     'label' => 'Nom de la sortie :',
@@ -58,7 +57,8 @@ class SortieType extends AbstractType
                 ->add('campus', EntityType::class, [
                     'label' => 'Campus :',
                     'class' => Campus::class,
-                    'choice_label' => 'nom'
+                    'choice_label' => 'nom',
+                    'disabled' => true
                 ])
                 ->add('ville', EntityType::class, [
                     'label' => 'Ville :',
@@ -79,57 +79,79 @@ class SortieType extends AbstractType
                     //'label' => 'Lieu :',
                     'placeholder' => 'Sélectionner un lieu',
                     'class' => Lieu::class,
-                    'disabled' => true,
+                    //'disabled' => true,
                 ])
                 ->add('creer', SubmitType::class, [
                     'label' => 'Créer'
-                ])
-                ->add('publier', SubmitType::class, [
-                    'label' => 'Publier'
                 ]);
 
-            $formModifier = function (FormInterface $form, Ville $ville = null) {
-                $lieux = $ville === null ? [] : $ville->getLieux();
-
-                $form->add('lieu', EntityType::class, [
-                    'class' => Lieu::class,
-                    'choice_label' => 'nom',
-                    'placeholder' => 'Sélectionnez un lieu',
-                    'disabled' => $ville === null,
-                    'choices' => $lieux
-                ]);
-            };
-
-            //Ecoute de la soumission sur le formulaire Ville.
-            //On passe le résultat à $formModifier
-            $builder->get('ville')->addEventListener(
-                FormEvents::POST_SUBMIT,
-                function (FormEvent $event) use ($formModifier) {
-                    $ville = $event->getForm()->getData();
-                    $parent = $event->getForm()->getParent();
-                    $formModifier($parent, $ville);
+                if ($options['publication_false']) {
+                    $builder
+                        ->add('publier', SubmitType::class, [
+                            'label' => 'Publier'
+                        ])
+                        ->add('supprimer', SubmitType::class, [
+                            'label' => 'Supprimer'
+                        ]);
                 }
-            );
 
-            $builder->get('lieu')->addEventListener(
-                FormEvents::POST_SUBMIT,
-                function (FormEvent $event) {
-                    $event->getForm()->getData();
-                    $event->getForm()->getParent();
+                //Dynamisme des sélecteurs
+                $formModifier = function (FormInterface $form, Ville $ville = null) {
+                    $lieux = $ville === null ? [] : $ville->getLieux();
 
-                }
-            );
+                    $form->add('lieu', EntityType::class, [
+                        'class' => Lieu::class,
+                        'choice_label' => 'nom',
+                        'placeholder' => 'Sélectionnez un lieu',
+                        'choices' => $lieux
+                    ]);
+                };
 
-            //Ajout d'action pour Javascript mais peut-être présent par défaut ?
-            $builder->setAction($options['action']);
+                //Ecoute de la soumission sur le formulaire Ville.
+                //On passe le résultat à $formModifier
+                $builder->get('ville')->addEventListener(
+                    FormEvents::POST_SUBMIT,
+                    function (FormEvent $event) use ($formModifier) {
+                        $ville = $event->getForm()->getData();
+                        $parent = $event->getForm()->getParent();
+                        $formModifier($parent, $ville);
+                    }
+                );
+
+                //Ecoute de la soumission sur le formulaire Ville.
+                //On passe le résultat à $formModifier
+                $builder->get('ville')->addEventListener(
+                    FormEvents::PRE_SET_DATA,
+                    function (FormEvent $event) use ($formModifier) {
+                        $ville = $event->getData();
+                        $parent = $event->getForm()->getParent();
+                        $formModifier($parent, $ville);
+                    }
+                );
+
+                $builder->get('lieu')->addEventListener(
+                    FormEvents::POST_SUBMIT,
+                    function (FormEvent $event) {
+                        $event->getForm()->getData();
+                        $event->getForm()->getParent();
+
+                    }
+                );
+
+                //Ajout d'action pour Javascript mais peut-être présent par défaut ?
+                $builder->setAction($options['action']);
+            }
+        }
+
+
+        public
+        function configureOptions(OptionsResolver $resolver): void
+        {
+            $resolver->setDefaults([
+                'data_class' => Sortie::class,
+                //'lieu_class' => Lieu::class,
+                'only_motif' => false,
+                'publication_false' => true,
+            ]);
         }
     }
-
-    public function configureOptions(OptionsResolver $resolver): void
-    {
-        $resolver->setDefaults([
-            'data_class' => Sortie::class,
-            'only_motif' => false,
-        ]);
-    }
-}

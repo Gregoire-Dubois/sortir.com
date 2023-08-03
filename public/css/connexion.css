@@ -7,12 +7,17 @@ main{
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0 40%;
+}
+
+a:-webkit-any-link {
+  color: var(--primary-color);
 }
 
 /* Container */
 .default_container {
   margin: auto;
-  width: 300px;
+  width: 100%;
   font-size: 2.5vh;
 }
 
@@ -83,4 +88,28 @@ main{
 .default_secondary_button {
   width: 100%;
   height: 4vh;
+}
+
+@media screen and (max-width: 1024px) {
+
+  main {
+    padding: 0 30%;
+  }
+
+}
+
+@media screen and (max-width: 768px) {
+
+  main {
+    padding: 0 25%;
+  }
+
+}
+
+@media screen and (max-width: 426px) {
+
+  main {
+    padding: 0;
+  }
+
 }

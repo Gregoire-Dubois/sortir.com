@@ -9,6 +9,7 @@ use App\Form\Admin\RechercheVilleType;
 use App\Form\Admin\VilleType;
 use App\Form\Admin\CampusType;
 use App\Repository\CampusRepository;
+use App\Repository\ParticipantRepository;
 use App\Repository\VilleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -146,22 +147,40 @@ class VilleEtCampusController extends AbstractController
     /**
      * @Route("/campus/{id}/supprimer", name="supprimer_campus")
      */
-    public function supprimerCampus(Request $request, EntityManagerInterface $entityManager, Campus $campus): Response
+    public function supprimerCampus(int $id, EntityManagerInterface $entityManager, CampusRepository $campusRepository, ParticipantRepository $participantRepository): Response
     {
-        $entityManager->remove($campus);
-        $entityManager->flush();
+        $campus = $campusRepository->find($id);
+        $countParticipant = $participantRepository->countByCampus($id);
+        if ($countParticipant === 0) {
+            $entityManager->remove($campus);
+            $entityManager->flush();
 
-        $this->addFlash('success_suppression_campus', $campus .' a été supprimée de la liste des campus.');
-
-        // Redirigez vers la même page après la suppression
-        return $this->redirectToRoute('admin_villes_et_campus');
+            $this->addFlash('success_suppression_campus', $campus . ' a été supprimée de la liste des campus.');
+            // Redirigez vers la même page après la suppression
+            return $this->redirectToRoute('admin_villes_et_campus');
+        } else {
+            $this->addFlash('error', 'Impossible de supprimer le campus car il a des participants associés');
+            return $this->redirectToRoute('admin_villes_et_campus');
+        }
     }
 
     /**
-     * @Route("/ville/{id}/modifier", name="modifier_ville")
+     * @Route("/ville/{id}/modifier", name="modifier_ville", methods={"POST"})
      */
-    public function modifierVille(Request $request, EntityManagerInterface $entityManager, Ville $ville): Response
+    public function modifierVille(int $id, Request $request, VilleRepository $villeRepository, EntityManagerInterface $em): Response
     {
+
+        $ville = $em->getRepository(Ville::class)->find($id);
+        $nom = $request->request->get('edit_nom_' . $id);
+        $codePostal = $request->get('edit_code_postal_' . $id);
+        $villeRepository->modifierVille($id, $nom, $codePostal);
+
+        $this->addFlash('success_modification_ville', $ville .' a été modifiée.');
+
+        // Redirigez vers la même page après la suppression
+        return $this->redirectToRoute('admin_villes_et_campus');
+
+        /*
         $form = $this->createForm(VilleType::class, $ville)
             ->add('nom', TextType::class)
             ->add('codePostal', TextType::class);
@@ -184,14 +203,28 @@ class VilleEtCampusController extends AbstractController
             'is_ville' => true,
             'entity' => $ville,
         ]);
+        */
     }
 
     /**
-     * @Route("/campus/{id}/modifier", name="modifier_campus")
+     * @Route("/campus/{id}/modifier", name="modifier_campus", methods={"POST"})
+     * @throws Exception
      */
-    public function modifierCampus(Request $request, EntityManagerInterface $entityManager, Campus $campus): Response
+    public function modifierCampus(Request $request, EntityManagerInterface $entityManager, Campus $campus, int $id, CampusRepository $campusRepository): Response
     {
-        $form = $this->createForm(VilleType::class, $campus)
+
+        $campus = $entityManager->getRepository(Campus::class)->find($id);
+        $nom = $request->request->get('edit_nom_' . $id );
+        var_dump($nom . $id);
+        $campusRepository -> modifierCampus($id, $nom);
+
+        $this -> addFlash('modifier_campus', $campus .' a été modifiée.');
+
+        return $this->redirectToRoute('admin_villes_et_campus');
+
+/*
+        // Créez le formulaire VilleType avec "data_class" défini à null
+        $form = $this->createForm(VilleType::class, null, ['data_class' => null])
             ->add('nom', TextType::class);
 
         $form->handleRequest($request);
@@ -211,6 +244,8 @@ class VilleEtCampusController extends AbstractController
             'is_ville' => false,
             'entity' => $campus,
         ]);
+*/
+
     }
 
     /**

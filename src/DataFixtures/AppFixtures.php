@@ -54,6 +54,20 @@ class AppFixtures extends Fixture
         $participant->setPhoto('testupload-64c152eec147d.jpg');
         $manager->persist($participant);
 
+        $participantAnonyme = new Participant();
+        $participantAnonyme->setNom('Anonyme');
+        $participantAnonyme->setPrenom('Participant');
+        $participantAnonyme->setEmail('testanonyme@test.com');
+        $participantAnonyme->setPassword($this->passwordHasher->hashPassword($participant,'azerty'));
+        $participantAnonyme->setRoles([]);
+        $participantAnonyme->setActif(true);
+        $participantAnonyme->setDateCreation(new \DateTimeImmutable());
+        $participantAnonyme->setPseudo('Anonyme');
+        $participantAnonyme->setTelephone('0600000000');
+        $participantAnonyme->setCampus($campusArray[0]);
+        //$participantAnonyme->setPhoto('testupload-64c152eec147d.jpg');
+        $manager->persist($participantAnonyme);
+
         $faker = Faker\Factory::create('fr_FR');
 
         for($i=0;$i<10;$i++)

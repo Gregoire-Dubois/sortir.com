@@ -1,6 +1,12 @@
+main {
+  display: flex;
+  flex-direction: column;
+  padding: 0 27.5%;
+}
+
 .default_container {
-  width: 640px;
-  margin: calc((93vh - 42vh) / 2) auto;
+  width: 100%;
+  margin: 0;
 }
 
 .profil_info {
@@ -37,6 +43,12 @@
   grid-row: 5;
 }
 
+a.default_secondary_button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 /* Paramétrage des lignes et colonnes du formulaire */
 .column2 {
   grid-column: 2/3;
@@ -71,6 +83,10 @@
 }
 
 @media screen and (max-width: 768px) {
+
+  main {
+    padding: 0;
+  }
 
   .header_menu_nav {
     height: 20vh;

@@ -5,17 +5,17 @@ $(document).ready(function () {
     let rue_id = $("#event_street");
     let latitude_id = $("#event_latitude");
     let longitude_id = $("#event_longitude");
-/*
+
     console.log(sortie_ville);
     console.log(codePostalid);
     console.log(sortie_lieu);
     console.log(rue_id);
-*/
+
     sortie_ville.on("change", function () {
         let villeChoisie = $(this).val();
         let form = $(this).closest("form");
         let data = $(this).attr("name") + "=" + $(this).val();
-        //console.log(data);
+        console.log(data);
         if (villeChoisie === '') {
             codePostalid.val('');
             codePostalid.text('');
@@ -25,7 +25,8 @@ $(document).ready(function () {
         } else {
             $.ajax({
                 url: form.attr("action"),
-                method: form.attr("method"),
+                //method: form.attr("method"),
+                method: "POST",
                 data: data,
                 contentType: "application/x-www-form-urlencoded; charset=UTF-8",
                 success: function (html) {
@@ -41,7 +42,7 @@ $(document).ready(function () {
                 success: function (codePostal) {
                     codePostalid.val(codePostal);
                     $("#event_postal_code").text(codePostal);
-          //          console.log(codePostal);
+                    console.log(codePostal);
                 },
                 error: function (error) {
                     console.log(error);
@@ -54,7 +55,7 @@ $(document).ready(function () {
     //sortie_lieu.on("change") ne peut pas fonctionner !
     $(document).on("change", "#sortie_lieu", function () {
         let data = $(this).attr("name") + "=" + $(this).val();
-        //console.log(data);
+        console.log(data);
         if ($(this).val() === '') {
             rue_id.text('');
             latitude_id.text('');
@@ -68,10 +69,10 @@ $(document).ready(function () {
                     latitude_id.text(response.latitude);
                     longitude_id.text(response.longitude);
                     //$("#event_street").text(rue);
-          //          console.log(response);
+                    console.log(response);
                 },
                 error: function (error) {
-          //          console.log(error);
+                    console.log(error);
                 },
             });
         }

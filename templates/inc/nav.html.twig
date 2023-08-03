@@ -1,20 +1,20 @@
 <!-- Logo et Nom du site -->
 <div class="header_title_container">
     <div class="logo_ENI">
-        <a href="#"><img src="{{ asset('img/logo_ENI.png') }}" id="logo_ENI" alt="logo_ENI"></a>
+        <a href="{{ path('sortie_listeSortie')}}"><img src="{{ asset('img/logo_ENI.png') }}" id="logo_ENI" alt="logo_ENI"></a>
     </div>
     <div class="app_title_container">
         <h1 id="app_title">Sortir.com</h1>
     </div>
 </div>
 <!-- Menu global -->
-<nav class="header_menu_nav">
+<nav class="header_menu_nav smartphoneCache">
     <!-- Menu réservé aux administrateurs -->
     {% if is_granted("ROLE_ADMIN")  %}
     <ul class="admin_menu_nav">
         <li><p class="administrator_li">Administrateur</p></li>
         <li><a href="{{ path('admin_villes_et_campus') }}" id="administrator_cities_campus">Villes & Campus</a></li>
-        <li><a href="{{ path('app_register') }}" id="administrator_users">Utilisateurs</a></li>
+        <li><a href="{{ path('admin_listeParticipants') }}" id="administrator_users">Participants</a></li>
     </ul>
     {% endif %}
     <!-- Menu accessible aux connectés -->
@@ -25,6 +25,6 @@
     </ul>
 </nav>
 <!-- Menu hamburger pour les tablettes et smartphones -->
-<div class="hbg_user_menu_nav">
+<div class="hbg_user_menu_nav smartphoneCache">
     <div class="hbg_user_menu_icon">&#9776</div>
 </div>

@@ -3,13 +3,26 @@ main{
   display: block;
 }
 
+.default_block_message {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: nowrap;
+  height: 5vh;
+  margin: 0 1vh 1vh 1vh;
+  overflow-y: hidden;
+}
+
+.smartphoneVisible{
+  display: none;
+}
 .info_login_container {
   display: flex;
   justify-content: flex-end;
   align-items: center;
   gap: 2vh;
-  height: 5vh;
-  margin: 0 1vh 1vh 1vh;
+  height: 100%;
+  min-width: fit-content;
   padding-right: 1vh;
   color: var(--tertiary-color);
   font-style: italic;
@@ -26,7 +39,7 @@ main{
   flex-direction: column;
   justify-content: flex-start;
   height: fit-content;
-  max-height: 68vh;
+  max-height: 70vh;
 }
 
 /* Partie "Filtres du tableau des sorties"*/
@@ -44,7 +57,7 @@ main{
 }
 
 .default_table_wrapper {
-  height: 55vh;
+  max-height: 50vh;
 }
 
 /* Format Spécifique*/
@@ -54,6 +67,16 @@ main{
   height: 30px;
   margin-right: 10px;
 }
+
+#unsubscribe_link,
+#subscribe_link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 50%;
+  height: 100%;
+}
+
 /* Disposition par lignes et par colonnes*/
 .column1 {
   grid-column: 1/2;
@@ -121,35 +144,59 @@ main{
 
 /* Paramétrage de la liste des sorties */
 .event_column1 {
-  width: 25%;
+  width: 16.25%;
 }
 
 .event_column2 {
-  width: 12.5%;
+  width: 16.25%;
 }
 
 .event_column3 {
-  width: 12.5%;
+  width: 10%;
 }
 
 .event_column4 {
-  width: 6%;
+  width: 10%;
 }
 
 .event_column5 {
-  width: 8%;
+  width: 5%;
 }
 
 .event_column6 {
-  width: 6%;
+  width: 5%;
 }
 
 .event_column7 {
-  width: 20%;
+  width: 5%;
 }
 
 .event_column8 {
-  width: 10%;
+  width: 16.25%;
+}
+
+.event_column9 {
+  width: 16.25%;
+}
+
+.table_link {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  height: 100%;
+}
+
+table a {
+  color: white;
+}
+
+.default_table td:last-child {
+  display: flex;
+  justify-content: space-around;
+  height: fit-content;
+  width: 100%;
+  margin-top: 0.5vh;
 }
 
 /* Bouton "Création Sortie"*/
@@ -161,26 +208,39 @@ main{
   margin: 1vh 1.25vw 1vh 0.25vw;
 }
 
-.default_principal_button {
-  width: fit-content;
-  height: 100%;
-}
-
 #event_create {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
+.tablette2{
+  display:none;
+}
+
 @media screen and (max-width: 768px) {
 
   body {
     height: auto;
+
   }
 
+  .default_block_message {
+    display: flex;
+    flex-wrap: wrap;
+    height: fit-content;
+    justify-content: center;
+    text-align: center;
+  }
+
+.tablette2{
+  display: block;
+}
   .default_container {
     flex-wrap: wrap;
     max-height: none;
+
+
   }
 
   .filter_container {
@@ -287,7 +347,15 @@ main{
     width: 96.5vw;
     margin: 0 1.5vw 1vh 1.5vw;
   }
-
+  .default_table{
+    width:100%;
+  }
+  .tablette{
+    display: none;
+  }
+  td, tr, th {
+    font-size: 2vh;
+  }
 }
 
 @media screen and (max-width: 426px) {
@@ -298,17 +366,21 @@ main{
     height: fit-content;
     margin-top: 1vh;
   }
-
+  .tablette2{
+    display: none;
+  }
   .filter_container {
     grid-template-columns: 0.5fr 1.5fr 0.5fr 1.5fr;
     grid-template-rows: repeat(10,4vh);
     height: auto;
     min-height: fit-content;
     padding: 1vh 1.5vw 2vh 1.5vw;
+
   }
 
   .default_table_wrapper {
     overflow-x: auto;
+
   }
 
   .column1.row1 {
@@ -401,4 +473,47 @@ main{
     grid-column: span 4;
     grid-row: 10;
   }
+
+  .smartphoneCache{
+    display: none;
+  }
+  .smartphoneVisible{
+    display: block;
+
+  }
+  .table_link{
+    display: none;
+
+  }
+.default_container{
+  margin:10px;
+  margin-top: 50px;
+  width:95%;
+
+
+}
+
+h2{
+  padding: 6px;
+}
+
+a:active{
+  font-weight: bold;
+  font-size: large;
+}
+td{
+  font-size: 1.5vh;
+}
+
+td.smartphoneVisible, th.smartphoneVisible{
+  padding-top: 6px;
+  border:none;
+  height: 100%;
+}
+th.smartphoneVisible{
+  padding-bottom: 10px;
+}
+
+
+
 }

@@ -4,21 +4,17 @@ document.addEventListener("DOMContentLoaded", function() {
     // Affichage du formulaire dans la modale
     document.getElementById("add_place_button").addEventListener("click", function(e) {
         e.preventDefault();
-
         // Effectuez une requête AJAX pour récupérer le contenu du formulaire
         let xhr = new XMLHttpRequest();
 
-        xhr.open("GET", "/sorties/lieu/afficher"); // L'URL associée à votre action du contrôleur
+        xhr.open("GET", "/sorties/lieu/afficher");
 
         xhr.onload = function() {
             if (xhr.status === 200) {
-                // Ajoutez le contenu de la modale dans le DOM
-                //console.log(xhr.responseText)
-                //console.log(xhr.status)
                 document.getElementById("popup_add_place").innerHTML = xhr.responseText;
-                //console.log(document.getElementById("popup_add_place").innerHTML)
                 // Affichez la modale
                 document.getElementById("popup_add_place").style.display = "block";
+                document.getElementById("popup_overlay").style.display = "block";
 
             } else {
                 console.error("Erreur lors de la requête AJAX");
@@ -34,18 +30,16 @@ document.addEventListener("DOMContentLoaded", function() {
             let formData = new FormData(document.getElementById("form_lieu"));
             let xhr = new XMLHttpRequest();
 
-            xhr.open("POST", "/sorties/lieu/creation"); // L'URL associée à votre action du contrôleur
+            xhr.open("POST", "/sorties/lieu/creation");
             xhr.onload = function() {
                 if (xhr.status === 200) {
-                    // Gérer la réponse du serveur en cas de succès (vous pouvez ajouter la logique souhaitée ici)
-                    console.log("Données enregistrées avec succès !");
-
                     // Cacher la modale après l'enregistrement
                     document.getElementById("popup_add_place").style.display = "none";
+                    document.getElementById("popup_overlay").style.display = "none";
 
                     // Mise à jour du formulaire de sortie avec le nouveau lieu
                     let response = JSON.parse(xhr.responseText);
-                    let lieuSelect = document.getElementById("sortie_lieu"); // ID du champ lieu dans le formulaire de sortie
+                    let lieuSelect = document.getElementById("sortie_lieu");
 
                     // Créer une nouvelle option pour le nouveau lieu
                     let newOption = document.createElement("option");
@@ -78,6 +72,7 @@ document.addEventListener("DOMContentLoaded", function() {
         if (e.target.id === 'cancel_add_place_button') {
             e.preventDefault();
             document.getElementById("popup_add_place").style.display = "none";
+            document.getElementById("popup_overlay").style.display = "none";
 
             // Réaffecter les données déjà saisies du formulaire de sortie
             for (let pair of sortieFormData.entries()) {

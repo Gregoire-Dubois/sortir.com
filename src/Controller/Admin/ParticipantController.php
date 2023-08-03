@@ -2,7 +2,11 @@
 
 namespace App\Controller\Admin;
 
+use App\Repository\ParticipantRepository;
+use App\Repository\SortieRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -29,12 +33,25 @@ class ParticipantController extends AbstractController
     }
 
     /**
-     * @Route ("/admin/utilisateurs", name="admin_listeUtilisateur")
+     * @Route ("/admin/participants", name="admin_listeParticipants")
      */
-    public function listeUtilisateur(): Response
-    {
-        return $this->render('admin/participant/liste.html.twig', [
+    public function listeUtilisateur(
+        ParticipantRepository $participantRepository,
+        SortieRepository $sortieRepository
+    ): Response {
 
+       //$participants = $participantRepository->findAll();
+        //Pour ne pas récupérer l'utilisateur connecté et l'utilisateur anonyme
+        $participants = $participantRepository->selectParticipants($this->getUser());
+
+        foreach ($participants as $participant) {
+            // Récupérer les sorties associées à chaque participant
+            $sorties = $sortieRepository->findSortiesByParticipant($participant);
+            $participant->sorties = $sorties;
+        }
+
+        return $this->render('admin/participant/gestionParticipants.html.twig', [
+            'participants' => $participants,
         ]);
     }
 

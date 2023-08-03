@@ -86,6 +86,8 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
         $queryBuilder->where('p.actif = true');
         $queryBuilder->andWhere('p != :participantConnecte');
         $queryBuilder->setParameter(':participantConnecte', $participantConnecte);
+        $queryBuilder->andWhere('p.email != :email');
+        $queryBuilder->setParameter(':email', 'testanonyme@test.com');
         dump($queryBuilder);
         dump($queryBuilder->getDQL());
 
@@ -93,6 +95,66 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
 
         return $participantsActifs;
 
+    }
+
+    public function selectParticipantsInactifs()
+    {
+        $queryBuilder = $this->createQueryBuilder('p');
+        $queryBuilder->select('DISTINCT p');
+        $queryBuilder->where('p.actif = false');
+        $queryBuilder->andWhere('p.email != :email');
+        $queryBuilder->setParameter(':email', 'testanonyme@test.com');
+
+        dump($queryBuilder);
+        dump($queryBuilder->getDQL());
+
+        $participantsActifs = $queryBuilder->getQuery()->getResult();
+
+        return $participantsActifs;
+
+    }
+
+    public function selectParticipants(UserInterface $participantConnecte)
+    {
+        $queryBuilder = $this->createQueryBuilder('p');
+        $queryBuilder->select('DISTINCT p');
+        $queryBuilder->andWhere('p != :participantConnecte');
+        $queryBuilder->setParameter(':participantConnecte', $participantConnecte);
+        $queryBuilder->andWhere('p.email != :email');
+        $queryBuilder->setParameter(':email', 'testanonyme@test.com');
+        dump($queryBuilder);
+        dump($queryBuilder->getDQL());
+
+        $participants = $queryBuilder->getQuery()->getResult();
+
+        return $participants;
+
+    }
+
+    public function findOneByEmail($email)
+    {
+        $queryBuilder = $this->createQueryBuilder('p');
+        $queryBuilder->select('DISTINCT p');
+        $queryBuilder->andWhere('p.email = :email');
+        $queryBuilder->setParameter(':email', $email);
+        dump($queryBuilder);
+        dump($queryBuilder->getDQL());
+
+        $participantByEmail = $queryBuilder->getQuery()->getOneOrNullResult();
+
+        return $participantByEmail;
+
+    }
+
+    public function countByCampus(int $campusId): int
+    {
+        return $this->createQueryBuilder('participant')
+            ->select('COUNT(participant.id)')
+            ->join('participant.campus', 'campus')
+            ->where('campus.id = :campusId')
+            ->setParameter('campusId', $campusId)
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 
 

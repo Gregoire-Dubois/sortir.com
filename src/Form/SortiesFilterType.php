@@ -10,12 +10,20 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Security;
 
 class SortiesFilterType extends AbstractType
 {
+    private Security $security;
+    public function __construct(Security $security){
+        $this->security = $security;
+    }
 
      public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $participantConnecte = $this->security->getUser();
+        $campusParticipant = $participantConnecte->getCampus();
+
         $builder
             ->add('name', TextType::class, [
                 'label' => 'Nom',
@@ -36,6 +44,7 @@ class SortiesFilterType extends AbstractType
                 'class' => Campus::class,
                 'choice_label' => 'nom',
                 'required' => false,
+                'data'=> $campusParticipant
             ])
 
             ->add('organized', CheckboxType::class, [
