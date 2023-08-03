@@ -46,10 +46,16 @@ class SortieType extends AbstractType
                 ])
                 ->add('nbInscritptionMax', IntegerType::class, [
                     'label' => 'Nombre de places :',
+                    'attr' => [
+                        'min' => 1
+                    ]
                     //'data"' => '1'
                 ])
                 ->add('duree', IntegerType::class, [
                     'label' => 'Durée en minutes :',
+                    'attr' => [
+                        'min' => 15
+                    ]
                     //'data' => '15',
                     //'help' => 'Une sortie doit être au minimum de 15 minutes'
                 ])
