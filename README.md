@@ -22,3 +22,6 @@ La gestion de courriers est assurée par Papercut (https://github.com/Changemake
 5. Créez le schéma de la BDD `symfony console doctrine:schema:update --force`
 6. Ajouter des données de test `php bin/console doctrine:fixtures:load`
 7. Accédez à l'application http://localhost:8000/
+8. Connectez vous avec l'utilisateur par défaut :
+   id: PseudoTest
+   password : azerty 
