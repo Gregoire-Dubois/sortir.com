@@ -24,4 +24,5 @@ La gestion de courriers est assurée par Papercut (https://github.com/Changemake
 7. Accédez à l'application http://localhost:8000/
 8. Connectez vous avec l'utilisateur par défaut :
    id: PseudoTest
-   password : azerty 
+   password : azerty
+9. Pour générer les courriers, modifier le fichier passez la commande `symfony console messenger:consume async` après avoir ajouter `MAILER_DSN=smtp://localhost` dans votre fichier .env   
