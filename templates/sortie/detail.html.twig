@@ -50,11 +50,16 @@
                 <label class="column6 row5 default_label">Code postal</label>
                 <span class="column7 row5 default_span" id="event_postal_code">{{ sortie.lieu.ville.codePostal }}</span>
 
+                {% if (sortie.etat.libelle == 'Annulée') %}
+                <label for="event_reason" class="column6 row6 default_label">Motif d'annulation :</label>
+                <span class="column7-8 default_textarea" id="event_reason">{{ sortie.motif }}</span>
+                {% else %}
                 <label class="column6 row6 default_label">Latitude</label>
                 <span class="column7 row6 default_span" id="event_latitude">{{ sortie.lieu.latitude }}</span>
 
                 <label class="column6 row7 default_label">Longitude</label>
                 <span class="column7 row7 default_span" id="event_longitude">{{ sortie.lieu.longitude }}</span>
+                {% endif %}
 
                 <div class="display_event_button">
                     {% if is_granted('ROLE_ADMIN') %} <!-- Affichage des boutons pour un Administrateur -->
