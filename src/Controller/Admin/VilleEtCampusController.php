@@ -9,6 +9,7 @@ use App\Form\Admin\RechercheVilleType;
 use App\Form\Admin\VilleType;
 use App\Form\Admin\CampusType;
 use App\Repository\CampusRepository;
+use App\Repository\ParticipantRepository;
 use App\Repository\VilleRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -146,15 +147,21 @@ class VilleEtCampusController extends AbstractController
     /**
      * @Route("/campus/{id}/supprimer", name="supprimer_campus")
      */
-    public function supprimerCampus(Request $request, EntityManagerInterface $entityManager, Campus $campus): Response
+    public function supprimerCampus(int $id, EntityManagerInterface $entityManager, CampusRepository $campusRepository, ParticipantRepository $participantRepository): Response
     {
-        $entityManager->remove($campus);
-        $entityManager->flush();
+        $campus = $campusRepository->find($id);
+        $countParticipant = $participantRepository->countByCampus($id);
+        if ($countParticipant === 0) {
+            $entityManager->remove($campus);
+            $entityManager->flush();
 
-        $this->addFlash('success_suppression_campus', $campus .' a été supprimée de la liste des campus.');
-
-        // Redirigez vers la même page après la suppression
-        return $this->redirectToRoute('admin_villes_et_campus');
+            $this->addFlash('success_suppression_campus', $campus . ' a été supprimée de la liste des campus.');
+            // Redirigez vers la même page après la suppression
+            return $this->redirectToRoute('admin_villes_et_campus');
+        } else {
+            $this->addFlash('error', 'Impossible de supprimer le campus car il a des participants associés');
+            return $this->redirectToRoute('admin_villes_et_campus');
+        }
     }
 
     /**

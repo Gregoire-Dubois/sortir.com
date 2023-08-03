@@ -146,6 +146,17 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
 
     }
 
+    public function countByCampus(int $campusId): int
+    {
+        return $this->createQueryBuilder('participant')
+            ->select('COUNT(participant.id)')
+            ->join('participant.campus', 'campus')
+            ->where('campus.id = :campusId')
+            ->setParameter('campusId', $campusId)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
 
 
 //    /**
