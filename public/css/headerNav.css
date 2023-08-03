@@ -266,5 +266,7 @@ header {
   .user_menu_nav li {
     width: 75vw;
   }
-
+.smartphoneCache{
+  display: none;
+}
 }
