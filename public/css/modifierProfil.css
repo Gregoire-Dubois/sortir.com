@@ -149,6 +149,10 @@ a {
 
 @media screen and (max-width: 768px) {
 
+  main {
+    padding: 0;
+  }
+
   .header_menu_nav {
     height: 20vh;
   }

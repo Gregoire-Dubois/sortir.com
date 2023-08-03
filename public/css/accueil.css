@@ -3,13 +3,23 @@ main{
   display: block;
 }
 
+.default_block_message {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  flex-wrap: nowrap;
+  height: 5vh;
+  margin: 0 1vh 1vh 1vh;
+  overflow-y: hidden;
+}
+
 .info_login_container {
   display: flex;
   justify-content: flex-end;
   align-items: center;
   gap: 2vh;
-  height: 5vh;
-  margin: 0 1vh 1vh 1vh;
+  height: 100%;
+  min-width: fit-content;
   padding-right: 1vh;
   color: var(--tertiary-color);
   font-style: italic;
@@ -205,6 +215,14 @@ table a {
 
   body {
     height: auto;
+  }
+
+  .default_block_message {
+    display: flex;
+    flex-wrap: wrap;
+    height: fit-content;
+    justify-content: center;
+    text-align: center;
   }
 
   .default_container {

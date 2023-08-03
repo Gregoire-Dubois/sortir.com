@@ -9,17 +9,24 @@
     <link rel="stylesheet" href="{{ asset('css/accueil.css') }}">
 {% endblock %}
 
+{% block flash_message %}
+    <div class="default_block_message">
+        {{ parent() }}
+        <!-- Infos : nom utilisateurs et date du jour -->
+        <div class="info_login_container">
+            {% set currentDate = "now"|date("d/m/Y") %} {# Récupéreration de la date du jour #}
+            {% set currentUserFirstName = app.user.prenom %} {# Récupérer du nom de l'utilisateur connecté #}
+            {% set currentUserLastName = app.user.nom %} {# Récupérer du nom de l'utilisateur connecté #}
+            <div class="today_date"><p>Date du jour : </p>
+                <p id="today_date_value">{{ currentDate }}</p></div>
+            <div class="username"><p>Participant : </p>
+                <p id="username_value">{{ currentUserFirstName }} {{ currentUserLastName }}</p></div>
+        </div>
+    </div>
+{% endblock %}
+
 {% block body %}
 
-    <!-- Infos : nom utilisateurs et date du jour -->
-    <div class="info_login_container">
-        {% set currentDate = "now"|date("d/m/Y") %} {# Récupéreration de la date du jour #}
-        {% set currentUser = app.user.nom %} {# Récupérer du nom de l'utilisateur connecté #}
-        <div class="today_date"><p>Date du jour : </p>
-            <p id="today_date_value">{{ currentDate }}</p></div>
-        <div class="username"><p>Participant : </p>
-            <p id="username_value">{{ currentUser }}</p></div>
-    </div>
     <section class="default_container">
         <h2>Liste et Filtres des Sorties</h2>
         <!-- Bloc filtres et recherches de la sortie -->
