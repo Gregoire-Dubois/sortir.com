@@ -5,7 +5,7 @@ L'objectif est de développer une application pour un bureau d'éléves avec de 
 Ce Readme décrit les actions à suivre pour exécuter l'application de cet environnement.
 
 # Environnement techniques et pré-requis
-L'application a été développé avec Symfony 5.4, PHP 7.4 et Mysql 8.
+L'application a été développée avec Symfony 5.4, PHP 7.4 et Mysql 8.
 Le serveur web utilisé est celui de Symfony via la commance `symfony serve`.
 La gestion de courriers est assurée par Papercut (https://github.com/ChangemakerStudios/Papercut-SMTP)
 
