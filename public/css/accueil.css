@@ -203,15 +203,24 @@ table a {
   align-items: center;
 }
 
+.tablette2{
+  display:none;
+}
+
 @media screen and (max-width: 768px) {
 
   body {
     height: auto;
-  }
 
+  }
+.tablette2{
+  display: block;
+}
   .default_container {
     flex-wrap: wrap;
     max-height: none;
+
+
   }
 
   .filter_container {
@@ -318,7 +327,15 @@ table a {
     width: 96.5vw;
     margin: 0 1.5vw 1vh 1.5vw;
   }
-
+  .default_table{
+    width:100%;
+  }
+  .tablette{
+    display: none;
+  }
+  td, tr, th {
+    font-size: 2vh;
+  }
 }
 
 @media screen and (max-width: 426px) {
@@ -329,17 +346,21 @@ table a {
     height: fit-content;
     margin-top: 1vh;
   }
-
+  .tablette2{
+    display: none;
+  }
   .filter_container {
     grid-template-columns: 0.5fr 1.5fr 0.5fr 1.5fr;
     grid-template-rows: repeat(10,4vh);
     height: auto;
     min-height: fit-content;
     padding: 1vh 1.5vw 2vh 1.5vw;
+
   }
 
   .default_table_wrapper {
     overflow-x: auto;
+
   }
 
   .column1.row1 {
@@ -447,6 +468,8 @@ table a {
 .default_container{
   margin:10px;
   margin-top: 50px;
+  width:95%;
+
 
 }
 
@@ -458,4 +481,19 @@ a:active{
   font-weight: bold;
   font-size: large;
 }
+td{
+  font-size: 1.5vh;
+}
+
+td.smartphoneVisible, th.smartphoneVisible{
+  padding-top: 6px;
+  border:none;
+  height: 100%;
+}
+th.smartphoneVisible{
+  padding-bottom: 10px;
+}
+
+
+
 }

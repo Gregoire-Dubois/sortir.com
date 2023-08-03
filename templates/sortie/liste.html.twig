@@ -79,29 +79,30 @@
             <table class="default_table">
 
                 <colgroup>
-                    <col class="event_column1 smartphoneCache">
+                    <col class="event_column1 smartphoneCache tablette">
                     <col class="event_column2">
                     <col class="event_column3">
-                    <col class="event_column4">
-                    <col class="event_column5 smartphoneCache">
-                    <col class="event_column6 smartphoneCache">
+                    <col class="event_column4 tablette">
+                    <col class="event_column5 smartphoneCache tablette">
+                    <col class="event_column6 smartphoneCache tablette">
                     <col class="event_column7 smartphoneCache">
-                    <col class="event_column8 smartphoneCache">
-                    <col class="event_column9 smartphoneCache">
+                    <col class="event_column8 smartphoneCache tablette">
+                    <col class="event_column9 smartphoneCache tablette">
                 </colgroup>
 
                 <!-- Titre du tableau -->
                 <thead>
                 <tr>
-                    <th class="smartphoneCache">Campus</th>
+                    <th class="smartphoneCache tablette">Campus</th>
                     <th>Nom de la sortie</th>
                     <th>Date de la sortie</th>
-                    <th class="smartphoneCache">Date de clôture</th>
-                    <th class="smartphoneVisible">Lieu</th>
-                    <th class="smartphoneCache">Inscrits / Places</th>
-                    <th class="smartphoneCache">État</th>
-                    <th class="smartphoneCache">Inscrit</th>
-                    <th class="smartphoneCache">Organisateur</th>
+                    <th class="smartphoneCache tablette">Date de clôture</th>
+                    <th class="smartphoneVisible tablette">Lieu</th>
+                    <th class="smartphoneCache tablette">Inscrits / Places</th>
+                    <th class="smartphoneCache ">État</th>
+                    <th class="smartphoneCache tablette">Inscrit</th>
+                    <th class="smartphoneCache tablette">Organisateur</th>
+
                     <th class="smartphoneCache">Actions</th>
                 </tr>
                 </thead>
@@ -111,15 +112,15 @@
                 {% for sortie in sorties %}
 
                 <tr>
-                    <td class="smartphoneCache">{{ sortie.campus.nom }}</td>
+                    <td class="smartphoneCache tablette">{{ sortie.campus.nom }}</td>
                     <td ><a href="{{ path('sortie_detailSortie', { 'id': sortie.id }) }}">{{ sortie.nom }}</a></td>
                     <td>{{ sortie.dateDebut|date('d-m-Y H:i') }}</td>
-                    <td class="smartphoneCache">{{ sortie.dateLimiteInscription|date('d-m-Y') }}</td>
-                    <td class="smartphoneVisible"> {{ sortie.lieu.nom }}</td>
-                    <td class="smartphoneCache">{{ sortie.participants.count }} / {{ sortie.nbInscritptionMax }}</td>
+                    <td class="smartphoneCache tablette">{{ sortie.dateLimiteInscription|date('d-m-Y') }}</td>
+                    <td class="smartphoneVisible tablette"> {{ sortie.lieu.nom }}</td>
+                    <td class="smartphoneCache tablette">{{ sortie.participants.count }} / {{ sortie.nbInscritptionMax }}</td>
                     <td class="smartphoneCache">{{ sortie.etat.libelle }}</td>
-                    <td class="smartphoneCache">{%if app.user in  sortie.participants %}X{% endif %}</td>
-                    <td class="smartphoneCache"><a href="{{ path('participant_afficherProfil', { 'id': sortie.organisateur.id }) }}" >{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</a></td>
+                    <td class="smartphoneCache tablette">{%if app.user in  sortie.participants %}X{% endif %}</td>
+                    <td class="smartphoneCache tablette"><a href="{{ path('participant_afficherProfil', { 'id': sortie.organisateur.id }) }}" >{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</a></td>
 
                     <td class="smartphoneCache">
                             {% if is_granted('ROLE_ADMIN') %} <!-- Affichage des boutons pour un Administrateur -->
