@@ -9,6 +9,7 @@ use App\Form\Admin\RechercheVilleType;
 use App\Form\Admin\VilleType;
 use App\Form\Admin\CampusType;
 use App\Repository\CampusRepository;
+use App\Repository\LieuRepository;
 use App\Repository\ParticipantRepository;
 use App\Repository\VilleRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -133,15 +134,20 @@ class VilleEtCampusController extends AbstractController
     /**
      * @Route("/ville/{id}/supprimer", name="supprimer_ville")
      */
-    public function supprimerVille(Request $request, EntityManagerInterface $entityManager, Ville $ville): Response
+    public function supprimerVille(int $id, EntityManagerInterface $entityManager, VilleRepository $villeRepository, LieuRepository $lieuRepository): Response
     {
-        $entityManager->remove($ville);
-        $entityManager->flush();
+        $ville = $villeRepository->find($id);
+        $countLocation = $lieuRepository->countByCity($id);
+        if ($countLocation === 0 ) {
+            $entityManager->remove($ville);
+            $entityManager->flush();
 
-        $this->addFlash('success_suppression_ville', $ville .' a été supprimée de la liste des villes.');
-
-        // Redirigez vers la même page après la suppression
-        return $this->redirectToRoute('admin_villes_et_campus');
+            $this->addFlash('success_suppression_ville', $ville . ' a été supprimée de la liste des villes.');
+            return $this->redirectToRoute('admin_villes_et_campus');
+        } else {
+            $this->addFlash('error', 'Impossible de supprimer la ville  car des lieux lui sont associés');
+            return $this->redirectToRoute('admin_villes_et_campus');
+        }
     }
 
     /**

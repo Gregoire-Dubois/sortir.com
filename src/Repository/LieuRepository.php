@@ -48,6 +48,17 @@ class LieuRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function countByCity(int $cityId): int
+    {
+        return $this->createQueryBuilder('lieu')
+            ->select('COUNT(lieu.id)')
+            ->join('lieu.ville', 'ville')
+            ->where('ville.id = :cityId')
+            ->setParameter('cityId', $cityId)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
 //    /**
 //     * @return Lieu[] Returns an array of Lieu objects
 //     */
