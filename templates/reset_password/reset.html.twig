@@ -1,11 +1,17 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Réinitialiser le mot de passe | {{ parent() }}{% endblock %}
+{% block title %} {{ parent() }} | Réinitialiser le mot de passe {% endblock %}
+
+{%  block header %}{% endblock %}
 
 {% block body %}
-    <h1>Réinitialiser votre mot de passe</h1>
+<section class="default_container">
 
-    {{ form_start(resetForm) }}
+    <div class="forgot_pwd_container">
+        <!-- Titre du bloc "Gérer les villes" -->
+        <h2>Réinitialiser votre mot de passe</h2>
+
+    {{ form_start(resetForm, {'attr': {'class': 'forgot_pwd_form'}, 'render_form': false}) }}
         {{ form_row(resetForm.plainPassword) }}
         <button class="btn btn-primary">Réinitialiser le mot de passe</button>
     {{ form_end(resetForm) }}

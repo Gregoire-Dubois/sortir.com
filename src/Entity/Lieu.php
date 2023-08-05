@@ -6,13 +6,13 @@ use App\Repository\LieuRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Form\FormInterface;
+use JsonSerializable;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=LieuRepository::class)
  */
-class Lieu implements \JsonSerializable
+class Lieu implements JsonSerializable
 {
     /**
      * @ORM\Id
@@ -160,7 +160,10 @@ class Lieu implements \JsonSerializable
         return $this;
     }
 
-    public function jsonSerialize()
+    /**
+     * @return mixed
+     */
+    public function jsonSerialize(): array
     {
         return [
             "id" => $this->getId(),
