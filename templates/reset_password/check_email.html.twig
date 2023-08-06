@@ -1,11 +1,36 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Réinitialiser le mot de passe | {{ parent() }}{% endblock %}
+{% block title %} {{ parent() }} | Réinitialiser le mot de passe {% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/checkEmail.css') }}">
+{% endblock %}
+
+{%  block header %}{% endblock %}
 
 {% block body %}
-    <p>
-        Si un compte correspondant à votre adresse e-mail existe, un e-mail vient d'être envoyé contenant un lien que vous pouvez utiliser pour réinitialiser votre mot de passe.
-        Ce lien expirera dans {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
-    </p>
-    <p>Si vous ne recevez pas d'e-mail, veuillez vérifier votre dossier spam ou <a href="{{ path('app_forgot_password_request') }}">essayer à nouveau</a>.</p>
+    <!-- {% for flash_error in app.flashes('reset_password_error') %}
+        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+    {% endfor %} -->
+
+    <section class="default_container">
+
+        <div class="check_email_container">
+            <!-- Titre du bloc "Réinitialisation du mot de passe" -->
+            <h2>Réinitialiser votre mot de passe</h2>
+
+            <div class="check_email_message">Si un compte correspondant à votre adresse e-mail existe,
+                un e-mail vient d'être envoyé contenant un lien que vous pouvez utiliser pour réinitialiser
+                votre mot de passe.
+                Ce lien expirera dans
+                {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.</div>
+
+            <div class="try_new_email_message">
+                <span>Si vous ne recevez pas d'e-mail, veuillez vérifier votre dossier spam ou</span>
+                <button class="default_principal_button"><a href="{{ path('app_forgot_password_request') }}">Essayer à nouveau</a></button></div>
+
+        </div>
+    </section>
+
 {% endblock %}

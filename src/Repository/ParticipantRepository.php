@@ -74,6 +74,10 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
             ->getOneOrNullResult();
     }
 
+    /**
+     * @param string $usernameOrEmail
+     * @return ?UserInterface
+     */
     public function loadUserByUsername(string $usernameOrEmail)
     {
         return $this->loadUserByIdentifier($usernameOrEmail);
