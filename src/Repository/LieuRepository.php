@@ -3,11 +3,13 @@
 namespace App\Repository;
 
 use App\Entity\Lieu;
+use App\Entity\Ville;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Lieu>
  *
  * @method Lieu|null find($id, $lockMode = null, $lockVersion = null)
  * @method Lieu|null findOneBy(array $criteria, array $orderBy = null)
@@ -48,6 +50,10 @@ class LieuRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * @throws NonUniqueResultException
+     * @throws NoResultException
+     */
     public function countByCity(int $cityId): int
     {
         return $this->createQueryBuilder('lieu')

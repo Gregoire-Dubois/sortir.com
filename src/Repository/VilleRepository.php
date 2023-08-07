@@ -8,7 +8,6 @@ use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 
 /**
- * @extends ServiceEntityRepository<Ville>
  *
  * @method Ville|null find($id, $lockMode = null, $lockVersion = null)
  * @method Ville|null findOneBy(array $criteria, array $orderBy = null)
@@ -70,6 +69,4 @@ class VilleRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
-
-
 }

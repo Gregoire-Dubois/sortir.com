@@ -8,7 +8,6 @@ use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 
 /**
- * @extends ServiceEntityRepository<Campus>
  *
  * @method Campus|null find($id, $lockMode = null, $lockVersion = null)
  * @method Campus|null findOneBy(array $criteria, array $orderBy = null)
@@ -53,7 +52,6 @@ class CampusRepository extends ServiceEntityRepository
         }
 
         $campus->setNom($nom);
-
         $entityManager->flush();
 
         return $campus;

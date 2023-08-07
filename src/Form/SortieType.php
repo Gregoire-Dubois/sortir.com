@@ -17,10 +17,8 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-
 class SortieType extends AbstractType
 {
-
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         if ($options['only_motif']) {
@@ -32,7 +30,6 @@ class SortieType extends AbstractType
             $builder
                 ->add('nom', null, [
                     'label' => 'Nom de la sortie :',
-                    //'help' => 'Le nom doit être composé de 3 à 100 caractères'
                 ])
                 ->add('dateDebut', null, [
                     'label' => 'Date et heure de la sortie :',
@@ -42,22 +39,18 @@ class SortieType extends AbstractType
                 ->add('dateLimiteInscription', null, [
                     'label' => 'Date de clôture des inscriptions :',
                     'widget' => 'single_text',
-                    //'help' => 'La date de clôture ne peut être supérieure à la date de sortie'
                 ])
                 ->add('nbInscritptionMax', IntegerType::class, [
                     'label' => 'Nombre de places :',
                     'attr' => [
                         'min' => 1
                     ]
-                    //'data"' => '1'
                 ])
                 ->add('duree', IntegerType::class, [
                     'label' => 'Durée en minutes :',
                     'attr' => [
                         'min' => 15
                     ]
-                    //'data' => '15',
-                    //'help' => 'Une sortie doit être au minimum de 15 minutes'
                 ])
                 ->add('description')
                 ->add('campus', EntityType::class, [
@@ -82,10 +75,9 @@ class SortieType extends AbstractType
                 //Affichage par défaut du formulaire de Lieu, avant toute action sur le formulaire Ville
                 //Désactivé par défaut
                 ->add('lieu', EntityType::class, [
-                    //'label' => 'Lieu :',
                     'placeholder' => 'Sélectionner un lieu',
                     'class' => Lieu::class,
-                    //'disabled' => true,
+
                 ])
                 ->add('creer', SubmitType::class, [
                     'label' => 'Créer'
@@ -155,7 +147,6 @@ class SortieType extends AbstractType
         {
             $resolver->setDefaults([
                 'data_class' => Sortie::class,
-                //'lieu_class' => Lieu::class,
                 'only_motif' => false,
                 'publication_false' => true,
             ]);

@@ -48,7 +48,7 @@ class SortiesFilterType extends AbstractType
             ])
 
             ->add('organized', CheckboxType::class, [
-                'label' => "Sorties dont je suis l'organisteur/trice",
+                'label' => "Sorties dont je suis l'organisateur/trice",
                 'required' => false
             ])
             ->add('subscribed', CheckboxType::class, [
@@ -62,14 +62,7 @@ class SortiesFilterType extends AbstractType
             ->add('over', CheckboxType::class, [
                 'label' => "Sorties passées",
                 'required' => false
-            ])
-            /*
-            ->add('open', CheckboxType::class, [
-                'label' => "Sorties ouvertes",
-                'required' => false
-            ])
-            */
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

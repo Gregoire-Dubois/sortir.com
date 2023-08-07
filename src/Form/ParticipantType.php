@@ -16,7 +16,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\Length;
 
-
 class ParticipantType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
@@ -80,11 +79,8 @@ class ParticipantType extends AbstractType
                     'mimeTypesMessage' => 'Veuillez télécharger une image au format JPG, PNG ou GIF.',
                     'maxSize' => '8M',
                     'maxSizeMessage' => 'La taille de la photo ne doit pas dépasser 8 Mo',
-
-        ])
-    ]
-            ])
-        ;
+        	])]
+        ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

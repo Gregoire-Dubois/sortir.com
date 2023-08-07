@@ -236,6 +236,7 @@ h2 {
 /* Input par défaut */
 .default_textarea {
   width: 100%;
+  text-align: start;
   padding: 1vh 0.5vw;
   font-size: 2vh;
   color: var(--primary-color);

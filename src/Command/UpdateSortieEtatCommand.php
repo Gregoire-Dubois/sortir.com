@@ -21,12 +21,12 @@ class UpdateSortieEtatCommand extends Command
     protected static $defaultDescription = "Commande utilisée pour mettre à jour l'état des sorties";
 
     /** @var EntityManagerInterface */
-    private $em;
+    private EntityManagerInterface $em;
 
-    private $logger;
+    private LoggerInterface $logger;
 
     /** @var SortieEvent */
-    private $sortieEtats;
+    private SortieEvent $sortieEtats;
 
 
     /**

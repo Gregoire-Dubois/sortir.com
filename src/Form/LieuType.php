@@ -34,7 +34,6 @@ class LieuType extends AbstractType
                         ->orderBy('v.nom', 'ASC');
                 },
             ])
-            //->add('Valider', SubmitType::class)
         ;
     }
 

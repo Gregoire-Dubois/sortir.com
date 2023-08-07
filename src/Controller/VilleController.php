@@ -2,12 +2,11 @@
 
 namespace App\Controller;
 
-use App\Entity\Lieu;
 use App\Entity\Ville;
-use App\Form\LieuType;
 use App\Form\VilleType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,9 +16,8 @@ class VilleController extends AbstractController
     /**
      * @Route("/sorties/ville/afficher", name="ville_afficher", methods={"GET"})
      */
-
-    //Sert à l'affichage du formulaire dans la pop-up
-    public function create(Request $request, EntityManagerInterface $em)
+    //Sert à l'affichage du formulaire dans les pop-up
+    public function create(): Response
     {
         // Créer une instance du formulaire LieuType
         $ville = new Ville();
@@ -30,11 +28,10 @@ class VilleController extends AbstractController
         ]);
     }
 
-
     /**
      * @Route("/sorties/ville/creation", name="ville_creation_submit", methods={"POST"})
      */
-    public function createCity(Request $request, EntityManagerInterface $em)
+    public function createCity(Request $request, EntityManagerInterface $em): JsonResponse
     {
         // Créer une instance du formulaire VilleType
         $ville = new Ville();
@@ -64,5 +61,14 @@ class VilleController extends AbstractController
                 'errors' => $errors,
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
+    }
+
+    private function getFormErrors($form): array
+    {
+        $errors = [];
+        foreach ($form->getErrors(true) as $error) {
+            $errors[] = $error->getMessage();
+        }
+        return $errors;
     }
 }

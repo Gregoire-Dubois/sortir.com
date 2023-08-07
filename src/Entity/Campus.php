@@ -17,7 +17,7 @@ class Campus
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private ?int $id;
 
     /**
      * @ORM\Column(type="string", length=100)
@@ -65,22 +65,22 @@ class Campus
         return $this->sorties;
     }
 
-    public function addSorty(Sortie $sorty): self
+    public function addSortie(Sortie $sortie): self
     {
-        if (!$this->sorties->contains($sorty)) {
-            $this->sorties[] = $sorty;
-            $sorty->setCampus($this);
+        if (!$this->sorties->contains($sortie)) {
+            $this->sorties[] = $sortie;
+            $sortie->setCampus($this);
         }
 
         return $this;
     }
 
-    public function removeSorty(Sortie $sorty): self
+    public function removeSortie(Sortie $sortie): self
     {
-        if ($this->sorties->removeElement($sorty)) {
+        if ($this->sorties->removeElement($sortie)) {
             // set the owning side to null (unless already changed)
-            if ($sorty->getCampus() === $this) {
-                $sorty->setCampus(null);
+            if ($sortie->getCampus() === $this) {
+                $sortie->setCampus(null);
             }
         }
 
@@ -105,7 +105,7 @@ class Campus
         return $this;
     }
 
-    public function removeElefe(Participant $etudiant): self
+    public function removeEtudiant(Participant $etudiant): self
     {
         if ($this->etudiants->removeElement($etudiant)) {
             // set the owning side to null (unless already changed)

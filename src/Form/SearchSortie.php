@@ -12,28 +12,24 @@ class SearchSortie extends AbstractType
 
     /**
      * @var Campus|null
-     *
      * @Assert\Type(type=Campus::class)
      */
     public $campus = null;
 
     /**
      * @var string|null
-     *
      * @Assert\Type(type="string")
      */
     public $name = null;
 
     /**
      * @var DateTime|null
-     *
      * @Assert\Type(type=DateTime::class)
      */
     public $from = null;
 
     /**
      * @var DateTime|null
-     *
      * @Assert\Type(type="DateTime")
      * @Assert\GreaterThanOrEqual(
      *     propertyPath="from",
@@ -44,35 +40,30 @@ class SearchSortie extends AbstractType
 
     /**
      * @var bool|null
-     *
      * @Assert\Type(type="bool")
      */
     public $organized = null;
 
     /**
      * @var bool|null
-     *
      * @Assert\Type(type="bool")
      */
     public $subscribed = null;
 
     /**
      * @var bool|null
-     *
      * @Assert\Type(type="bool")
      */
     public $notSubscribed = null;
 
     /**
      * @var bool|null
-     *
      * @Assert\Type(type="bool")
      */
     public $over = null;
 
     /**
      * @var bool|null
-     *
      * @Assert\Type(type="bool")
      */
     public $open = null;

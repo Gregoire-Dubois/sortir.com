@@ -2,7 +2,6 @@
 
 namespace App\Security;
 
-use App\Entity\Participant;
 use App\Repository\ParticipantRepository;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,9 +21,7 @@ use Symfony\Component\Security\Http\Util\TargetPathTrait;
 class AppAuthentifcatorAuthenticator extends AbstractLoginFormAuthenticator
 {
     use TargetPathTrait;
-
     public const LOGIN_ROUTE = 'app_login';
-
     private UrlGeneratorInterface $urlGenerator;
     private ParticipantRepository $participantRepository;
 
@@ -53,20 +50,15 @@ class AppAuthentifcatorAuthenticator extends AbstractLoginFormAuthenticator
             [
                 new CsrfTokenBadge('authenticate', $request->request->get('_csrf_token')),
                 new RememberMeBadge(),
-
             ]
         );
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-
-
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
             return new RedirectResponse($targetPath);
         }
-
-
         return new RedirectResponse($this->urlGenerator->generate('sortie_listeSortie'));
     }
 

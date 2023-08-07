@@ -10,7 +10,7 @@ main {
 }
 #date_heure, #ville, #lieu, #rue, #cp, #cp_valeur, #nom_sortie_label, #nom_sortie, #date_heure_label, #date_heure,
 #ville_label, #lieu_label, #rue_label, #rue, #latitude, #latitude_label, #latitude, #longitude_label, #longitude,
-  #cloture_label, #cloture, #nbplaces_label, #nbplaces, #duree_label, #duree, #description_label, #description
+  #cloture_label, #cloture, #nbPlaces_label, #nbPlaces, #duree_label, #duree, #description_label, #description
 {
   display: none;
 }
@@ -75,6 +75,7 @@ a {
 #event_description {
   grid-row: 6/8;
   resize: none;
+  align-items: start;
   background-color: var(--primary-color);
   color: white;
 }
@@ -82,6 +83,7 @@ a {
 #event_reason {
   grid-row: 6/8;
   resize: none;
+  align-items: start;
   background-color: var(--primary-color);
   color: white;
 }
@@ -287,12 +289,12 @@ box-sizing: border-box;
   }
   #date_heure, #ville, #lieu, #rue, #cp, #cp_valeur, #nom_sortie_label, #nom_sortie, #date_heure_label, #date_heure,
   #ville_label, #lieu_label, #rue_label, #rue, #latitude, #latitude_label, #latitude, #longitude_label, #longitude,
-  #cloture_label, #cloture, #nbplaces_label, #nbplaces, #duree_label, #duree, #description_label, #description
+  #cloture_label, #cloture, #nbPlaces_label, #nbPlaces, #duree_label, #duree, #description_label, #description
   {
     display: block;
   }
  header{
-   margin:15px 15px 0px 15px;
+   margin:15px 15px 0 15px;
  }
   .smartphoneVisible{
     display: block;

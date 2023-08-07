@@ -4,17 +4,16 @@ namespace App\Event;
 
 use App\Entity\Etat;
 use App\Entity\Sortie;
+use DateTime;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
- *
  * Ce service permet de gérer les états de sortie
- *
  */
 class SortieEvent extends Event
 {
-    private $doctrine;
+    private ManagerRegistry $doctrine;
 
     // Définition des constantes pour les différents états
     const ETAT_CREEE = 'Créée';
@@ -34,16 +33,14 @@ class SortieEvent extends Event
     }
 
     /**
-     * Retourne  un objet Etat en fonction de son nom
+     * Retourne un objet Etat en fonction de son nom
      *
      * @param string $libelle
      * @return SortieEvent|object|null
      */
     public function getEtatByLibelle(string $libelle): ?Etat
     {
-        $etat = $this->doctrine->getRepository(Etat::class)->findOneBy(['libelle' => $libelle]);
-
-        return $etat;
+        return $this->doctrine->getRepository(Etat::class)->findOneBy(['libelle' => $libelle]);
     }
 
     /**
@@ -63,8 +60,7 @@ class SortieEvent extends Event
     }
 
     /**
-     *
-     * Retourne true si la sortie peut être "Ouverte"
+     * Retourne true si la sortie peut-être "Ouverte"
      *
      * @param Sortie $sortie
      * @return bool
@@ -76,7 +72,6 @@ class SortieEvent extends Event
     }
 
     /**
-     *
      * Retourne un booléen en fonction de si la sortie devrait être classée comme "Clôturée"
      *
      * @param Sortie $sortie
@@ -84,7 +79,7 @@ class SortieEvent extends Event
      */
     public function changementEtatSortieCloturee(Sortie $sortie): bool
     {
-        $now = new \DateTime();
+        $now = new DateTime();
         // Vérifie si la sortie est en état "Ouverte" et n'est pas déjà en état "Clôturée"
         if (
             $sortie->getEtat()->getLibelle() === self::ETAT_OUVERTE
@@ -102,13 +97,11 @@ class SortieEvent extends Event
                 }
             }
         }
-
         return false;
     }
 
     /**
-     *
-     * Retourne true si la sortie peut être "Annulée""
+     * Retourne true si la sortie peut-être "Annulée""
      *
      * @param Sortie $sortie
      * @return bool
@@ -128,7 +121,7 @@ class SortieEvent extends Event
      */
     public function changementEtatSortieEnCours(Sortie $sortie): bool
     {
-        $now = new \DateTime();
+        $now = new DateTime();
         if (
             $sortie->getEtat()->getLibelle() === self::ETAT_CLOTUREE
             && $sortie->getDateDebut() < $now
@@ -141,7 +134,6 @@ class SortieEvent extends Event
     }
 
     /**
-     *
      * Retourne un booléen en fonction de si la sortie devrait être classée comme "Passée"
      *
      * @param Sortie $sortie
@@ -149,8 +141,8 @@ class SortieEvent extends Event
      */
     public function changementEtatSortiePassee(Sortie $sortie): bool
     {
-        $now = new \DateTime();
-        $dateNowMoinsUnMois = new \DateTime("-1 month");
+        $now = new DateTime();
+        $dateNowMoinsUnMois = new DateTime("-1 month");
         if (
             $sortie->getEtat()->getLibelle() === self::ETAT_ACTIVITE_EN_COURS
             && $sortie->getDateFin() >= $dateNowMoinsUnMois
@@ -170,7 +162,7 @@ class SortieEvent extends Event
      */
     public function changementEtatSortieArchivee(Sortie $sortie): bool
     {
-        $dateNowMoinsUnMois = new \DateTime("-1 month");
+        $dateNowMoinsUnMois = new DateTime("-1 month");
         if (
             $sortie->getDateFin() < $dateNowMoinsUnMois
             && $sortie->getEtat()->getLibelle() !== self::ETAT_ARCHIVEE
@@ -182,12 +174,12 @@ class SortieEvent extends Event
 
     /**
      * Déduit l'état d'une sortie, utile pour les fixtures
-     * grosse duplication des méthode ci-dessus, mais pas trop le choix
+     * grosse duplication des méthodes ci-dessus, mais pas trop le choix
      */
     public function getEtatSortie(Sortie $sortie): string
     {
-        $now = new \DateTime();
-        $dateNowMoinsUnMois = new \DateTime("-1 month");
+        $now = new DateTime();
+        $dateNowMoinsUnMois = new DateTime("-1 month");
 
         if ($sortie->getDateFin() < $dateNowMoinsUnMois){
             return "Archivée";
@@ -208,8 +200,7 @@ class SortieEvent extends Event
             return "Clôturée";
         }
 
-        if ($sortie->getDateDebut() > $now &&
-            $sortie->getDateLimiteInscription() > $now){
+        if ($sortie->getDateLimiteInscription() > $now){
             return "Ouverte";
         }
 
