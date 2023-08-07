@@ -130,7 +130,6 @@ class VilleEtCampusController extends AbstractController
 
         return $campus;
     }
-
     /**
      * @Route("/ville/{id}/supprimer", name="supprimer_ville")
      */
@@ -143,11 +142,10 @@ class VilleEtCampusController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash('success_suppression_ville', $ville . ' a été supprimée de la liste des villes.');
-            return $this->redirectToRoute('admin_villes_et_campus');
         } else {
             $this->addFlash('error', 'Impossible de supprimer la ville  car des lieux lui sont associés');
-            return $this->redirectToRoute('admin_villes_et_campus');
         }
+        return $this->redirectToRoute('admin_villes_et_campus');
     }
 
     /**
@@ -162,20 +160,19 @@ class VilleEtCampusController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash('success_suppression_campus', $campus . ' a été supprimée de la liste des campus.');
-            // Redirigez vers la même page après la suppression
-            return $this->redirectToRoute('admin_villes_et_campus');
         } else {
             $this->addFlash('error', 'Impossible de supprimer le campus car il a des participants associés');
-            return $this->redirectToRoute('admin_villes_et_campus');
         }
+        // Redirigez vers la même page après la suppression
+        return $this->redirectToRoute('admin_villes_et_campus');
     }
 
     /**
      * @Route("/ville/{id}/modifier", name="modifier_ville", methods={"POST"})
+     * @throws Exception
      */
     public function modifierVille(int $id, Request $request, VilleRepository $villeRepository, EntityManagerInterface $em): Response
     {
-
         $ville = $em->getRepository(Ville::class)->find($id);
         $nom = $request->request->get('edit_nom_' . $id);
         $codePostal = $request->get('edit_code_postal_' . $id);
@@ -185,40 +182,14 @@ class VilleEtCampusController extends AbstractController
 
         // Redirigez vers la même page après la suppression
         return $this->redirectToRoute('admin_villes_et_campus');
-
-        /*
-        $form = $this->createForm(VilleType::class, $ville)
-            ->add('nom', TextType::class)
-            ->add('codePostal', TextType::class);
-
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            // Enregistrez les modifications dans la base de données
-            $entityManager->flush();
-
-            $this->addFlash('success_modification_ville', $ville .' a été modifiée avec succès.');
-
-            return $this->redirectToRoute('admin_villes_et_campus');
-        }
-
-        // Affichez le formulaire dans le modal
-        return $this->render('admin/popup/modifierVilleEtCampus.html.twig', [
-            'villeForm' => $form->createView(),
-            'is_ville' => true,
-            'entity' => $ville,
-        ]);
-        */
     }
 
     /**
      * @Route("/campus/{id}/modifier", name="modifier_campus", methods={"POST"})
      * @throws Exception
      */
-    public function modifierCampus(Request $request, EntityManagerInterface $entityManager, Campus $campus, int $id, CampusRepository $campusRepository): Response
+    public function modifierCampus(Request $request, EntityManagerInterface $entityManager, int $id, CampusRepository $campusRepository): Response
     {
-
         $campus = $entityManager->getRepository(Campus::class)->find($id);
         $nom = $request->request->get('edit_nom_' . $id );
         var_dump($nom . $id);
@@ -227,31 +198,6 @@ class VilleEtCampusController extends AbstractController
         $this -> addFlash('modifier_campus', $campus .' a été modifiée.');
 
         return $this->redirectToRoute('admin_villes_et_campus');
-
-/*
-        // Créez le formulaire VilleType avec "data_class" défini à null
-        $form = $this->createForm(VilleType::class, null, ['data_class' => null])
-            ->add('nom', TextType::class);
-
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            // Enregistrez les modifications dans la base de données
-            $entityManager->flush();
-
-            $this->addFlash('success_modification_campus', $campus .' a été modifié avec succès.');
-
-            return $this->redirectToRoute('admin_villes_et_campus');
-        }
-
-        // Affichez le formulaire dans le modal
-        return $this->render('admin/popup/modifierVilleEtCampus.html.twig', [
-            'campusForm' => $form->createView(),
-            'is_ville' => false,
-            'entity' => $campus,
-        ]);
-*/
-
     }
 
     /**
@@ -299,9 +245,6 @@ class VilleEtCampusController extends AbstractController
         }
 
         // Affichez le formulaire dans le modal
-        dump($isVille);
-        dump($type);
-        dump($id);
         return $this->render('admin/gestionVillesEtCampus.html.twig', [
             'form' => $form->createView(),
             'is_ville' => $isVille,

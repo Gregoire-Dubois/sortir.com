@@ -8,7 +8,6 @@ use App\Entity\Lieu;
 use App\Entity\Participant;
 use App\Entity\Sortie;
 use App\Entity\Ville;
-use App\Event\SortieEvent;
 use DateTime;
 use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -21,7 +20,7 @@ class AppFixtures extends Fixture
     protected static string $defaultName = 'app:fixtures:load';
     private UserPasswordHasherInterface $passwordHasher;
 
-    public function __construct(UserPasswordHasherInterface $passwordHasher, SortieEvent $sortieEtats)
+    public function __construct(UserPasswordHasherInterface $passwordHasher)
     {
         $this->passwordHasher=$passwordHasher;
     }
@@ -420,6 +419,7 @@ class AppFixtures extends Fixture
             $sortieAnnulee = new Sortie();
             $sortieAnnulee->setNom($faker->randomElement($nomsSorties));
             $sortieAnnulee->setDescription($faker->paragraph(1));
+            $sortieAnnulee->setMotif($faker->paragraph(1));
             $sortieAnnulee->setDateDebut($randomDate);
             $sortieAnnulee->setDuree($faker->numberBetween(60, 240));
             $dateLimiteInscription = (clone $randomDate)->modify('-1 day');

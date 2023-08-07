@@ -4,16 +4,17 @@ namespace App\Repository;
 
 use App\Entity\Participant;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use function get_class;
 
 /**
- * @extends ServiceEntityRepository<Participant>
  *
  * @method Participant|null find($id, $lockMode = null, $lockVersion = null)
  * @method Participant|null findOneBy(array $criteria, array $orderBy = null)
@@ -51,7 +52,7 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
         if (!$user instanceof Participant) {
-            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', \get_class($user)));
+            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', get_class($user)));
         }
 
         $user->setPassword($newHashedPassword);
@@ -60,6 +61,10 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
     }
 
     # Utilisation d'une requête personnalisée pour charger l'utilisateur
+
+    /**
+     * @throws NonUniqueResultException
+     */
     public function loadUserByIdentifier(string $usernameOrEmail): ?Participant
     {
         $entityManager = $this->getEntityManager();
@@ -77,6 +82,7 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
     /**
      * @param string $usernameOrEmail
      * @return ?UserInterface
+     * @throws NonUniqueResultException
      */
     public function loadUserByUsername(string $usernameOrEmail)
     {
@@ -92,12 +98,8 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
         $queryBuilder->setParameter(':participantConnecte', $participantConnecte);
         $queryBuilder->andWhere('p.email != :email');
         $queryBuilder->setParameter(':email', 'testanonyme@test.com');
-        dump($queryBuilder);
-        dump($queryBuilder->getDQL());
 
-        $participantsActifs = $queryBuilder->getQuery()->getResult();
-
-        return $participantsActifs;
+        return $queryBuilder->getQuery()->getResult();
 
     }
 
@@ -109,12 +111,7 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
         $queryBuilder->andWhere('p.email != :email');
         $queryBuilder->setParameter(':email', 'testanonyme@test.com');
 
-        dump($queryBuilder);
-        dump($queryBuilder->getDQL());
-
-        $participantsActifs = $queryBuilder->getQuery()->getResult();
-
-        return $participantsActifs;
+        return $queryBuilder->getQuery()->getResult();
 
     }
 
@@ -126,30 +123,27 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
         $queryBuilder->setParameter(':participantConnecte', $participantConnecte);
         $queryBuilder->andWhere('p.email != :email');
         $queryBuilder->setParameter(':email', 'testanonyme@test.com');
-        dump($queryBuilder);
-        dump($queryBuilder->getDQL());
 
-        $participants = $queryBuilder->getQuery()->getResult();
-
-        return $participants;
-
+        return $queryBuilder->getQuery()->getResult();
     }
 
+    /**
+     * @throws NonUniqueResultException
+     */
     public function findOneByEmail($email)
     {
         $queryBuilder = $this->createQueryBuilder('p');
         $queryBuilder->select('DISTINCT p');
         $queryBuilder->andWhere('p.email = :email');
         $queryBuilder->setParameter(':email', $email);
-        dump($queryBuilder);
-        dump($queryBuilder->getDQL());
 
-        $participantByEmail = $queryBuilder->getQuery()->getOneOrNullResult();
-
-        return $participantByEmail;
-
+        return $queryBuilder->getQuery()->getOneOrNullResult();
     }
 
+    /**
+     * @throws NonUniqueResultException
+     * @throws NoResultException
+     */
     public function countByCampus(int $campusId): int
     {
         return $this->createQueryBuilder('participant')
@@ -160,32 +154,4 @@ class ParticipantRepository extends ServiceEntityRepository implements PasswordU
             ->getQuery()
             ->getSingleScalarResult();
     }
-
-
-
-//    /**
-//     * @return Participant[] Returns an array of Participant objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('p.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Participant
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
-
 }

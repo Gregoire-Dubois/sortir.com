@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\SortieRepository;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -124,7 +125,6 @@ class Sortie
     public function __construct()
     {
         $this->participants = new ArrayCollection();
-
     }
     public function __toString()
     {
@@ -148,12 +148,12 @@ class Sortie
         return $this;
     }
 
-    public function getDateDebut(): ?\DateTimeInterface
+    public function getDateDebut(): ?DateTimeInterface
     {
         return $this->dateDebut;
     }
 
-    public function setDateDebut(\DateTimeInterface $dateDebut = null): self
+    public function setDateDebut(DateTimeInterface $dateDebut = null): self
     {
         $this->dateDebut = $dateDebut;
 
@@ -172,12 +172,12 @@ class Sortie
         return $this;
     }
 
-    public function getDateLimiteInscription(): ?\DateTimeInterface
+    public function getDateLimiteInscription(): ?DateTimeInterface
     {
         return $this->dateLimiteInscription;
     }
 
-    public function setDateLimiteInscription(\DateTimeInterface $dateLimiteInscription = null): self
+    public function setDateLimiteInscription(DateTimeInterface $dateLimiteInscription = null): self
     {
         $this->dateLimiteInscription = $dateLimiteInscription;
 
@@ -220,24 +220,24 @@ class Sortie
         return $this;
     }
 
-    public function getDateCreation(): ?\DateTimeInterface
+    public function getDateCreation(): ?DateTimeInterface
     {
         return $this->dateCreation;
     }
 
-    public function setDateCreation(\DateTimeInterface $dateCreation): self
+    public function setDateCreation(DateTimeInterface $dateCreation): self
     {
         $this->dateCreation = $dateCreation;
 
         return $this;
     }
 
-    public function getDateModification(): ?\DateTimeInterface
+    public function getDateModification(): ?DateTimeInterface
     {
         return $this->dateModification;
     }
 
-    public function setDateModification(?\DateTimeInterface $dateModification): self
+    public function setDateModification(?DateTimeInterface $dateModification): self
     {
         $this->dateModification = $dateModification;
 
@@ -334,7 +334,7 @@ dump($this->participants);
     /**
      * Calcule et retourne la date de fin en ajoutant la durée à la date de début.
      */
-    public function getDateFin(): \DateTime
+    public function getDateFin(): DateTimeInterface
     {
         $dateFin = clone $this->dateDebut;
         $dateFin->modify('+' . $this->duree . ' minutes');

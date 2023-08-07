@@ -11,6 +11,9 @@ use App\Form\SortieType;
 use App\Form\VilleType;
 use App\Repository\EtatRepository;
 use App\Repository\SortieRepository;
+use DateInterval;
+use DateTime;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,6 +27,7 @@ class SortieController extends AbstractController
 {
     /**
      * @Route("/", name="sortie_listeSortie")
+     * @throws NonUniqueResultException
      */
     public function listeSortie(SortieRepository $sortieRepository, Request $request): Response
     {
@@ -33,30 +37,20 @@ class SortieController extends AbstractController
         $sortieForm = $this->createForm(SortiesFilterType::class);
         $sortieForm->handleRequest($request);
         $sortiesAll = $sortieRepository->getSortiesCampus($campusParticipant, $participantConnnecte);
-        //$data = null;
-
-
 
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
 
             $data = $sortieForm->getData();
-         //   dump($data);
             $sortiesAll = $sortieRepository->selectAllSorties($data);
-            // dump($sortieForm->getData());
 
         }
-       // $sortiesAll = $sortieRepository->selectAllSorties($data);
-
-        //$sortiesAll = $sortieRepository-> selectAllSorties($data);
         if($sortiesAll==null){
             $this->addFlash('error', 'Il n\'y a pas de sortie correspondant à votre recherche.');
         }
         return $this->render('sortie/liste.html.twig', [
             'sorties' => $sortiesAll,
             'sortieForm' => $sortieForm->createView(),
-
         ]);
-
     }
 
     /**
@@ -65,17 +59,14 @@ class SortieController extends AbstractController
      */
     public function detailSortie(int $id, SortieRepository $sortieRepository): Response
     {
-
         $sortie = $sortieRepository->findSortieByIdWithDetails($id);
 
         if (!$sortie) {
             throw $this->createNotFoundException('Sortie non trouvée.');
         }
-
         return $this->render('sortie/detail.html.twig', [
             'sortie' => $sortie,
         ]);
-
     }
 
     /**
@@ -84,29 +75,26 @@ class SortieController extends AbstractController
     public function creerSortie(Request $request, EtatRepository $etatRepository, EntityManagerInterface $em): Response
     {
         $sortie = new Sortie();
-
-        //On checke l'utilisateur courant
+        //On check l'utilisateur courant
         $campus=$this->getUser()->getCampus();
         //On fixe une date de création
-        $sortie->setDateCreation(new \DateTime());
-        $sortie->setDateModification(new \DateTime());
-
+        $sortie->setDateCreation(new DateTime());
+        $sortie->setDateModification(new DateTime());
         //On paramètre des propositions de date cohérentes dans le formulaire
-        $sortie->setDateDebut((new \DateTimeImmutable())->setTime(21, 0));
-        $sortie->setDateLimiteInscription($sortie->getDateDebut()->sub(new \DateInterval("PT8H")));
+        $sortie->setDateDebut((new DateTimeImmutable())->setTime(21, 0));
+        $sortie->setDateLimiteInscription($sortie->getDateDebut()->sub(new DateInterval("PT8H")));
         $sortie->setCampus($campus);
         $sortieType = $this->createForm(SortieType::class, $sortie);
 
         $sortieType->handleRequest($request);
 
         if ($sortieType->isSubmitted() && $sortieType->isValid()) {
-            //On passe la sortie à l'état Créée si on clique sur créer
+            //On passe la sortie à l'état "Créée" si on clique sur créer
             if ($sortieType->getClickedButton() && 'publier' === $sortieType->getClickedButton()->getName()) {
                 $sortie->setEtat($etatRepository->findOneBy(['libelle' => 'Ouverte']));
             } else {
                 $sortie->setEtat($etatRepository->findOneBy(['libelle' => 'Créée']));
             }
-
             //On enregistre le créateur (utilisateur connecté)
             $sortie->setOrganisateur($this->getUser());
             $sortie->setModifiePar($this->getUser());
@@ -126,23 +114,20 @@ class SortieController extends AbstractController
 
     /**
      * @Route("/sorties/modifier/{id}", name="sortie_modifierSortie", requirements={"id"="\d+"}, methods={"POST"})
+     * @throws NonUniqueResultException
      */
     public function modifierSortie(int $id, Request $request, EtatRepository $etatRepository, SortieRepository $sortieRepository, EntityManagerInterface $em): Response
     {
-        //Recherche de la sortie concernées avec les jointures idoines
+        //Recherche de la sortie concernée avec les jointures idoines
         $sortie = $sortieRepository->findSortieByIdWithDetails($id);
         //On prépare l'alimentation du champ dateModif
-        $sortie->setDateModification(new \DateTime());
-
+        $sortie->setDateModification(new DateTime());
         //si l'id n'existe pas
         if (!$sortie) {
             throw $this->createNotFoundException('Sortie non trouvée.');
         }
-
         //On récupère la ville pour l'afficher dans le sélecteur
         $ville = $sortie->getLieu()->getVille();
-       // dump($sortie->getEtat());
-
         //On vérifie l'état de la sortie pour afficher/masque les boutons publier et supprimer
         if ($sortie->getEtat()->getId() === 1) {
             $etat = true;
@@ -156,7 +141,6 @@ class SortieController extends AbstractController
 
         //On affiche la ville enregistrée en base pour cette sortie
         $sortieType->get('ville')->setData($ville);
-        //$sortieType->get('lieu')->setData($lieu);
 
         $sortieType->handleRequest($request);
 
@@ -165,14 +149,13 @@ class SortieController extends AbstractController
         }
 
         if ($sortieType->isSubmitted() && $sortieType->isValid()) {
-            //On passe la sortie à l'état Publiée si on clique sur publier
+            //On passe la sortie à l'état "Publiée" si on clique sur publier
             if ($sortieType->getClickedButton() && 'publier' === $sortieType->getClickedButton()->getName()) {
                 $sortie->setEtat($etatRepository->findOneBy(['libelle' => 'Ouverte']));
             }
-
             //On enregistre le créateur (utilisateur connecté)
             $sortie->setModifiePar($this->getUser());
-            //$em->persist($sortie);
+
             $em->flush();
             $this->addFlash('success', 'La modification de la sortie a bien été enregistrée');
             return $this->redirectToRoute('sortie_listeSortie');
@@ -190,16 +173,16 @@ class SortieController extends AbstractController
 
     /**
      * @Route("/sorties/publier/{id}", name="sortie_publierSortie", methods={"POST"})
+     * @throws NonUniqueResultException
      */
-    public function publierSortie(int $id, Request $request, SortieRepository $sortieRepository, EntityManagerInterface $em, EtatRepository $etatRepository): Response
+    public function publierSortie(int $id, SortieRepository $sortieRepository, EntityManagerInterface $em, EtatRepository $etatRepository): Response
     {
-
         $sortie = $sortieRepository->findSortieByIdWithDetails($id);
         //si l'id n'existe pas
         if (!$sortie) {
             throw $this->createNotFoundException('Sortie non trouvée.');
         }
-        $sortie->setDateModification(new \DateTime());
+        $sortie->setDateModification(new DateTime());
         $sortie->setModifiePar($this->getUser());
         $sortie->setEtat($etatRepository->findOneBy(['libelle' => 'Ouverte']));
         $em->flush();
@@ -208,13 +191,14 @@ class SortieController extends AbstractController
 
     /**
      * @Route("/sorties/annuler/{id}", name="sortie_annulerSortie",  methods={"POST"})
+     * @throws NonUniqueResultException
      */
     public function annulerSortie(int $id, Request $request, EtatRepository $etatRepository, SortieRepository $sortieRepository, EntityManagerInterface $em): Response
     {
-        //Recherche de la sortie concernées avec les jointures idoines
+        //Recherche de la sortie concernée avec les jointures idoines
         $sortie = $sortieRepository->findSortieByIdWithDetails($id);
         //On prépare l'alimentation du champ dateModif
-        $sortie->setDateModification(new \DateTime());
+        $sortie->setDateModification(new DateTime());
 
         //si l'id n'existe pas
         if (!$sortie) {
@@ -224,10 +208,9 @@ class SortieController extends AbstractController
         $sortieType->handleRequest($request);
 
         if ($sortieType->isSubmitted() && $sortieType->isValid()) {
-            //On passe la sortie à l'état annulée
+            //On passe la sortie à l'état "Annulée"
             $sortie->setEtat($etatRepository->findOneBy(['libelle' => 'Annulée']));
-            //On enregistre le mofif
-            //$em->persist($sortie);
+            //On enregistre le motif
             $em->flush();
             $this->addFlash('success', 'La sortie a bien été annulée');
             return $this->redirectToRoute('sortie_listeSortie');
@@ -241,13 +224,12 @@ class SortieController extends AbstractController
     /**
      * @Route("/sorties/supprimer/{id}", name="sortie_supprimerSortie",  methods={"GET"})
      */
-    public function supprimerSortie(int $id, Request $request, Sortie $sortie, EntityManagerInterface $em): Response
+    public function supprimerSortie(Sortie $sortie, EntityManagerInterface $em): Response
     {
         $em->remove($sortie);
         $em->flush();
 
         $this->addFlash('success_suppression_sortie', 'La sortie ' . $sortie . ' a été supprimée.');
-
         // Redirigez vers la même page après la suppression
         return $this->redirectToRoute('sortie_listeSortie');
     }
@@ -273,49 +255,29 @@ class SortieController extends AbstractController
 
         $etatCloture = $etatRepository->findbyLibelle('Clôturée');
 
-
         if ($sortie->getEtat()->getLibelle() == 'Ouverte'
-            && $sortie->getDateLimiteInscription() >= new \DateTime('now')
+            && $sortie->getDateLimiteInscription() >= new DateTime('now')
             && !$sortie->getParticipants()->contains($participantConnecte)) {
 
-          //  dump($sortie->getEtat()->getLibelle());
-            //dump($sortie->getDateLimiteInscription());
-            //dump(new \DateTime('now'));
-
-            //dump($sortie);
-            //dump($participantConnecte);
             if($participantConnecte instanceof Participant) {
                 $sortie->addParticipant($participantConnecte);
-              //  dump($sortie->getParticipants());
 
-
-
-            //dump(count($sortie->getParticipants()));
                 if(count($sortie->getParticipants()) == $sortie->getNbInscritptionMax()){
                     $sortie->setEtat($etatCloture);
                 }
                 $entityManager->persist($sortie);
-                //dump($sortie->getParticipants());
-                //dump($participantConnecte);
                 $entityManager->flush();
-                // dump($sortie->getParticipants());
-                //dump($sortie);
+
                 $this->addFlash('success', 'Vous êtes bien inscrit/e pour la sortie ' . $sortie->getNom() . ' !');}
-
-
         } else {
             $this->addFlash('error', 'Vous ne pouvez pas vous inscrire pour la sortie ' . $sortie->getNom() . ' !');
         }
-
-
-        //On renvoit vers l'URL qui a émis la requête
+        //On renvoie vers l'URL qui a émis la requête
         if ($url) {
             return $this->redirect($url);
         } else {
             return $this->redirectToRoute('sortie_listeSortie');
         }
-
-
     }
 
     /**
@@ -337,37 +299,27 @@ class SortieController extends AbstractController
         $url = $request->headers->get('referer');
         $participantConnecte = $this->getUser();
         $etatOuvert = $etatRepository->findbyLibelle('Ouverte');
-        if ($sortie->getDateDebut() >= new \DateTime('now')
+        if ($sortie->getDateDebut() >= new DateTime('now')
             && $sortie->getParticipants()->contains($participantConnecte)) {
-          //  dump($sortie->getEtat()->getLibelle());
-            //dump($sortie->getDateLimiteInscription());
-            //dump(new \DateTime('now'));
 
-            //dump($sortie);
-            //dump($participantConnecte);
             if($participantConnecte instanceof Participant) {
                 $sortie->removeParticipant($participantConnecte);
-                if(count($sortie->getParticipants()) < $sortie->getNbInscritptionMax() && $sortie->getDateLimiteInscription() >= new \DateTime('now')){
+                if(count($sortie->getParticipants()) < $sortie->getNbInscritptionMax() && $sortie->getDateLimiteInscription() >= new DateTime('now')){
                     $sortie->setEtat($etatOuvert);
                 }
-
                 $entityManager->persist($sortie);
-                //dump($participantConnecte);
                 $entityManager->flush();
-                //dump($sortie);
+
                 $this->addFlash('success', 'Vous êtes bien désinscrit/e pour la sortie ' . $sortie->getNom() . ' !');
             }
         } else {
             $this->addFlash('error', 'Vous ne pouvez pas vous désinscrire pour la sortie ' . $sortie->getNom() . ' !');
         }
-
-
-        //On renvoit vers l'URL qui a émis la requête ou main_accueil
+        //On renvoie vers l'URL qui a émis la requête ou main_accueil
         if ($url) {
             return $this->redirect($url);
         } else {
             return $this->redirectToRoute('sortie_listeSortie');
         }
-
     }
 }

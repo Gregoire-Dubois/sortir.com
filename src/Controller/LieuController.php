@@ -18,8 +18,8 @@ class LieuController extends AbstractController
      * @Route("/sorties/lieu/afficher", name="lieu_afficher", methods={"GET"})
      */
 
-    //Sert à l'affichage du formulaire dans la pop-up
-    public function create(Request $request, EntityManagerInterface $em)
+    //Sert à l'affichage du formulaire dans les pop-up
+    public function create(): Response
     {
         // Créer une instance du formulaire LieuType
         $lieu = new Lieu();
@@ -34,8 +34,8 @@ class LieuController extends AbstractController
      * @Route("/sorties/lieu/creation", name="lieu_creation_submit", methods={"POST"})
      */
 
-    //Sert à la soumission du formulaire dans la pop-up
-    public function createSubmit(Request $request, EntityManagerInterface $em)
+    //Sert à la soumission du formulaire dans les pop-up
+    public function createSubmit(Request $request, EntityManagerInterface $em): JsonResponse
     {
         // Créer une instance du formulaire LieuType
         $lieu = new Lieu();
@@ -67,7 +67,7 @@ class LieuController extends AbstractController
         }
     }
 
-    private function getFormErrors($form)
+    private function getFormErrors($form): array
     {
         $errors = [];
         foreach ($form->getErrors(true) as $error) {
@@ -75,7 +75,6 @@ class LieuController extends AbstractController
         }
         return $errors;
     }
-
 
     /**
      * Méthode appelée en AJAX pour retourner le CP d'une ville donnée.
